@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChildESG x LaPaQ x Flabee Mobile Prototype</title>
+    <title>ChildESG™ Mobile Prototype</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- HTML5 QR Code Scanner Library CDN -->
@@ -35,7 +35,7 @@
         <!-- App Header -->
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
-                <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">Kemaih Ecosystem</span>
+                <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
                 <h1 id="app-title" class="text-lg font-bold text-slate-900">Authentication</h1>
             </div>
             <button onclick="switchTab('auth')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
@@ -115,9 +115,9 @@
         function renderAuthPage() {
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
-                    <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">Unlisted Gateway</span>
-                    <h2 class="text-xl font-bold">Kemaih Authentication</h2>
-                    <p class="text-xs text-slate-300">Sign in or register to access Layer 1 Profile</p>
+                    <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">ChildESG™ Gateway</span>
+                    <h2 class="text-xl font-bold">Account Authentication</h2>
+                    <p class="text-xs text-slate-300">Sign in or register to access Parent Profile</p>
                 </div>
 
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
@@ -141,7 +141,7 @@
                             <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
                         </div>
                         <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">
-                            Sign In → Proceed to Layer 1 Profile
+                            Sign In → Proceed to Profile
                         </button>
                     </div>
 
@@ -179,7 +179,7 @@
                         </div>
 
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">
-                            ✓ Register & Proceed to Layer 1 Profile
+                            ✓ Register & Proceed to Profile
                         </button>
                     </div>
                 </div>
@@ -192,26 +192,26 @@
         }
 
         function handleLoginSubmit() {
-            alert("Authenticated successfully! Proceeding to Layer 1 (Home & Parent Profile)...");
+            alert("Authenticated successfully! Proceeding to Home & Parent Profile...");
             switchTab('layer1');
         }
 
         function handleRegisterSubmit() {
-            alert("Account registered & PDPA consent stored! Proceeding to Layer 1 (Home & Parent Profile)...");
+            alert("Account registered & PDPA consent stored! Proceeding to Home & Parent Profile...");
             switchTab('layer1');
         }
 
         const contentData = {
-            // UNLISTED AUTH LAYER
+            // UNLISTED AUTH
             auth: renderAuthPage(),
 
-            // LAYER 1: Home / Profile Page
+            // HOME / PARENT PROFILE
             layer1: `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
                     <div>
-                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Layer 1 Profile Page</span>
+                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Dashboard</span>
                         <h2 class="text-xl font-bold mt-1">Welcome, Ainol</h2>
-                        <p class="text-xs text-emerald-100 mt-0.5">Kemaih Ecosystem Parent Hub</p>
+                        <p class="text-xs text-emerald-100 mt-0.5">ChildESG™ Ecosystem Guardian Hub</p>
                     </div>
                     <button onclick="document.getElementById('add-child-form').scrollIntoView({behavior: 'smooth'})" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl font-bold transition shadow-inner">
                         +
@@ -331,14 +331,14 @@
                 </div>
             `,
 
-            // LAYER 3: Children Profile
+            // CHILDREN PROFILE
             layer3: `
                 <div id="child-profile-container">
                     <!-- Dynamic Child Profile Content Rendered via JavaScript -->
                 </div>
             `,
 
-            // LAPAQ ANALYTICS: Energy & Detailed RNI Intake Status
+            // LAPAQ ANALYTICS
             lapaq: `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
@@ -574,7 +574,7 @@
 
             const titles = {
                 auth: "Authentication",
-                layer1: "Home & Profile (Layer 1)",
+                layer1: "Home & Profile",
                 layer3: "Children Profile",
                 lapaq: "LaPaQ RNI Analytics",
                 school: "School Dashboard",
