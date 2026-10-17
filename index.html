@@ -83,9 +83,10 @@
         let html5QrCode = null;
         let selectedChild = 'adam'; 
         let currentAuthTab = 'register'; 
-        let currentUserRole = 'parent'; // 'parent' or 'partner'
+        let currentUserRole = 'parent'; 
         let currentPartnerView = 'dashboard'; 
         let activeParticipantGroup = '';
+        let currentTimeSpan = '1';
 
         const childrenData = {
             adam: {
@@ -149,7 +150,6 @@
             ]
         };
 
-        // Layer 1: Registration Page (Authentication Gateway)
         function renderRegistrationPage() {
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
@@ -167,7 +167,6 @@
                         </button>
                     </div>
                     
-                    <!-- REGISTER FORM -->
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Register Role</label>
@@ -209,7 +208,6 @@
                         </button>
                     </div>
 
-                    <!-- LOGIN FORM -->
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
@@ -253,7 +251,6 @@
             switchTab('home');
         }
 
-        // Home Page Profile for Parent Login
         function renderParentProfilePage() {
             return `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
@@ -357,7 +354,6 @@
             `;
         }
 
-        // Home Page Profile for Organization Partner Login
         function renderPartnerProfilePage() {
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
@@ -384,7 +380,6 @@
             `;
         }
 
-        // Partner Organization Dashboard Layer
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') {
                 return renderParticipantGroupDetails(activeParticipantGroup);
@@ -479,6 +474,27 @@
 
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
+            
+            // Multiplier scale factor according to selected time span
+            let multiplier = 1;
+            if (currentTimeSpan === '3') multiplier = 3;
+            if (currentTimeSpan === '7') multiplier = 7;
+            if (currentTimeSpan === '14') multiplier = 14;
+            if (currentTimeSpan === '30') multiplier = 30;
+            if (currentTimeSpan === 'custom') multiplier = 10; // Custom range estimate sample factor
+
+            const rniMetrics = [
+                { name: "Calories (Kcal)", current: Math.round(1620 * multiplier), target: Math.round(1800 * multiplier), unit: "kcal", color: "bg-emerald-500" },
+                { name: "Carbohydrate", current: Math.round(225 * multiplier), target: Math.round(240 * multiplier), unit: "g", color: "bg-blue-500" },
+                { name: "Protein", current: Math.round(42 * multiplier), target: Math.round(45 * multiplier), unit: "g", color: "bg-indigo-500" },
+                { name: "Fiber", current: Math.round(18 * multiplier), target: Math.round(20 * multiplier), unit: "g", color: "bg-amber-500" },
+                { name: "Calcium", current: Math.round(680 * multiplier), target: Math.round(800 * multiplier), unit: "mg", color: "bg-purple-500" },
+                { name: "Iron", current: Math.round(11 * multiplier), target: Math.round(12 * multiplier), unit: "mg", color: "bg-teal-500" },
+                { name: "Potassium", current: Math.round(2100 * multiplier), target: Math.round(2300 * multiplier), unit: "mg", color: "bg-sky-500" },
+                { name: "Vitamin A", current: Math.round(480 * multiplier), target: Math.round(500 * multiplier), unit: "µg RE", color: "bg-orange-500" },
+                { name: "Vitamin C", current: Math.round(38 * multiplier), target: Math.round(40 * multiplier), unit: "mg", color: "bg-rose-500" }
+            ];
+
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
@@ -500,6 +516,16 @@
                             <span>🔗 Connect / Login to LaPaQ Portal</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
+                    </div>
+                    <div class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
+                        <div>
+                            <p class="text-slate-300 text-[10px] font-bold uppercase">Daily RNI Diet Target</p>
+                            <p class="font-bold text-emerald-400 mt-0.5">${child.rniStatus}</p>
+                        </div>
+                        ${child.rniClaimed 
+                            ? `<span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold border border-emerald-500/40">✓ Token Minted</span>` 
+                            : `<button onclick="claimRNIToken()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">🥗 Claim Nutrition Token</button>`
+                        }
                     </div>
                 </div>
 
@@ -537,7 +563,53 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Time Span selector -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
+                    <div class="grid grid-cols-3 gap-1.5 text-center">
+                        <button onclick="selectTimeSpan('1')" id="ts-1" class="py-1.5 text-[10px] font-bold rounded-lg ${currentTimeSpan === '1' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} transition">1 Day</button>
+                        <button onclick="selectTimeSpan('3')" id="ts-3" class="py-1.5 text-[10px] font-bold rounded-lg ${currentTimeSpan === '3' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} transition">3 Days</button>
+                        <button onclick="selectTimeSpan('7')" id="ts-7" class="py-1.5 text-[10px] font-bold rounded-lg ${currentTimeSpan === '7' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} transition">7 Days</button>
+                        <button onclick="selectTimeSpan('14')" id="ts-14" class="py-1.5 text-[10px] font-bold rounded-lg ${currentTimeSpan === '14' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} transition">14 Days</button>
+                        <button onclick="selectTimeSpan('30')" id="ts-30" class="py-1.5 text-[10px] font-bold rounded-lg ${currentTimeSpan === '30' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} transition">30 Days</button>
+                        <button onclick="selectTimeSpan('custom')" id="ts-custom" class="py-1.5 text-[10px] font-bold rounded-lg ${currentTimeSpan === 'custom' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'} transition">Custom Date</button>
+                    </div>
+                    <div id="custom-date-picker" class="${currentTimeSpan === 'custom' ? 'flex' : 'hidden'} pt-2 space-x-2">
+                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                </div>
+
+                <!-- 9 RNI Bars Compliance Block -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">RNI Intake Compliance (${child.name})</h3>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Span: ${currentTimeSpan === 'custom' ? 'Custom Range' : currentTimeSpan + ' Day(s)'}</span>
+                    </div>
+                    <div class="space-y-3">
+                        ${rniMetrics.map(m => {
+                            const pct = Math.min(Math.round((m.current / m.target) * 100), 100);
+                            return `
+                                <div class="space-y-1">
+                                    <div class="flex justify-between text-xs font-semibold">
+                                        <span class="text-slate-700">${m.name}</span>
+                                        <span class="text-slate-800">${m.current.toLocaleString()} / ${m.target.toLocaleString()} ${m.unit} <span class="text-emerald-600 font-bold">(${pct}%)</span></span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                        <div class="${m.color} h-full" style="width: ${pct}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
             `;
+        }
+
+        function selectTimeSpan(span) {
+            currentTimeSpan = span;
+            switchTab('lapaq');
         }
 
         function recalculateGrowthMetrics() {
@@ -567,6 +639,14 @@
             childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
             childrenData[selectedChild].stuntingStatus = stunting;
             childrenData[selectedChild].wastingStatus = wasting;
+        }
+
+        function claimRNIToken() {
+            const child = childrenData[selectedChild];
+            child.rniClaimed = true;
+            child.nutritionTokens += 1;
+            alert(`🎉 Daily RNI Balanced Diet Target Met! 1 Nutrition Token (🥗) minted directly to ${child.name}'s Impact Wallet.`);
+            switchTab('lapaq');
         }
 
         function renderTokensPage() {
