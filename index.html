@@ -206,6 +206,47 @@
                     </div>
                 </div>
 
+                <!-- Growth Tracking / WHO Z-Score Section -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth & WHO Z-Score Trajectory</h3>
+                        <span class="text-[10px] bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                            <p class="text-[10px] text-emerald-600 font-semibold uppercase">Height-for-Age</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5">132.5 cm</p>
+                            <p class="text-[10px] text-emerald-700 mt-1 font-medium">HAZ: +0.25 (Healthy)</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                            <p class="text-[10px] text-blue-600 font-semibold uppercase">BMI-for-Age</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5">16.1 kg/m²</p>
+                            <p class="text-[10px] text-blue-700 mt-1 font-medium">BAZ: -0.10 (Normal)</p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Z-Score Indicator Bar -->
+                    <div class="p-3 bg-slate-50 rounded-lg space-y-1.5">
+                        <div class="flex justify-between text-[10px] font-semibold text-slate-600">
+                            <span>Stunting Risk (-2SD)</span>
+                            <span class="text-emerald-600">Optimal (0)</span>
+                            <span>Overweight (+2SD)</span>
+                        </div>
+                        <div class="w-full bg-slate-200 h-2.5 rounded-full relative">
+                            <div class="bg-emerald-500 h-full w-2.5 rounded-full absolute left-[52%] -translate-x-1/2 ring-2 ring-white shadow-sm"></div>
+                        </div>
+                        <p class="text-[9px] text-slate-400 text-center">Last measured 14 days ago by SK-PJ Health Desk</p>
+                    </div>
+
+                    <!-- Quick Log Anthropometrics Modal Trigger -->
+                    <div class="pt-1">
+                        <button onclick="alert('Anthropometrics update logged into secure token record!')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-lg font-semibold text-xs transition">
+                            + Log Height & Weight Entry
+                        </button>
+                    </div>
+                </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Today's Milestone & Verification</h3>
                     <div class="flex items-center space-x-3 mb-3">
