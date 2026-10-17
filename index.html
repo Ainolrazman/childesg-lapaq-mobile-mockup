@@ -93,44 +93,105 @@
                     <p class="text-xs text-blue-100 mt-1">Register parent account & securely link child profiles</p>
                 </div>
 
+                <!-- Layer 1: Parent Registration Form -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent / Guardian Details</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent / Guardian Account Setup</h3>
+                    
                     <div>
                         <label class="block text-[11px] font-medium text-slate-600 mb-1">Full Name</label>
                         <input type="text" placeholder="e.g. Guardian Name" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                     </div>
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Email / Mobile Number</label>
-                        <input type="text" placeholder="e.g. parent@example.com" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Username</label>
+                            <input type="text" placeholder="e.g. guardian123" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Password</label>
+                            <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
                     </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Mobile Number</label>
+                            <input type="tel" placeholder="e.g. 012-3456789" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Alt Phone Number</label>
+                            <input type="tel" placeholder="e.g. 03-89001234" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Email Address</label>
+                        <input type="email" placeholder="e.g. parent@example.com" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+
                     <div class="flex items-center space-x-2 pt-1">
                         <input type="checkbox" id="pdpa" checked class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5">
                         <label for="pdpa" class="text-[10px] text-slate-500">I consent to PDPA-compliant child data hashing & nutritional monitoring.</label>
                     </div>
+
+                    <button onclick="registerParentDemo()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition">
+                        ✓ Submit Guardian Registration
+                    </button>
                 </div>
 
+                <!-- Layer 2: Child Registration Form -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Link Child Profile (Layer 2)</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Child Registration (Layer 2)</h3>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Child Name or Moniker</label>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Name of Child</label>
                         <input type="text" placeholder="e.g. Adam / Maya" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                     </div>
+                    
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Age / Group</label>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Gender</label>
                             <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
-                                <option>0 - 2 Years (Flabee Care)</option>
-                                <option>3 - 6 Years (Preschool)</option>
-                                <option selected>7 - 12 Years (ChildESG)</option>
+                                <option>Boy</option>
+                                <option>Girl</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-medium text-slate-600 mb-1">School Token / Code</label>
-                            <input type="text" placeholder="e.g. SK-PJ-2026" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Date of Birth</label>
+                            <input type="date" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                         </div>
                     </div>
-                    <button onclick="linkChildDemo()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition">
-                        + Link Child & Generate Tokenized Passport
+
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">School / Kindergarten</label>
+                        <input type="text" placeholder="e.g. SK Petaling Jaya / Taska Flabee" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+
+                    <!-- Health Section -->
+                    <div class="border-t border-slate-100 pt-3 space-y-2">
+                        <h4 class="text-[11px] font-bold text-slate-700 uppercase">Health Profile & Medical Conditions</h4>
+                        
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 mb-1">1. Allergies (e.g. Seafood, Peanut, Dairy)</label>
+                            <input type="text" placeholder="e.g. Peanuts, Shellfish (or None)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 mb-1">2. Asthmatic Condition</label>
+                            <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                                <option>No</option>
+                                <option>Yes (Mild)</option>
+                                <option>Yes (Severe / Requires Inhaler)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 mb-1">3. Other Medical / Dietary Notes</label>
+                            <input type="text" placeholder="e.g. G6PD Deficiency, Lactose Intolerance, Eczema" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <button onclick="linkChildDemo()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-emerald-700 transition mt-2">
+                        + Register Child & Generate Tokenized Passport
                     </button>
                 </div>
 
@@ -154,7 +215,6 @@
                     <p class="text-xs text-indigo-100 mt-1">Attendance linkage & anonymized token monitoring</p>
                 </div>
 
-                <!-- School Attendance & Health Correlation -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Attendance & Nutrition Correlation</h3>
@@ -274,7 +334,6 @@
                     <p class="text-xs text-amber-100 mt-1">Immunization, Health Records & Cognitive Milestones</p>
                 </div>
 
-                <!-- Early Childhood Cognitive & Developmental Milestones -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Early Childhood Milestones</h3>
@@ -296,42 +355,10 @@
                             </div>
                             <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded font-bold">On Track</span>
                         </div>
-                        <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-lg border border-slate-100">
-                            <div>
-                                <span class="font-bold text-slate-800">Cognitive & Social Engagement</span>
-                                <p class="text-[10px] text-slate-500">Follows simple multi-step instructions</p>
-                            </div>
-                            <span class="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded font-bold">Advanced</span>
-                        </div>
                     </div>
                     <button onclick="alert('Milestone observation note logged successfully!')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-lg font-semibold text-xs transition">
                         + Add Milestone Observation Note
                     </button>
-                </div>
-
-                <!-- National Immunization Programme Tracker -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Immunization Schedule (NIP)</h3>
-                        <span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded-full">Month 14 Complete</span>
-                    </div>
-
-                    <div class="space-y-2 text-xs">
-                        <div class="flex justify-between items-center p-2.5 bg-emerald-50 border border-emerald-100 rounded-lg">
-                            <div>
-                                <p class="font-bold text-slate-800">6-in-1 Hexavalent (DTaP-IPV-HepB-Hib)</p>
-                                <p class="text-[10px] text-emerald-700">Dose 3 completed at 5 Months</p>
-                            </div>
-                            <span class="bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded font-bold">Completed</span>
-                        </div>
-                        <div class="flex justify-between items-center p-2.5 bg-orange-50 border border-orange-100 rounded-lg">
-                            <div>
-                                <p class="font-bold text-slate-800">MMR Booster (Dose 2)</p>
-                                <p class="text-[10px] text-orange-700">Upcoming: Month 18 (Scheduled Nov 2026)</p>
-                            </div>
-                            <span class="bg-orange-500 text-white text-[9px] px-2 py-0.5 rounded font-bold">Upcoming</span>
-                        </div>
-                    </div>
                 </div>
             `,
             lapaq: `
@@ -387,7 +414,7 @@
             }
 
             const titles = {
-                register: "Parent Onboarding",
+                register: "Parent & Child Registration",
                 school: "School Portal",
                 passport: "ChildESG Passport",
                 flabee: "Flabee Care",
@@ -410,8 +437,12 @@
             });
         }
 
+        function registerParentDemo() {
+            alert("Layer 1 Guardian Account registered successfully! You can now register child profiles below.");
+        }
+
         function linkChildDemo() {
-            alert("Child profile successfully linked! Hashed Token generated: #AB-34X-KEMAIH");
+            alert("Child profile & health record successfully registered! Tokenized Passport generated: #AB-34X-KEMAIH");
             switchTab('passport');
         }
 
