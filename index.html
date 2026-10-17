@@ -126,7 +126,7 @@
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">ChildESG™ Gateway</span>
                     <h2 class="text-xl font-bold">Account Authentication</h2>
-                    <p class="text-xs text-slate-300">Sign in as Parent or School Administrator</p>
+                    <p class="text-xs text-slate-300">Sign in or register as Parent or School Administrator</p>
                 </div>
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
                     <div class="flex bg-slate-100 p-1 rounded-xl">
@@ -137,6 +137,8 @@
                             📝 Register
                         </button>
                     </div>
+                    
+                    <!-- LOGIN FORM -->
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
@@ -157,15 +159,23 @@
                             Sign In → Access Dashboard
                         </button>
                     </div>
+
+                    <!-- REGISTER FORM -->
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Register Role</label>
+                            <select id="register-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 font-bold text-slate-800">
+                                <option value="parent">👤 Parent / Guardian Account</option>
+                                <option value="school">🏫 School / Teacher Administrator Account</option>
+                            </select>
+                        </div>
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
                             <span class="text-[10px] font-bold text-blue-700 uppercase">PDPA Consent Included</span>
                             <p class="text-[10px] text-blue-600 mt-0.5">Registration creates your account and registers PDPA hashing consent.</p>
                         </div>
-                        
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name</label>
-                            <input type="text" placeholder="e.g. Guardian Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name / Institutional Name</label>
+                            <input type="text" placeholder="e.g. Guardian Name or School Admin" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -174,7 +184,7 @@
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email</label>
-                                <input type="email" placeholder="parent@example.com" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                                <input type="email" placeholder="user@example.com" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                             </div>
                         </div>
                         <div class="space-y-1.5 pt-1">
@@ -184,11 +194,11 @@
                             </div>
                             <div class="flex items-start space-x-2">
                                 <input type="checkbox" id="pdpa2" checked class="mt-0.5 rounded text-blue-600 h-3 w-3">
-                                <label for="pdpa2" class="text-[10px] text-slate-600">I authorize tokenized health monitoring for my children.</label>
+                                <label for="pdpa2" class="text-[10px] text-slate-600">I authorize tokenized institutional/health monitoring.</label>
                             </div>
                         </div>
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">
-                            ✓ Register & Proceed to Profile
+                            ✓ Register & Proceed to Dashboard
                         </button>
                     </div>
                 </div>
@@ -211,9 +221,16 @@
             }
         }
         function handleRegisterSubmit() {
-            currentUserRole = 'parent';
-            alert("Account registered & PDPA consent stored! Proceeding to Home & Parent Profile...");
-            switchTab('layer1');
+            const roleSelect = document.getElementById('register-role-select');
+            currentUserRole = roleSelect ? roleSelect.value : 'parent';
+
+            if (currentUserRole === 'school') {
+                alert("School account registered successfully! Redirecting to School Dashboard...");
+                switchTab('school');
+            } else {
+                alert("Parent account registered & PDPA consent stored! Proceeding to Home & Parent Profile...");
+                switchTab('layer1');
+            }
         }
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
@@ -831,125 +848,11 @@
         }
         const contentData = {
             auth: renderAuthPage(),
-            layer1: `
-                <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
-                    <div>
-                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Dashboard</span>
-                        <h2 class="text-xl font-bold mt-1">Welcome, Ainol</h2>
-                        <p class="text-xs text-emerald-100 mt-0.5">ChildESG™ Ecosystem Guardian Hub</p>
-                    </div>
-                    <button onclick="document.getElementById('add-child-form').scrollIntoView({behavior: 'smooth'})" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl font-bold transition shadow-inner">
-                        +
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent Account Profile</h3>
-                        <button onclick="switchTab('auth')" class="text-[10px] text-blue-600 font-bold underline">Auth Portal</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="p-2.5 bg-slate-50 rounded-lg">
-                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Full Name</span>
-                            <span class="font-bold text-slate-800">Ainol Razman</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg">
-                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Mobile Number</span>
-                            <span class="font-bold text-slate-800">012-3456789</span>
-                        </div>
-                    </div>
-                    <div class="border-t border-slate-100 pt-3 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Demographic Insights</h4>
-                            <span class="text-[9px] text-slate-400 italic">Optional</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[10px] font-medium text-slate-500 mb-1">Age</label>
-                                <input type="number" placeholder="34" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-medium text-slate-500 mb-1">Profession</label>
-                                <input type="text" placeholder="Technology Founder" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-medium text-slate-500 mb-1">Location / State</label>
-                            <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                                <option>Selangor</option>
-                                <option>W.P. Kuala Lumpur</option>
-                                <option>Johor</option>
-                                <option>Penang</option>
-                                <option>Perak</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button onclick="alert('Parent profile updated successfully!')" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-xs shadow hover:bg-emerald-700 transition">
-                        ✓ Save Profile Updates
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Children</h3>
-                    
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">Adam (Boy, 8 Yrs)</p>
-                            <p class="text-[10px] text-slate-500">SK Petaling Jaya • Token: #AB-34X-KEMAIH</p>
-                        </div>
-                        <button onclick="switchChildView('adam')" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-sm">
-                            View Profile →
-                        </button>
-                    </div>
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">Maya (Girl, 5 Yrs)</p>
-                            <p class="text-[10px] text-slate-500">Taska Permata KEMAS • Token: #MY-99Z-PERMATA</p>
-                        </div>
-                        <button onclick="switchChildView('maya')" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-sm">
-                            View Profile →
-                        </button>
-                    </div>
-                </div>
-                <div id="add-child-form" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Register New Child</h3>
-                        <span class="text-xs text-emerald-600 font-bold flex items-center"><span class="text-sm mr-1">+</span> Add Child</span>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Name of Child</label>
-                        <input type="text" placeholder="e.g. Adam / Maya" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Gender</label>
-                            <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                                <option>Boy</option>
-                                <option>Girl</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Date of Birth</label>
-                            <input type="date" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1">School / Kindergarten</label>
-                        <input type="text" placeholder="e.g. SK Petaling Jaya / Taska Permata KEMAS" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <button onclick="alert('Child registered! Viewable under Children Profile.')" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-emerald-700 transition mt-2">
-                        + Register Child & Generate Token ID
-                    </button>
-                </div>
-            `,
-            layer3: `
-                <div id="child-profile-container">
-                    <!-- Dynamic Child Profile Content Rendered via JavaScript -->
-                </div>
-            `,
-            tokens: ``, // Handled dynamically via renderTokensPage()
-            lapaq: ``, // Handled dynamically via renderLaPaQPage()
-            school: ``, // Handled dynamically via renderSchoolPage()
+            layer1: ``, // Handled dynamically
+            layer3: ``, // Handled dynamically
+            tokens: ``, // Handled dynamically
+            lapaq: ``, // Handled dynamically
+            school: ``, // Handled dynamically
             scanner: `
                 <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
@@ -966,9 +869,9 @@
             `
         };
         function switchTab(tabKey) {
-            // Role-based security check: School login cannot access parent/child profile tabs
-            if (currentUserRole === 'school' && ['layer1', 'layer3', 'tokens'].includes(tabKey)) {
-                alert("🔒 Access Restricted: School Teacher accounts can only view the School & Teacher Dashboard.");
+            // Role-based security check: School login cannot access parent, child, token, or LaPaQ analytics tabs
+            if (currentUserRole === 'school' && ['layer1', 'layer3', 'tokens', 'lapaq'].includes(tabKey)) {
+                alert("🔒 Access Restricted: School Teacher accounts can only view the School Dashboard and QR Scanner.");
                 return;
             }
 
