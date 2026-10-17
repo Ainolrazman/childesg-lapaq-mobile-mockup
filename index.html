@@ -36,10 +36,10 @@
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">Kemaih Ecosystem</span>
-                <h1 id="app-title" class="text-lg font-bold text-slate-900">Home</h1>
+                <h1 id="app-title" class="text-lg font-bold text-slate-900">Authentication</h1>
             </div>
-            <button onclick="switchTab('layer2')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
-                Profile
+            <button onclick="switchTab('auth')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
+                Auth
             </button>
         </header>
 
@@ -50,7 +50,7 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
-            <button onclick="switchTab('layer2')" id="nav-layer2" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
+            <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span class="text-[8px] font-medium">Home</span>
             </button>
@@ -112,20 +112,25 @@
             }
         };
 
-        function renderAuthHeader() {
+        function renderAuthPage() {
             return `
-                <!-- Login or Register Top Card on Home -->
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
+                    <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">Unlisted Gateway</span>
+                    <h2 class="text-xl font-bold">Kemaih Authentication</h2>
+                    <p class="text-xs text-slate-300">Sign in or register to access Layer 1 Profile</p>
+                </div>
+
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
                     <div class="flex bg-slate-100 p-1 rounded-xl">
-                        <button onclick="toggleAuthTab('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
+                        <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
                             🔐 Login
                         </button>
-                        <button onclick="toggleAuthTab('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
-                            📝 Register (Layer 1)
+                        <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
+                            📝 Register
                         </button>
                     </div>
 
-                    <!-- Login Form View -->
+                    <!-- Login Form -->
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Username / Email</label>
@@ -135,21 +140,21 @@
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Password</label>
                             <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
                         </div>
-                        <button onclick="alert('Successfully logged into Kemaih Ecosystem!')" class="w-full bg-emerald-600 text-white py-2 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition">
-                            Sign In to Account
+                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">
+                            Sign In → Proceed to Layer 1 Profile
                         </button>
                     </div>
 
-                    <!-- Register (Layer 1) Form View -->
+                    <!-- Register Form -->
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
-                            <span class="text-[10px] font-bold text-blue-700 uppercase">Layer 1 Registration & Consent</span>
-                            <p class="text-[10px] text-blue-600 mt-0.5">Creates your guardian account & authorizes PDPA tokenization.</p>
+                            <span class="text-[10px] font-bold text-blue-700 uppercase">PDPA Consent Included</span>
+                            <p class="text-[10px] text-blue-600 mt-0.5">Registration creates your account and registers PDPA hashing consent.</p>
                         </div>
                         
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Username</label>
-                            <input type="text" placeholder="e.g. guardian123" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name</label>
+                            <input type="text" placeholder="e.g. Guardian Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -173,30 +178,40 @@
                             </div>
                         </div>
 
-                        <button onclick="alert('Account registered & PDPA consent stored! Welcome to Kemaih Ecosystem.')" class="w-full bg-blue-600 text-white py-2 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition">
-                            ✓ Register & Agree to PDPA
+                        <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">
+                            ✓ Register & Proceed to Layer 1 Profile
                         </button>
                     </div>
                 </div>
             `;
         }
 
-        function toggleAuthTab(tab) {
-            currentAuthTab = tab;
-            switchTab('layer2');
+        function setAuthMode(mode) {
+            currentAuthTab = mode;
+            switchTab('auth');
+        }
+
+        function handleLoginSubmit() {
+            alert("Authenticated successfully! Proceeding to Layer 1 (Home & Parent Profile)...");
+            switchTab('layer1');
+        }
+
+        function handleRegisterSubmit() {
+            alert("Account registered & PDPA consent stored! Proceeding to Layer 1 (Home & Parent Profile)...");
+            switchTab('layer1');
         }
 
         const contentData = {
-            // LAYER 2: Home (With Top Login/Register Section)
-            layer2: `
-                <!-- Top Login or Register Container -->
-                ${renderAuthHeader()}
+            // UNLISTED AUTH LAYER
+            auth: renderAuthPage(),
 
+            // LAYER 1: Home / Profile Page
+            layer1: `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
                     <div>
-                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Dashboard</span>
+                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Layer 1 Profile Page</span>
                         <h2 class="text-xl font-bold mt-1">Welcome, Ainol</h2>
-                        <p class="text-xs text-emerald-100 mt-0.5">Kemaih Ecosystem Guardian Hub</p>
+                        <p class="text-xs text-emerald-100 mt-0.5">Kemaih Ecosystem Parent Hub</p>
                     </div>
                     <button onclick="document.getElementById('add-child-form').scrollIntoView({behavior: 'smooth'})" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl font-bold transition shadow-inner">
                         +
@@ -204,7 +219,10 @@
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent Account Profile</h3>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent Account Profile</h3>
+                        <button onclick="switchTab('auth')" class="text-[10px] text-blue-600 font-bold underline">Auth Portal</button>
+                    </div>
                     
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="p-2.5 bg-slate-50 rounded-lg">
@@ -276,7 +294,7 @@
                     </div>
                 </div>
 
-                <!-- Registration of Children in Home -->
+                <!-- Registration of Children -->
                 <div id="add-child-form" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Register New Child</h3>
@@ -313,7 +331,7 @@
                 </div>
             `,
 
-            // LAYER 3: Children Profile (With Child Selector)
+            // LAYER 3: Children Profile
             layer3: `
                 <div id="child-profile-container">
                     <!-- Dynamic Child Profile Content Rendered via JavaScript -->
@@ -555,7 +573,8 @@
             }
 
             const titles = {
-                layer2: "Home",
+                auth: "Authentication",
+                layer1: "Home & Profile (Layer 1)",
                 layer3: "Children Profile",
                 lapaq: "LaPaQ RNI Analytics",
                 school: "School Dashboard",
@@ -566,11 +585,13 @@
             
             if (tabKey === 'layer3') {
                 document.getElementById('app-content').innerHTML = renderChildProfile(selectedChild);
+            } else if (tabKey === 'auth') {
+                document.getElementById('app-content').innerHTML = renderAuthPage();
             } else {
                 document.getElementById('app-content').innerHTML = contentData[tabKey];
             }
 
-            ['layer2', 'layer3', 'lapaq', 'school', 'scanner', 'sroi'].forEach(key => {
+            ['layer1', 'layer3', 'lapaq', 'school', 'scanner', 'sroi'].forEach(key => {
                 const btn = document.getElementById(`nav-${key}`);
                 if (btn) {
                     if (key === tabKey) {
@@ -619,8 +640,8 @@
             });
         }
 
-        // Initialize default view to Home (Layer 2)
-        switchTab('layer2');
+        // Initialize default view to the unlisted auth layer
+        switchTab('auth');
     </script>
 </body>
 </html>
