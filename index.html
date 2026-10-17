@@ -36,7 +36,7 @@
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
-                <h1 id="app-title" class="text-lg font-bold text-slate-900">Home & Profile</h1>
+                <h1 id="app-title" class="text-lg font-bold text-slate-900">Authentication</h1>
             </div>
             <button onclick="switchTab('auth')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
                 Auth
@@ -45,7 +45,9 @@
 
         <!-- Main Scrollable Screen Content Area -->
         <main id="app-content" class="flex-1 overflow-y-auto p-5 pb-24 hide-scrollbar space-y-5">
-            <!-- Dynamic Content Injected via JavaScript -->
+            <div class="p-4 bg-white rounded-xl shadow-sm text-center">
+                <p class="text-xs text-slate-500 font-bold">Loading ChildESG™ Platform...</p>
+            </div>
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -514,7 +516,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Switch Cards -->
                 <div class="flex space-x-2 overflow-x-auto py-1 hide-scrollbar">
                     <button onclick="switchChildView('adam')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'adam' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
                         <p class="text-xs font-bold text-slate-800">Adam</p>
@@ -526,7 +527,6 @@
                     </button>
                 </div>
 
-                <!-- Anthropometrics -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth Trajectory (WHO Standards)</h3>
@@ -547,7 +547,6 @@
                     </div>
                 </div>
 
-                <!-- Physical Activity Tokens -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Physical Activity & Tokens</h3>
@@ -559,20 +558,17 @@
                     </button>
                 </div>
 
-                <!-- ECO-HABITS WITH ANTI-CHEAT LIVE CAMERA MODULE -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Eco-Habit Photo Evidence</h3>
                         <span id="eco-token-count" class="text-[10px] bg-teal-50 text-teal-700 font-bold px-2 py-0.5 rounded-full">${child.ecoTokens}</span>
                     </div>
 
-                    <!-- AI Verification Pipeline Mockup Info -->
                     <div class="p-2.5 bg-teal-50 rounded-lg border border-teal-100 text-[10px] text-teal-800 space-y-1">
                         <p class="font-bold flex items-center">🛡️ Anti-Cheat AI Pipeline Enabled</p>
                         <p class="text-slate-600">Requires Live Camera Stream • Perceptual Hash Check (`pHash`) • Geofence Stamping (`Petaling Jaya, MY`). Gallery uploads disabled to prevent spoofing.</p>
                     </div>
 
-                    <!-- Habit Category Choice -->
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Eco-Habit Type</label>
                         <select id="eco-habit-type" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-500">
@@ -582,7 +578,6 @@
                         </select>
                     </div>
 
-                    <!-- Live Anti-Cheat Camera Box -->
                     <div id="photo-capture-box" class="space-y-2">
                         <div class="relative w-full h-44 bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center border-2 border-slate-800">
                             <video id="live-camera-feed" class="w-full h-full object-cover hidden" autoplay playsinline muted></video>
@@ -593,7 +588,6 @@
                                 <p class="text-[9px] text-slate-400 mt-0.5">Live video feed required for AI verification</p>
                             </div>
 
-                            <!-- Live AI Overlay Watermark Mock -->
                             <div id="ai-watermark" class="hidden absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[9px] text-emerald-400 font-mono space-y-0.5">
                                 <div>GPS: 3.1073° N, 101.6067° E</div>
                                 <div>TIME: 10:34:12 MYT</div>
@@ -611,7 +605,6 @@
                         </div>
                     </div>
 
-                    <!-- Live AI Analysis Result Output Box -->
                     <div id="ai-analysis-result" class="hidden p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1">
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-slate-800">AI Verification Status:</span>
@@ -651,7 +644,7 @@
                     });
             } else {
                 alert("Simulated live camera stream active.");
-                watermark.classList.remove('hidden');
+                if(watermark) watermark.classList.remove('hidden');
             }
         }
 
@@ -683,7 +676,7 @@
 
         function switchTab(tabKey) {
             if (html5QrCode && tabKey !== 'scanner') {
-                html5QrCode.stop().catch(() => {});
+                try { html5QrCode.stop(); } catch(e){}
             }
             if (tabKey !== 'layer3') {
                 stopLiveCamera();
@@ -698,14 +691,19 @@
                 scanner: "QR Code Scanner",
                 sroi: "SROI Dashboard"
             };
-            document.getElementById('app-title').innerText = titles[tabKey];
             
-            if (tabKey === 'layer3') {
-                document.getElementById('app-content').innerHTML = renderChildProfile(selectedChild);
-            } else if (tabKey === 'auth') {
-                document.getElementById('app-content').innerHTML = renderAuthPage();
-            } else {
-                document.getElementById('app-content').innerHTML = contentData[tabKey];
+            const titleElem = document.getElementById('app-title');
+            if (titleElem) titleElem.innerText = titles[tabKey] || "ChildESG™ Mobile";
+            
+            const contentElem = document.getElementById('app-content');
+            if (contentElem) {
+                if (tabKey === 'layer3') {
+                    contentElem.innerHTML = renderChildProfile(selectedChild);
+                } else if (tabKey === 'auth') {
+                    contentElem.innerHTML = renderAuthPage();
+                } else {
+                    contentElem.innerHTML = contentData[tabKey] || contentData['auth'];
+                }
             }
 
             ['layer1', 'layer3', 'lapaq', 'school', 'scanner', 'sroi'].forEach(key => {
@@ -735,30 +733,38 @@
             });
 
             const customPicker = document.getElementById('custom-date-picker');
-            if (span === 'custom') {
-                customPicker.classList.remove('hidden');
-            } else {
-                customPicker.classList.add('hidden');
+            if (customPicker) {
+                if (span === 'custom') {
+                    customPicker.classList.remove('hidden');
+                } else {
+                    customPicker.classList.add('hidden');
+                }
             }
         }
 
         function startScanner() {
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText) => {
-                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
-                    html5QrCode.stop().catch(() => {});
-                },
-                () => {}
-            ).catch(() => {
-                document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
-            });
+            if (typeof Html5Qrcode !== 'undefined') {
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 150 } },
+                    (decodedText) => {
+                        document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
+                        html5QrCode.stop().catch(() => {});
+                    },
+                    () => {}
+                ).catch(() => {
+                    document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
+                });
+            } else {
+                document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
+            }
         }
 
-        // Initialize default view to the unlisted auth layer
-        switchTab('auth');
+        // Initialize default view safely after DOM loads
+        window.addEventListener('DOMContentLoaded', () => {
+            switchTab('auth');
+        });
     </script>
 </body>
 </html>
