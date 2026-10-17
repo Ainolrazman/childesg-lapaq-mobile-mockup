@@ -36,7 +36,7 @@
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
-                <h1 id="app-title" class="text-lg font-bold text-slate-900">Authentication</h1>
+                <h1 id="app-title" class="text-lg font-bold text-slate-900">Home & Profile</h1>
             </div>
             <button onclick="switchTab('auth')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
                 Auth
@@ -80,8 +80,9 @@
     <!-- App JavaScript Logic -->
     <script>
         let html5QrCode = null;
-        let selectedChild = 'adam'; // Default active child
-        let currentAuthTab = 'login'; // 'login' or 'register'
+        let selectedChild = 'adam'; 
+        let currentAuthTab = 'login'; 
+        let photoStream = null;
 
         const childrenData = {
             adam: {
@@ -95,7 +96,8 @@
                 bmi: "16.1 kg/m²",
                 baz: "-0.10 (Normal)",
                 playTime: "90 Mins",
-                tokensEarned: "3 Impact Tokens"
+                tokensEarned: "3 Impact Tokens",
+                ecoTokens: "2 Tokens"
             },
             maya: {
                 name: "Maya",
@@ -108,7 +110,8 @@
                 bmi: "15.4 kg/m²",
                 baz: "+0.05 (Normal)",
                 playTime: "60 Mins",
-                tokensEarned: "2 Impact Tokens"
+                tokensEarned: "2 Impact Tokens",
+                ecoTokens: "1 Token"
             }
         };
 
@@ -202,7 +205,6 @@
         }
 
         const contentData = {
-            // UNLISTED AUTH
             auth: renderAuthPage(),
 
             // HOME / PARENT PROFILE
@@ -269,7 +271,6 @@
                     </button>
                 </div>
 
-                <!-- Active Children List -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Children</h3>
                     
@@ -294,7 +295,6 @@
                     </div>
                 </div>
 
-                <!-- Registration of Children -->
                 <div id="add-child-form" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Register New Child</h3>
@@ -331,14 +331,12 @@
                 </div>
             `,
 
-            // CHILDREN PROFILE
             layer3: `
                 <div id="child-profile-container">
                     <!-- Dynamic Child Profile Content Rendered via JavaScript -->
                 </div>
             `,
 
-            // LAPAQ ANALYTICS
             lapaq: `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
@@ -496,7 +494,6 @@
                     <div class="flex justify-between items-center">
                         <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Children Profile</span>
                         
-                        <!-- Child Selector Choice -->
                         <select onchange="switchChildView(this.value)" class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-lg outline-none border border-white/30 cursor-pointer">
                             <option value="adam" ${childKey === 'adam' ? 'selected' : ''} class="text-slate-800">Adam (8 Yrs)</option>
                             <option value="maya" ${childKey === 'maya' ? 'selected' : ''} class="text-slate-800">Maya (5 Yrs)</option>
@@ -517,7 +514,7 @@
                     </div>
                 </div>
 
-                <!-- Child Quick Switch Cards -->
+                <!-- Quick Switch Cards -->
                 <div class="flex space-x-2 overflow-x-auto py-1 hide-scrollbar">
                     <button onclick="switchChildView('adam')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'adam' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
                         <p class="text-xs font-bold text-slate-800">Adam</p>
@@ -529,6 +526,7 @@
                     </button>
                 </div>
 
+                <!-- Anthropometrics -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth Trajectory (WHO Standards)</h3>
@@ -549,6 +547,7 @@
                     </div>
                 </div>
 
+                <!-- Physical Activity Tokens -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Physical Activity & Tokens</h3>
@@ -556,20 +555,138 @@
                     </div>
                     <p class="text-xs text-slate-600">Active Play Today: <strong>${child.playTime}</strong></p>
                     <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-indigo-700 transition">
-                        📷 Scan Station QR for ${child.name}
+                        📷 Scan Station QR Code
                     </button>
+                </div>
+
+                <!-- ECO-HABITS WITH ANTI-CHEAT LIVE CAMERA MODULE -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Eco-Habit Photo Evidence</h3>
+                        <span id="eco-token-count" class="text-[10px] bg-teal-50 text-teal-700 font-bold px-2 py-0.5 rounded-full">${child.ecoTokens}</span>
+                    </div>
+
+                    <!-- AI Verification Pipeline Mockup Info -->
+                    <div class="p-2.5 bg-teal-50 rounded-lg border border-teal-100 text-[10px] text-teal-800 space-y-1">
+                        <p class="font-bold flex items-center">🛡️ Anti-Cheat AI Pipeline Enabled</p>
+                        <p class="text-slate-600">Requires Live Camera Stream • Perceptual Hash Check (`pHash`) • Geofence Stamping (`Petaling Jaya, MY`). Gallery uploads disabled to prevent spoofing.</p>
+                    </div>
+
+                    <!-- Habit Category Choice -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Eco-Habit Type</label>
+                        <select id="eco-habit-type" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-500">
+                            <option value="Clean Plate Verification">🍽️ Clean Plate / Zero Food Waste</option>
+                            <option value="Reusable Water Bottle">🌱 Reusable Water Bottle Check-in</option>
+                            <option value="Reusable Lunch Container">🍱 Reusable Lunch Container</option>
+                        </select>
+                    </div>
+
+                    <!-- Live Anti-Cheat Camera Box -->
+                    <div id="photo-capture-box" class="space-y-2">
+                        <div class="relative w-full h-44 bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center border-2 border-slate-800">
+                            <video id="live-camera-feed" class="w-full h-full object-cover hidden" autoplay playsinline muted></video>
+                            
+                            <div id="camera-placeholder" class="text-center p-4">
+                                <span class="text-2xl block mb-1">📷</span>
+                                <p class="text-xs text-slate-300 font-semibold">Live Camera Mode</p>
+                                <p class="text-[9px] text-slate-400 mt-0.5">Live video feed required for AI verification</p>
+                            </div>
+
+                            <!-- Live AI Overlay Watermark Mock -->
+                            <div id="ai-watermark" class="hidden absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[9px] text-emerald-400 font-mono space-y-0.5">
+                                <div>GPS: 3.1073° N, 101.6067° E</div>
+                                <div>TIME: 10:34:12 MYT</div>
+                                <div>pHash: #e8a2f4c91</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="startLiveCamera()" class="bg-slate-800 text-white py-2 rounded-lg font-bold text-xs shadow hover:bg-slate-700 transition">
+                                📷 Turn On Camera
+                            </button>
+                            <button onclick="captureAndVerifyPhoto()" class="bg-teal-600 text-white py-2 rounded-lg font-bold text-xs shadow hover:bg-teal-700 transition">
+                                ⚡ Analyze & Submit
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live AI Analysis Result Output Box -->
+                    <div id="ai-analysis-result" class="hidden p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-slate-800">AI Verification Status:</span>
+                            <span id="ai-match-badge" class="bg-emerald-100 text-emerald-800 font-bold text-[9px] px-2 py-0.5 rounded">98.4% Match</span>
+                        </div>
+                        <p id="ai-analysis-details" class="text-[10px] text-slate-600">Detecting object features...</p>
+                    </div>
                 </div>
             `;
         }
 
         function switchChildView(childKey) {
+            stopLiveCamera();
             selectedChild = childKey;
             switchTab('layer3');
+        }
+
+        function startLiveCamera() {
+            const video = document.getElementById('live-camera-feed');
+            const placeholder = document.getElementById('camera-placeholder');
+            const watermark = document.getElementById('ai-watermark');
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(stream => {
+                        photoStream = stream;
+                        video.srcObject = stream;
+                        video.classList.remove('hidden');
+                        placeholder.classList.add('hidden');
+                        watermark.classList.remove('hidden');
+                    })
+                    .catch(err => {
+                        alert("Camera stream error: Running in simulated live mode.");
+                        video.classList.add('hidden');
+                        placeholder.classList.remove('hidden');
+                        watermark.classList.remove('hidden');
+                    });
+            } else {
+                alert("Simulated live camera stream active.");
+                watermark.classList.remove('hidden');
+            }
+        }
+
+        function stopLiveCamera() {
+            if (photoStream) {
+                photoStream.getTracks().forEach(track => track.stop());
+                photoStream = null;
+            }
+        }
+
+        function captureAndVerifyPhoto() {
+            const habitType = document.getElementById('eco-habit-type').value;
+            const resultBox = document.getElementById('ai-analysis-result');
+            const matchBadge = document.getElementById('ai-match-badge');
+            const detailsText = document.getElementById('ai-analysis-details');
+
+            resultBox.classList.remove('hidden');
+            detailsText.innerText = `Analyzing visual pixels for [${habitType}]... Checking perceptual hash for duplicates...`;
+
+            setTimeout(() => {
+                matchBadge.innerText = "PASSED (98.2%)";
+                matchBadge.className = "bg-emerald-100 text-emerald-800 font-bold text-[9px] px-2 py-0.5 rounded";
+                detailsText.innerHTML = `✓ <strong>Verified:</strong> Live ${habitType} detected.<br>✓ <strong>Anti-Cheat:</strong> pHash unique, Geofence match (SK PJ Zone A).<br>🎉 <strong>+1 Sustainability Token Minted!</strong>`;
+                
+                alert(`AI Anti-Cheat Verification Passed for ${habitType}! 1 Sustainability Token minted to ${childrenData[selectedChild].name}'s passport.`);
+                stopLiveCamera();
+            }, 1200);
         }
 
         function switchTab(tabKey) {
             if (html5QrCode && tabKey !== 'scanner') {
                 html5QrCode.stop().catch(() => {});
+            }
+            if (tabKey !== 'layer3') {
+                stopLiveCamera();
             }
 
             const titles = {
