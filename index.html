@@ -36,10 +36,10 @@
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">Kemaih Ecosystem</span>
-                <h1 id="app-title" class="text-lg font-bold text-slate-900">PDPA Consent Portal</h1>
+                <h1 id="app-title" class="text-lg font-bold text-slate-900">Parent & Child Profile</h1>
             </div>
-            <button onclick="switchTab('layer1')" class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs hover:bg-blue-200 transition">
-                PDPA
+            <button onclick="switchTab('layer2')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
+                Profile
             </button>
         </header>
 
@@ -50,11 +50,11 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
-            <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-blue-600 transition-all">
+            <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 <span class="text-[8px] font-medium">Layer 1</span>
             </button>
-            <button onclick="switchTab('layer2')" id="nav-layer2" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+            <button onclick="switchTab('layer2')" id="nav-layer2" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 <span class="text-[8px] font-medium">Layer 2</span>
             </button>
@@ -116,7 +116,7 @@
                     </div>
 
                     <button onclick="acceptPDPADemo()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition mt-2">
-                        ✓ Accept PDPA Consent & Proceed to Layer 2
+                        ✓ Accept PDPA Consent & Proceed to Layer 2 Profile
                     </button>
                 </div>
             `,
@@ -124,8 +124,8 @@
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
                     <div>
                         <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">User Profile (Layer 2)</span>
-                        <h2 class="text-xl font-bold mt-1">Parent & Child Registration</h2>
-                        <p class="text-xs text-emerald-100 mt-0.5">Manage parent profile, child details & tokens</p>
+                        <h2 class="text-xl font-bold mt-1">Parent & Child Profile</h2>
+                        <p class="text-xs text-emerald-100 mt-0.5">Manage parent details & child registrations</p>
                     </div>
                     <button onclick="document.getElementById('add-child-form').scrollIntoView({behavior: 'smooth'})" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl font-bold transition shadow-inner">
                         +
@@ -507,21 +507,21 @@
                 const btn = document.getElementById(`nav-${key}`);
                 if (key === tabKey) {
                     btn.classList.remove('text-slate-400');
-                    btn.classList.add('text-blue-600');
+                    btn.classList.add('text-emerald-600');
                 } else {
-                    btn.classList.remove('text-blue-600');
+                    btn.classList.remove('text-emerald-600');
                     btn.classList.add('text-slate-400');
                 }
             });
         }
 
         function acceptPDPADemo() {
-            alert("PDPA Consent accepted! Proceeding to Layer 2 Parent & Child Registration...");
+            alert("PDPA Consent accepted! Proceeding to Layer 2 Parent & Child Profile...");
             switchTab('layer2');
         }
 
         function saveParentDetailsDemo() {
-            alert("Parent profile details (including State, Profession & Age) saved in Layer 2!");
+            alert("Parent profile details saved in Layer 2!");
         }
 
         function linkChildDemo() {
@@ -529,23 +529,8 @@
             switchTab('passport');
         }
 
-        function startScanner() {
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText, decodedResult) => {
-                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
-                    html5QrCode.stop();
-                },
-                (errorMessage) => {}
-            ).catch(err => {
-                document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
-            });
-        }
-
-        // Initialize default tab on load
-        switchTab('layer1');
+        // Initialize directly to Layer 2
+        switchTab('layer2');
     </script>
 </body>
 </html>
