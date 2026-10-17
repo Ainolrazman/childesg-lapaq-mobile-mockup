@@ -216,11 +216,36 @@
             switchTab('home');
         }
 
+        // REGISTERED CHILDREN LIST COMPONENT FOR BOTH PROFILES
+        function renderRegisteredChildrenList() {
+            return `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">👶 Registered Children List</h3>
+                    <div class="space-y-2">
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Adam (Boy, 8 Yrs)</p>
+                                <p class="text-[10px] text-slate-500">SK Petaling Jaya • Token: #AB-34X-KEMAIH</p>
+                            </div>
+                            <button onclick="switchChildView('adam'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition">View Profile →</button>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Maya (Girl, 5 Yrs)</p>
+                                <p class="text-[10px] text-slate-500">Taska Permata KEMAS • Token: #MY-99Z-PERMATA</p>
+                            </div>
+                            <button onclick="switchChildView('maya'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition">View Profile →</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         // SHARED ADD CHILD FORM COMPONENT
         function renderAddChildSection() {
             return `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">👶 Add Child / Participant</h3>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">➕ Add New Child / Participant</h3>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Child's Full Name</label>
                         <input type="text" placeholder="e.g. Nurul Ain / Hakim" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
@@ -306,7 +331,7 @@
                         Update / Register Guardian Profile
                     </button>
                 </div>
-                ${renderAddChildSection()}
+                ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
 
@@ -355,7 +380,7 @@
                         Update / Register Organization Profile
                     </button>
                 </div>
-                ${renderAddChildSection()}
+                ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
 
