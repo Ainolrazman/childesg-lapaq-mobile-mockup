@@ -6,6 +6,8 @@
     <title>ChildESG x LaPaQ x Flabee Mobile Prototype</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTML5 QR Code Scanner Library CDN -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -48,27 +50,33 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 flex justify-around items-center shrink-0 z-50">
-            <button onclick="switchTab('passport')" id="nav-passport" class="flex flex-col items-center py-1 px-3 text-blue-600 transition-all">
+            <button onclick="switchTab('passport')" id="nav-passport" class="flex flex-col items-center py-1 px-2 text-blue-600 transition-all">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                <span class="text-[10px] font-medium">Passport</span>
+                <span class="text-[9px] font-medium">Passport</span>
             </button>
-            <button onclick="switchTab('flabee')" id="nav-flabee" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-slate-600 transition-all">
+            <button onclick="switchTab('flabee')" id="nav-flabee" class="flex flex-col items-center py-1 px-2 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                <span class="text-[10px] font-medium">Flabee Care</span>
+                <span class="text-[9px] font-medium">Flabee</span>
             </button>
-            <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-slate-600 transition-all">
+            <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-2 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <span class="text-[10px] font-medium">LaPaQ Engine</span>
+                <span class="text-[9px] font-medium">LaPaQ</span>
             </button>
-            <button onclick="switchTab('sroi')" id="nav-sroi" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-slate-600 transition-all">
+            <button onclick="switchTab('scanner')" id="nav-scanner" class="flex flex-col items-center py-1 px-2 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4m10-14h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4"/></svg>
+                <span class="text-[9px] font-medium">Scanner</span>
+            </button>
+            <button onclick="switchTab('sroi')" id="nav-sroi" class="flex flex-col items-center py-1 px-2 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span class="text-[10px] font-medium">SROI & ESG</span>
+                <span class="text-[9px] font-medium">SROI</span>
             </button>
         </nav>
     </div>
 
     <!-- App JavaScript Logic -->
     <script>
+        let html5QrCode = null;
+
         const contentData = {
             passport: `
                 <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 text-white shadow-lg">
@@ -102,18 +110,6 @@
                     </div>
                     <p class="text-[10px] text-slate-400 mt-2 text-right">Weekly Goal: 4/5 Healthy Plates Completed</p>
                 </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Modules (Kindy to Yr 6)</h3>
-                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
-                        <span class="text-sm font-medium text-slate-700">🌱 Rainbow Plate Lab</span>
-                        <span class="text-xs bg-blue-50 text-blue-600 font-semibold px-2 py-1 rounded">Active</span>
-                    </div>
-                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
-                        <span class="text-sm font-medium text-slate-700">🛡️ PEMADAM Anti-Vaping Badge</span>
-                        <span class="text-xs bg-slate-200 text-slate-600 font-semibold px-2 py-1 rounded">Locked</span>
-                    </div>
-                </div>
             `,
             flabee: `
                 <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg">
@@ -131,22 +127,6 @@
                         </div>
                         <span class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-full font-bold">Sync Active</span>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-slate-50 p-3 rounded-lg text-center">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">WHO Z-Score</p>
-                            <p class="text-base font-bold text-emerald-600 mt-0.5">Normal Growth</p>
-                        </div>
-                        <div class="bg-slate-50 p-3 rounded-lg text-center">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">RNI Status</p>
-                            <p class="text-base font-bold text-blue-600 mt-0.5">Iron Optimized</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Daily Family Action</h3>
-                    <p class="text-xs text-slate-600 mb-3">Logged meals automatically route to LaPaQ backend to check micronutrient adequacy.</p>
-                    <button class="w-full bg-orange-500 text-white py-2.5 rounded-xl font-semibold text-sm shadow-md hover:bg-orange-600 transition">Log Meal / Antenatal Intake</button>
                 </div>
             `,
             lapaq: `
@@ -163,16 +143,22 @@
                             <span class="font-medium text-slate-700">Calcium Target (B40 Cohort)</span>
                             <span class="font-bold text-emerald-600">Met via Local Anchovies</span>
                         </div>
-                        <div class="flex justify-between p-2.5 bg-slate-50 rounded-md">
-                            <span class="font-medium text-slate-700">Stunting Prevention Index</span>
-                            <span class="font-bold text-blue-600">99.2% Confidence</span>
-                        </div>
                     </div>
                 </div>
+            `,
+            scanner: `
+                <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
+                    <h2 class="text-xl font-bold mt-1">Barcode & QR Scanner</h2>
+                    <p class="text-xs text-violet-100 mt-1">Scan meal ingredients or student impact badges</p>
+                </div>
 
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">B2G Policy Data Pipeline</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Aggregated anonymized nutrition intelligence feeds directly into national policy whitepapers and Regulatory Impact Analysis (RIA) for the Nutrition Act.</p>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
+                    <div id="reader" class="w-full overflow-hidden rounded-lg bg-slate-100"></div>
+                    <div id="scan-result" class="p-3 bg-slate-50 rounded-lg text-xs text-slate-700 font-mono">
+                        Status: Camera ready. Aim at a barcode or QR code.
+                    </div>
+                    <button onclick="startScanner()" class="w-full bg-violet-600 text-white py-2.5 rounded-xl font-semibold text-sm shadow-md hover:bg-violet-700 transition">Start Camera Scanner</button>
                 </div>
             `,
             sroi: `
@@ -187,40 +173,26 @@
                     <p class="text-3xl font-extrabold text-emerald-600">~RM 6.20</p>
                     <p class="text-xs text-slate-600">Generated of verified social value per RM 1.00 spent by corporate sponsors.</p>
                 </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Corporate Dashboard Feed</h3>
-                    <div class="flex justify-between text-xs py-1.5 border-b border-slate-100">
-                        <span class="text-slate-500">Active Schools / Hubs:</span>
-                        <span class="font-bold text-slate-800">150+ Locations</span>
-                    </div>
-                    <div class="flex justify-between text-xs py-1.5 border-b border-slate-100">
-                        <span class="text-slate-500">B40 Meal Packs Delivered:</span>
-                        <span class="font-bold text-slate-800">12,000+ Packs</span>
-                    </div>
-                    <div class="flex justify-between text-xs py-1.5">
-                        <span class="text-slate-500">Audit Status:</span>
-                        <span class="font-bold text-emerald-600">Zero "Social-Washing"</span>
-                    </div>
-                </div>
             `
         };
 
         function switchTab(tabKey) {
-            // Update title
+            // Stop scanner if active when switching away
+            if (html5QrCode && tabKey !== 'scanner') {
+                html5QrCode.stop().catch(() => {});
+            }
+
             const titles = {
                 passport: "ChildESG Passport",
                 flabee: "Flabee Care",
                 lapaq: "LaPaQ Intelligence",
+                scanner: "Barcode Scanner",
                 sroi: "SROI & ESG Dashboard"
             };
             document.getElementById('app-title').innerText = titles[tabKey];
-
-            // Render content
             document.getElementById('app-content').innerHTML = contentData[tabKey];
 
-            // Update nav styles
-            ['passport', 'flabee', 'lapaq', 'sroi'].forEach(key => {
+            ['passport', 'flabee', 'lapaq', 'scanner', 'sroi'].forEach(key => {
                 const btn = document.getElementById(`nav-${key}`);
                 if (key === tabKey) {
                     btn.classList.remove('text-slate-400');
@@ -229,6 +201,23 @@
                     btn.classList.remove('text-blue-600');
                     btn.classList.add('text-slate-400');
                 }
+            });
+        }
+
+        function startScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 150 } },
+                (decodedText, decodedResult) => {
+                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
+                    html5QrCode.stop();
+                },
+                (errorMessage) => {
+                    // Scanning in progress...
+                }
+            ).catch(err => {
+                document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
             });
         }
 
