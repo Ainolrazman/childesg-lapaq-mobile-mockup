@@ -49,30 +49,34 @@
         </main>
 
         <!-- Bottom Navigation Bar -->
-        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-2 flex justify-around items-center shrink-0 z-50">
-            <button onclick="switchTab('register')" id="nav-register" class="flex flex-col items-center py-1 px-1.5 text-blue-600 transition-all">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                <span class="text-[9px] font-medium">Register</span>
+        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
+            <button onclick="switchTab('register')" id="nav-register" class="flex flex-col items-center py-1 px-1 text-blue-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                <span class="text-[8px] font-medium">Register</span>
             </button>
-            <button onclick="switchTab('passport')" id="nav-passport" class="flex flex-col items-center py-1 px-1.5 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                <span class="text-[9px] font-medium">Passport</span>
+            <button onclick="switchTab('school')" id="nav-school" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                <span class="text-[8px] font-medium">School</span>
             </button>
-            <button onclick="switchTab('flabee')" id="nav-flabee" class="flex flex-col items-center py-1 px-1.5 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                <span class="text-[9px] font-medium">Flabee</span>
+            <button onclick="switchTab('passport')" id="nav-passport" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <span class="text-[8px] font-medium">Passport</span>
             </button>
-            <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-1.5 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <span class="text-[9px] font-medium">LaPaQ</span>
+            <button onclick="switchTab('flabee')" id="nav-flabee" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                <span class="text-[8px] font-medium">Flabee</span>
             </button>
-            <button onclick="switchTab('scanner')" id="nav-scanner" class="flex flex-col items-center py-1 px-1.5 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4m10-14h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4"/></svg>
-                <span class="text-[9px] font-medium">Scanner</span>
+            <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <span class="text-[8px] font-medium">LaPaQ</span>
             </button>
-            <button onclick="switchTab('sroi')" id="nav-sroi" class="flex flex-col items-center py-1 px-1.5 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span class="text-[9px] font-medium">SROI</span>
+            <button onclick="switchTab('scanner')" id="nav-scanner" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4m10-14h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4"/></svg>
+                <span class="text-[8px] font-medium">Scanner</span>
+            </button>
+            <button onclick="switchTab('sroi')" id="nav-sroi" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                <span class="text-[8px] font-medium">SROI</span>
             </button>
         </nav>
     </div>
@@ -89,7 +93,6 @@
                     <p class="text-xs text-blue-100 mt-1">Register parent account & securely link child profiles</p>
                 </div>
 
-                <!-- Registration Form -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent / Guardian Details</h3>
                     <div>
@@ -106,7 +109,6 @@
                     </div>
                 </div>
 
-                <!-- Child Linking Form -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Link Child Profile (Layer 2)</h3>
                     <div>
@@ -128,172 +130,3 @@
                         </div>
                     </div>
                     <button onclick="linkChildDemo()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition">
-                        + Link Child & Generate Tokenized Passport
-                    </button>
-                </div>
-
-                <!-- Linked Profiles Status -->
-                <div id="linked-children" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Linked Child Tokens</h3>
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">Adam (Primary 3)</p>
-                            <p class="text-[10px] font-mono text-slate-500">Token: #AB-34X-KEMAIH</p>
-                        </div>
-                        <button onclick="switchTab('passport')" class="text-[10px] bg-emerald-500 text-white px-2.5 py-1 rounded-md font-bold">
-                            View Passport →
-                        </button>
-                    </div>
-                </div>
-            `,
-            passport: `
-                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 text-white shadow-lg">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span class="bg-blue-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Secure Tokenized ID</span>
-                            <h2 class="text-xl font-bold mt-1">Student Impact Passport</h2>
-                        </div>
-                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center font-bold text-lg">QR</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-3 flex justify-between items-center text-xs">
-                        <div>
-                            <p class="text-blue-200">Hashed Student Token</p>
-                            <p class="font-mono font-bold tracking-wider">#AB-34X-KEMAIH</p>
-                        </div>
-                        <span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">PDPA Verified</span>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Today's Milestone & Verification</h3>
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold">✓</div>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-800">The Conscious Plate Logged</p>
-                            <p class="text-xs text-slate-500">Suku-Suku Separuh standard verified</p>
-                        </div>
-                    </div>
-                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div class="bg-emerald-500 h-full w-3/4"></div>
-                    </div>
-                    <p class="text-[10px] text-slate-400 mt-2 text-right">Weekly Goal: 4/5 Healthy Plates Completed</p>
-                </div>
-            `,
-            flabee: `
-                <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">B2C Maternal Interface</span>
-                    <h2 class="text-xl font-bold mt-1">Flabee Care</h2>
-                    <p class="text-xs text-amber-100 mt-1">First 1,000 Days & Early Childhood (0-2)</p>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Maternal & Infant Status</h3>
-                    <div class="flex justify-between items-center p-3 bg-orange-50 rounded-lg border border-orange-100">
-                        <div>
-                            <p class="text-xs text-orange-600 font-semibold">Current Phase</p>
-                            <p class="text-sm font-bold text-slate-800">Infant Growth Tracking (Month 14)</p>
-                        </div>
-                        <span class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-full font-bold">Sync Active</span>
-                    </div>
-                </div>
-            `,
-            lapaq: `
-                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
-                    <h2 class="text-xl font-bold mt-1">LaPaQ Analytics</h2>
-                    <p class="text-xs text-slate-300 mt-1">RNI Gap Analysis & Food Composition Intelligence</p>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">ASEAN Local Food Mapping</h3>
-                    <div class="space-y-2 text-xs">
-                        <div class="flex justify-between p-2.5 bg-slate-50 rounded-md">
-                            <span class="font-medium text-slate-700">Calcium Target (B40 Cohort)</span>
-                            <span class="font-bold text-emerald-600">Met via Local Anchovies</span>
-                        </div>
-                    </div>
-                </div>
-            `,
-            scanner: `
-                <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
-                    <h2 class="text-xl font-bold mt-1">Barcode & QR Scanner</h2>
-                    <p class="text-xs text-violet-100 mt-1">Scan meal ingredients or student impact badges</p>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
-                    <div id="reader" class="w-full overflow-hidden rounded-lg bg-slate-100"></div>
-                    <div id="scan-result" class="p-3 bg-slate-50 rounded-lg text-xs text-slate-700 font-mono">
-                        Status: Camera ready. Aim at a barcode or QR code.
-                    </div>
-                    <button onclick="startScanner()" class="w-full bg-violet-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-violet-700 transition">Start Camera Scanner</button>
-                </div>
-            `,
-            sroi: `
-                <div class="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-emerald-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Audit-Ready ESG</span>
-                    <h2 class="text-xl font-bold mt-1">SROI Valuation</h2>
-                    <p class="text-xs text-emerald-100 mt-1">Certified via Social Value Malaysia (SVM)</p>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center space-y-2">
-                    <p class="text-xs text-slate-400 font-bold uppercase">Social Return Ratio</p>
-                    <p class="text-3xl font-extrabold text-emerald-600">~RM 6.20</p>
-                    <p class="text-xs text-slate-600">Generated of verified social value per RM 1.00 spent by corporate sponsors.</p>
-                </div>
-            `
-        };
-
-        function switchTab(tabKey) {
-            if (html5QrCode && tabKey !== 'scanner') {
-                html5QrCode.stop().catch(() => {});
-            }
-
-            const titles = {
-                register: "Parent Onboarding",
-                passport: "ChildESG Passport",
-                flabee: "Flabee Care",
-                lapaq: "LaPaQ Intelligence",
-                scanner: "Barcode Scanner",
-                sroi: "SROI & ESG Dashboard"
-            };
-            document.getElementById('app-title').innerText = titles[tabKey];
-            document.getElementById('app-content').innerHTML = contentData[tabKey];
-
-            ['register', 'passport', 'flabee', 'lapaq', 'scanner', 'sroi'].forEach(key => {
-                const btn = document.getElementById(`nav-${key}`);
-                if (key === tabKey) {
-                    btn.classList.remove('text-slate-400');
-                    btn.classList.add('text-blue-600');
-                } else {
-                    btn.classList.remove('text-blue-600');
-                    btn.classList.add('text-slate-400');
-                }
-            });
-        }
-
-        function linkChildDemo() {
-            alert("Child profile successfully linked! Hashed Token generated: #AB-34X-KEMAIH");
-            switchTab('passport');
-        }
-
-        function startScanner() {
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText, decodedResult) => {
-                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
-                    html5QrCode.stop();
-                },
-                (errorMessage) => {}
-            ).catch(err => {
-                document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
-            });
-        }
-
-        // Initialize default tab on load
-        switchTab('register');
-    </script>
-</body>
-</html>
