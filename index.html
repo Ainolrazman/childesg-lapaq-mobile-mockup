@@ -206,7 +206,6 @@
                     </div>
                 </div>
 
-                <!-- Growth Tracking / WHO Z-Score Section -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth & WHO Z-Score Trajectory</h3>
@@ -226,7 +225,6 @@
                         </div>
                     </div>
 
-                    <!-- Visual Z-Score Indicator Bar -->
                     <div class="p-3 bg-slate-50 rounded-lg space-y-1.5">
                         <div class="flex justify-between text-[10px] font-semibold text-slate-600">
                             <span>Stunting Risk (-2SD)</span>
@@ -239,7 +237,6 @@
                         <p class="text-[9px] text-slate-400 text-center">Last measured 14 days ago by SK-PJ Health Desk</p>
                     </div>
 
-                    <!-- Quick Log Anthropometrics Modal Trigger -->
                     <div class="pt-1">
                         <button onclick="alert('Anthropometrics update logged into secure token record!')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-lg font-semibold text-xs transition">
                             + Log Height & Weight Entry
@@ -264,20 +261,73 @@
             `,
             flabee: `
                 <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">B2C Maternal Interface</span>
+                    <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">B2C Maternal & Early Years</span>
                     <h2 class="text-xl font-bold mt-1">Flabee Care</h2>
-                    <p class="text-xs text-amber-100 mt-1">First 1,000 Days & Early Childhood (0-2)</p>
+                    <p class="text-xs text-amber-100 mt-1">First 1,000 Days, Immunization & Health Records</p>
                 </div>
 
+                <!-- National Immunization Programme Tracker -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Maternal & Infant Status</h3>
-                    <div class="flex justify-between items-center p-3 bg-orange-50 rounded-lg border border-orange-100">
-                        <div>
-                            <p class="text-xs text-orange-600 font-semibold">Current Phase</p>
-                            <p class="text-sm font-bold text-slate-800">Infant Growth Tracking (Month 14)</p>
-                        </div>
-                        <span class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-full font-bold">Sync Active</span>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Immunization Schedule (NIP)</h3>
+                        <span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded-full">Month 14 Complete</span>
                     </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between items-center p-2.5 bg-emerald-50 border border-emerald-100 rounded-lg">
+                            <div>
+                                <p class="font-bold text-slate-800">6-in-1 Hexavalent (DTaP-IPV-HepB-Hib)</p>
+                                <p class="text-[10px] text-emerald-700">Dose 3 completed at 5 Months</p>
+                            </div>
+                            <span class="bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded font-bold">Completed</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 bg-emerald-50 border border-emerald-100 rounded-lg">
+                            <div>
+                                <p class="font-bold text-slate-800">MMR (Measles, Mumps, Rubella)</p>
+                                <p class="text-[10px] text-emerald-700">Dose 1 completed at 9 Months</p>
+                            </div>
+                            <span class="bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded font-bold">Completed</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 bg-orange-50 border border-orange-100 rounded-lg">
+                            <div>
+                                <p class="font-bold text-slate-800">MMR Booster (Dose 2)</p>
+                                <p class="text-[10px] text-orange-700">Upcoming: Month 18 (Scheduled Nov 2026)</p>
+                            </div>
+                            <span class="bg-orange-500 text-white text-[9px] px-2 py-0.5 rounded font-bold">Upcoming</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maternal Health & Micronutrient Checkpoints -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Maternal Wellness & Supplements</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="p-3 bg-amber-50 rounded-lg border border-amber-100">
+                            <p class="text-[10px] text-amber-700 font-bold uppercase">Postnatal Wellness</p>
+                            <p class="text-xs font-bold text-slate-800 mt-1">6-Week Check Verified</p>
+                            <p class="text-[9px] text-slate-500 mt-0.5">Klinik Kesihatan Sync</p>
+                        </div>
+                        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                            <p class="text-[10px] text-emerald-700 font-bold uppercase">Micronutrient Intake</p>
+                            <p class="text-xs font-bold text-slate-800 mt-1">Iron & Folic Acid</p>
+                            <p class="text-[9px] text-emerald-600 mt-0.5">Streak: 24 Days Active</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pediatric Visit Logger -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Health Visit Logs</h3>
+                    <div class="flex justify-between items-center text-xs py-2 border-b border-slate-100">
+                        <div>
+                            <p class="font-semibold text-slate-800">12-Month Pediatric Review</p>
+                            <p class="text-[10px] text-slate-400">Motor Skills & Hearing Check: Normal</p>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-mono">12/08/2026</span>
+                    </div>
+                    <button onclick="alert('Digital health log entry saved!')" class="w-full bg-amber-500 text-white py-2 rounded-xl font-semibold text-xs shadow hover:bg-amber-600 transition mt-2">
+                        + Log Clinic Visit / Supplement Intake
+                    </button>
                 </div>
             `,
             lapaq: `
