@@ -34,10 +34,10 @@
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
-                <h1 id="app-title" class="text-lg font-bold text-slate-900">Authentication</h1>
+                <h1 id="app-title" class="text-lg font-bold text-slate-900">Registration Gateway</h1>
             </div>
-            <button onclick="switchTab('auth')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
-                Auth
+            <button onclick="switchTab('layer1')" class="px-3 py-1.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-[10px] hover:bg-slate-200 transition">
+                🚪 Logout / Auth
             </button>
         </header>
         <!-- Main Scrollable Screen Content Area -->
@@ -49,6 +49,10 @@
         <!-- Bottom Navigation Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                <span class="text-[8px] font-medium">Register</span>
+            </button>
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span class="text-[8px] font-medium">Home</span>
             </button>
@@ -62,7 +66,7 @@
             </button>
             <button onclick="switchTab('school')" id="nav-school" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                <span class="text-[8px] font-medium">School</span>
+                <span id="nav-label-partner" class="text-[8px] font-medium">Dashboard</span>
             </button>
             <button onclick="switchTab('scanner')" id="nav-scanner" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4m10-14h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4"/></svg>
@@ -78,8 +82,10 @@
     <script>
         let html5QrCode = null;
         let selectedChild = 'adam'; 
-        let currentAuthTab = 'login'; 
-        let currentUserRole = 'parent'; // 'parent' or 'school'
+        let currentAuthTab = 'register'; 
+        let currentUserRole = 'parent'; // 'parent' or 'partner'
+        let currentPartnerView = 'dashboard'; 
+        let activeParticipantGroup = '';
 
         const childrenData = {
             adam: {
@@ -88,10 +94,13 @@
                 gender: "Boy",
                 school: "SK Petaling Jaya",
                 token: "#AB-34X-KEMAIH",
-                height: "132.5 cm",
+                height: 132.5,
+                weight: 28.2,
                 haz: "+0.25 (Normal)",
                 bmi: "16.1 kg/m²",
                 baz: "-0.10 (Normal)",
+                stuntingStatus: "Normal Height-for-Age (No Stunting)",
+                wastingStatus: "Normal BMI-for-Age (No Wasting/Overweight)",
                 playTime: "90 Mins",
                 tokensEarned: 5,
                 ecoTokens: 3,
@@ -107,10 +116,13 @@
                 gender: "Girl",
                 school: "Taska Permata KEMAS Petaling Jaya",
                 token: "#MY-99Z-PERMATA",
-                height: "108.2 cm",
+                height: 108.2,
+                weight: 18.0,
                 haz: "+0.10 (Normal)",
                 bmi: "15.4 kg/m²",
                 baz: "+0.05 (Normal)",
+                stuntingStatus: "Normal Height-for-Age (No Stunting)",
+                wastingStatus: "Normal BMI-for-Age (No Wasting/Overweight)",
                 playTime: "60 Mins",
                 tokensEarned: 2,
                 ecoTokens: 2,
@@ -121,52 +133,47 @@
                 rniClaimed: false
             }
         };
-        function renderAuthPage() {
+
+        const participantGroups = {
+            "Year 2A (Cemerlang)": [
+                { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendance: "Present", rni: "95% (Met)", status: "Normal" },
+                { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendance: "Present", rni: "92% (Met)", status: "Normal" },
+                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendance: "Present", rni: "88% (Met)", status: "Overweight Risk" },
+                { name: "Siti Zulaikha", token: "#SZ-44K-PJ03", attendance: "Late", rni: "90% (Met)", status: "Normal" },
+                { name: "Dev Nathan", token: "#DN-77L-PJ04", attendance: "Present", rni: "100% (Met)", status: "Normal" }
+            ],
+            "Year 1A (Pintar)": [
+                { name: "Afiq Haziq", token: "#AH-11P-PJ10", attendance: "Present", rni: "91% (Met)", status: "Normal" },
+                { name: "Chloe Lim", token: "#CL-22Q-PJ11", attendance: "Present", rni: "96% (Met)", status: "Normal" },
+                { name: "Haris Iskandar", token: "#HI-33R-PJ12", attendance: "Absent", rni: "N/A", status: "Stunting Alert" }
+            ]
+        };
+
+        // Layer 1: Registration Page (Authentication Gateway)
+        function renderRegistrationPage() {
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">ChildESG™ Gateway</span>
-                    <h2 class="text-xl font-bold">Account Authentication</h2>
-                    <p class="text-xs text-slate-300">Sign in or register as Parent or School Administrator</p>
+                    <h2 class="text-xl font-bold">Registration & Authentication</h2>
+                    <p class="text-xs text-slate-300">Sign in or register as Parent or Organization Partner</p>
                 </div>
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
                     <div class="flex bg-slate-100 p-1 rounded-xl">
-                        <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
-                            🔐 Login
-                        </button>
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
                             📝 Register
                         </button>
-                    </div>
-                    
-                    <!-- LOGIN FORM -->
-                    <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
-                            <select id="login-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-bold text-slate-800">
-                                <option value="parent">👤 Parent / Guardian Account</option>
-                                <option value="school">🏫 School / Teacher Administrator Account</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Username / Email</label>
-                            <input type="text" placeholder="e.g. guardian123 or teacher@skpj.edu.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Password</label>
-                            <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">
-                            Sign In → Access Dashboard
+                        <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">
+                            🔐 Login
                         </button>
                     </div>
-
+                    
                     <!-- REGISTER FORM -->
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Register Role</label>
                             <select id="register-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 font-bold text-slate-800">
                                 <option value="parent">👤 Parent / Guardian Account</option>
-                                <option value="school">🏫 School / Teacher Administrator Account</option>
+                                <option value="partner">🏢 Organization Partner Account</option>
                             </select>
                         </div>
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
@@ -174,8 +181,8 @@
                             <p class="text-[10px] text-blue-600 mt-0.5">Registration creates your account and registers PDPA hashing consent.</p>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name / Institutional Name</label>
-                            <input type="text" placeholder="e.g. Guardian Name or School Admin" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name / Organization Name</label>
+                            <input type="text" placeholder="e.g. Guardian Name or Organization" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
@@ -194,52 +201,288 @@
                             </div>
                             <div class="flex items-start space-x-2">
                                 <input type="checkbox" id="pdpa2" checked class="mt-0.5 rounded text-blue-600 h-3 w-3">
-                                <label for="pdpa2" class="text-[10px] text-slate-600">I authorize tokenized institutional/health monitoring.</label>
+                                <label for="pdpa2" class="text-[10px] text-slate-600">I authorize tokenized participant/health monitoring.</label>
                             </div>
                         </div>
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">
-                            ✓ Register & Proceed to Dashboard
+                            ✓ Register & Go to Home Profile
+                        </button>
+                    </div>
+
+                    <!-- LOGIN FORM -->
+                    <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
+                            <select id="login-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-bold text-slate-800">
+                                <option value="parent">👤 Parent / Guardian Account</option>
+                                <option value="partner">🏢 Organization Partner Account</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Username / Email</label>
+                            <input type="text" placeholder="e.g. guardian123 or partner@organization.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Password</label>
+                            <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                        </div>
+                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">
+                            Sign In → Go to Home Profile
                         </button>
                     </div>
                 </div>
             `;
         }
+
         function setAuthMode(mode) {
             currentAuthTab = mode;
-            switchTab('auth');
+            switchTab('layer1');
         }
+
         function handleLoginSubmit() {
             const roleSelect = document.getElementById('login-role-select');
             currentUserRole = roleSelect ? roleSelect.value : 'parent';
-
-            if (currentUserRole === 'school') {
-                alert("School Teacher/Admin authenticated successfully! Redirecting to School Dashboard...");
-                switchTab('school');
-            } else {
-                alert("Parent authenticated successfully! Proceeding to Home & Parent Profile...");
-                switchTab('layer1');
-            }
+            alert("Authenticated successfully! Loading Home Profile...");
+            switchTab('home');
         }
+
         function handleRegisterSubmit() {
             const roleSelect = document.getElementById('register-role-select');
             currentUserRole = roleSelect ? roleSelect.value : 'parent';
-
-            if (currentUserRole === 'school') {
-                alert("School account registered successfully! Redirecting to School Dashboard...");
-                switchTab('school');
-            } else {
-                alert("Parent account registered & PDPA consent stored! Proceeding to Home & Parent Profile...");
-                switchTab('layer1');
-            }
+            alert("Account registered & PDPA consent stored! Loading Home Profile...");
+            switchTab('home');
         }
+
+        // Home Page Profile for Parent Login
+        function renderParentProfilePage() {
+            return `
+                <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
+                    <div>
+                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Profile Home</span>
+                        <h2 class="text-xl font-bold mt-1">Welcome, Ainol Razman</h2>
+                        <p class="text-xs text-emerald-100 mt-0.5">ChildESG™ Guardian Hub & Profile</p>
+                    </div>
+                    <button onclick="document.getElementById('add-child-form').scrollIntoView({behavior: 'smooth'})" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl font-bold transition shadow-inner">
+                        +
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent Account Profile</h3>
+                        <button onclick="switchTab('layer1')" class="text-[10px] text-blue-600 font-bold underline">Auth / Register</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="p-2.5 bg-slate-50 rounded-lg">
+                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Full Name</span>
+                            <span class="font-bold text-slate-800">Ainol Razman</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 rounded-lg">
+                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Mobile Number</span>
+                            <span class="font-bold text-slate-800">012-3456789</span>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-3 space-y-2">
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Demographic Insights</h4>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-medium text-slate-500 mb-1">Age</label>
+                                <input type="number" placeholder="57" value="57" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-medium text-slate-500 mb-1">Profession</label>
+                                <input type="text" value="Technology Founder" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-bold">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-medium text-slate-500 mb-1">Location / State</label>
+                            <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-bold">
+                                <option selected>Selangor / Kuala Lumpur</option>
+                                <option>Johor</option>
+                                <option>Penang</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="alert('Parent profile updated successfully!')" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-xs shadow hover:bg-emerald-700 transition">
+                        ✓ Save Profile Updates
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Children</h3>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Adam (Boy, 8 Yrs)</p>
+                            <p class="text-[10px] text-slate-500">SK Petaling Jaya • Token: #AB-34X-KEMAIH</p>
+                        </div>
+                        <button onclick="switchChildView('adam')" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-sm">
+                            View Profile →
+                        </button>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Maya (Girl, 5 Yrs)</p>
+                            <p class="text-[10px] text-slate-500">Taska Permata KEMAS • Token: #MY-99Z-PERMATA</p>
+                        </div>
+                        <button onclick="switchChildView('maya')" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-sm">
+                            View Profile →
+                        </button>
+                    </div>
+                </div>
+                <div id="add-child-form" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Register New Child</h3>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Name of Child</label>
+                        <input type="text" placeholder="e.g. Adam / Maya" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Gender</label>
+                            <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                                <option>Boy</option>
+                                <option>Girl</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Date of Birth</label>
+                            <input type="date" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">School / Kindergarten</label>
+                        <input type="text" placeholder="e.g. SK Petaling Jaya" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <button onclick="alert('Child registered successfully!')" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-emerald-700 transition mt-2">
+                        + Register Child & Generate Token ID
+                    </button>
+                </div>
+            `;
+        }
+
+        // Home Page Profile for Organization Partner Login
+        function renderPartnerProfilePage() {
+            return `
+                <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Profile Home</span>
+                    <h2 class="text-xl font-bold">Kemaih Impact & Nutrition Network</h2>
+                    <p class="text-xs text-indigo-100">Organization Partner Administrator Profile</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Organization Partner Particulars</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="p-2.5 bg-slate-50 rounded-lg">
+                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Partner ID Code</span>
+                            <span class="font-bold text-slate-800">PRT-9982-MY</span>
+                        </div>
+                        <div class="p-2.5 bg-slate-50 rounded-lg">
+                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Operating Zone</span>
+                            <span class="font-bold text-slate-800">Petaling Utama / KL</span>
+                        </div>
+                    </div>
+                    <button onclick="alert('Partner Profile updated!')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-xs shadow hover:bg-indigo-700 transition">
+                        ✓ Save Partner Profile
+                    </button>
+                </div>
+            `;
+        }
+
+        // Partner Organization Dashboard Layer
+        function renderPartnerDashboard() {
+            if (currentPartnerView === 'group_detail') {
+                return renderParticipantGroupDetails(activeParticipantGroup);
+            }
+            return `
+                <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Portal</span>
+                    <h2 class="text-xl font-bold">Partner Organization Dashboard</h2>
+                    <p class="text-xs text-indigo-100">SK Petaling Jaya & Community Centers • Active Tracking</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Attendance & Plate Metrics</h3>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Live Sync</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-50 p-3 rounded-lg text-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Attendance</p>
+                            <p class="text-lg font-extrabold text-indigo-600 mt-0.5">96.8%</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg text-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Plate Compliance</p>
+                            <p class="text-lg font-extrabold text-emerald-600 mt-0.5">91.4%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">👥 Registered Participants</h3>
+                    <div class="space-y-2">
+                        <div onclick="openParticipantGroup('Year 2A (Cemerlang)')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer transition">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Year 2A (Cemerlang)</p>
+                                <p class="text-[10px] text-slate-500">Participants: 33 • Lead: Cikgu Faridah</p>
+                            </div>
+                            <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
+                        </div>
+                        <div onclick="openParticipantGroup('Year 1A (Pintar)')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer transition">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Year 1A (Pintar)</p>
+                                <p class="text-[10px] text-slate-500">Participants: 32 • Lead: Cikgu Aminah</p>
+                            </div>
+                            <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openParticipantGroup(groupName) {
+            currentPartnerView = 'group_detail';
+            activeParticipantGroup = groupName;
+            switchTab('school');
+        }
+
+        function closeParticipantGroup() {
+            currentPartnerView = 'dashboard';
+            activeParticipantGroup = '';
+            switchTab('school');
+        }
+
+        function renderParticipantGroupDetails(groupName) {
+            const roster = participantGroups[groupName] || [];
+            let html = `
+                <div class="space-y-3">
+                    <button onclick="closeParticipantGroup()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs py-2 px-3 rounded-xl transition flex items-center space-x-1">
+                        <span>← Back to Dashboard</span>
+                    </button>
+                    <div class="bg-gradient-to-br from-indigo-800 to-purple-900 rounded-2xl p-4 text-white shadow-lg space-y-1">
+                        <span class="bg-indigo-500/40 text-[9px] uppercase font-bold px-2 py-0.5 rounded-full">Participants Group</span>
+                        <h2 class="text-lg font-bold">${groupName}</h2>
+                        <p class="text-[11px] text-indigo-200">Registered Participants: ${roster.length} Active Records</p>
+                    </div>
+                    <div class="space-y-2">
+            `;
+            roster.forEach(participant => {
+                html += `
+                    <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                        <div>
+                            <p class="font-bold text-slate-800">${participant.name}</p>
+                            <p class="text-[10px] text-slate-500 font-mono">${participant.token}</p>
+                            <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">RNI: ${participant.rni} • Status: ${participant.status}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="bg-emerald-100 text-emerald-800 text-[9px] px-2 py-1 rounded-full font-bold">${participant.attendance}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+            return html;
+        }
+
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
                         <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
-                        
-                        <!-- Prominent Child Selector Dropdown -->
                         <div class="flex items-center space-x-1.5">
                             <span class="text-[10px] text-slate-300 font-bold uppercase">Child:</span>
                             <select onchange="changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none border border-blue-400 shadow-sm cursor-pointer">
@@ -252,130 +495,86 @@
                         <h2 class="text-xl font-bold">${child.name}'s LaPaQ RNI Intake</h2>
                         <p class="text-xs text-slate-300 mt-0.5">Recommended Nutrient Intake (RNI) compliance profile</p>
                     </div>
-                    <!-- Connect / External Portal Login Button -->
                     <div class="pt-1">
                         <a href="https://lapaq.app:3000/login" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-md transition">
                             <span>🔗 Connect / Login to LaPaQ Portal</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                     </div>
-                    <!-- Balanced Diet Token Status Banner -->
-                    <div id="rni-token-banner" class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
-                        <div>
-                            <p class="text-slate-300 text-[10px] font-bold uppercase">Daily RNI Diet Target</p>
-                            <p class="font-bold text-emerald-400 mt-0.5">${child.rniStatus}</p>
-                        </div>
-                        ${child.rniClaimed 
-                            ? `<span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold border border-emerald-500/40">✓ Token Minted</span>` 
-                            : `<button onclick="claimRNIToken()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">🥗 Claim Nutrition Token</button>`
-                        }
-                    </div>
                 </div>
+
+                <!-- Annual Health & Growth Check & Active Screening Inputs -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
-                    
-                    <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <button onclick="selectTimeSpan('1')" id="ts-1" class="py-1.5 text-[10px] font-bold rounded-lg bg-blue-600 text-white transition">1 Day</button>
-                        <button onclick="selectTimeSpan('7')" id="ts-7" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">7 Days</button>
-                        <button onclick="selectTimeSpan('30')" id="ts-30" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">30 Days</button>
-                        <button onclick="selectTimeSpan('90')" id="ts-90" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">90 Days</button>
-                        <button onclick="selectTimeSpan('365')" id="ts-365" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">365 Days</button>
-                        <button onclick="selectTimeSpan('custom')" id="ts-custom" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">Selected Dates</button>
-                    </div>
-                    <div id="custom-date-picker" class="hidden pt-2 flex space-x-2">
-                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">RNI Intake Compliance (${child.name})</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Target Met</span>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 Annual Health & Growth Check</h3>
+                        <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
                     </div>
-                    <!-- Macro & Micronutrient Progress Bars -->
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Calories (Energy)</span>
-                            <span class="text-slate-800">1,620 / 1,800 kcal <span class="text-emerald-600 font-bold">(90%)</span></span>
+                    <p class="text-[10px] text-slate-500">Input height and weight to automatically analyze Stunting (HAZ), Wasting, and Overweight/Obesity (BMI).</p>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Height (cm)</label>
+                            <input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 font-bold">
                         </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-emerald-500 h-full w-[90%]"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Carbohydrate</span>
-                            <span class="text-slate-800">225 / 240 g <span class="text-emerald-600 font-bold">(94%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-blue-500 h-full w-[94%]"></div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Weight (kg)</label>
+                            <input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 font-bold">
                         </div>
                     </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Protein</span>
-                            <span class="text-slate-800">42 / 45 g <span class="text-emerald-600 font-bold">(93%)</span></span>
+
+                    <div id="growth-evaluation-box" class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-slate-500 font-semibold">Calculated BMI:</span>
+                            <span id="res-bmi" class="font-bold text-slate-800">${child.bmi}</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-indigo-500 h-full w-[93%]"></div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500 font-semibold">Stunting Status (HAZ):</span>
+                            <span id="res-stunting" class="font-bold text-emerald-600">${child.stuntingStatus}</span>
                         </div>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Fiber</span>
-                            <span class="text-slate-800">18 / 20 g <span class="text-emerald-600 font-bold">(90% Target Met)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-amber-500 h-full w-[90%]"></div>
-                        </div>
-                    </div>
-                    <!-- Micronutrients: Vitamin A & Vitamin C -->
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Vitamin A</span>
-                            <span class="text-slate-800">480 / 500 µg RE <span class="text-emerald-600 font-bold">(96%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-orange-500 h-full w-[96%]"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Vitamin C</span>
-                            <span class="text-slate-800">38 / 40 mg <span class="text-emerald-600 font-bold">(95%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-rose-500 h-full w-[95%]"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Sodium</span>
-                            <span class="text-slate-800">1,100 / 1,500 mg <span class="text-emerald-600 font-bold">(Optimal)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-teal-500 h-full w-[73%]"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Calcium</span>
-                            <span class="text-slate-800">680 / 800 mg <span class="text-emerald-600 font-bold">(85%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-purple-500 h-full w-[85%]"></div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-500 font-semibold">Wasting / Obesity (BAZ):</span>
+                            <span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span>
                         </div>
                     </div>
                 </div>
             `;
         }
+
+        function recalculateGrowthMetrics() {
+            const h = parseFloat(document.getElementById('input-height').value) || 100;
+            const w = parseFloat(document.getElementById('input-weight').value) || 15;
+            const heightInMeters = h / 100;
+            const bmiValue = (w / (heightInMeters * heightInMeters)).toFixed(1);
+
+            let stunting = "Normal Height-for-Age (No Stunting)";
+            let wasting = "Normal BMI-for-Age (Optimal)";
+
+            if (h < 110 && selectedChild === 'adam') {
+                stunting = "⚠️ Moderate Stunting Risk Detected";
+            }
+            if (bmiValue > 18.5) {
+                wasting = "⚠️ Overweight / Obesity Risk";
+            } else if (bmiValue < 13.5) {
+                wasting = "⚠️ Underweight / Wasting Risk";
+            }
+
+            document.getElementById('res-bmi').innerText = `${bmiValue} kg/m²`;
+            document.getElementById('res-stunting').innerText = stunting;
+            document.getElementById('res-wasting').innerText = wasting;
+
+            childrenData[selectedChild].height = h;
+            childrenData[selectedChild].weight = w;
+            childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
+            childrenData[selectedChild].stuntingStatus = stunting;
+            childrenData[selectedChild].wastingStatus = wasting;
+        }
+
         function renderTokensPage() {
             const child = childrenData[selectedChild];
             return `
                 <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Impact Wallet</span>
-                        
                         <select onchange="changeTokenChild(this.value)" class="bg-amber-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg outline-none border border-amber-500 cursor-pointer">
                             <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>Adam (8 Yrs)</option>
                             <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>Maya (5 Yrs)</option>
@@ -386,74 +585,15 @@
                         <p class="text-xs text-amber-100 mt-0.5">Physical play, eco-habits, school attendance, and social leadership</p>
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 text-center">
-                        <span class="text-lg">🏃</span>
-                        <p class="text-[8px] text-slate-400 font-bold uppercase mt-0.5">Impact</p>
-                        <p class="text-base font-extrabold text-amber-600">${child.tokensEarned}</p>
-                    </div>
-                    <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 text-center">
-                        <span class="text-lg">🌱</span>
-                        <p class="text-[8px] text-slate-400 font-bold uppercase mt-0.5">Eco</p>
-                        <p class="text-base font-extrabold text-teal-600">${child.ecoTokens}</p>
-                    </div>
-                    <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 text-center bg-emerald-50/30">
-                        <span class="text-lg">🥗</span>
-                        <p class="text-[8px] text-emerald-700 font-bold uppercase mt-0.5">Nutrition</p>
-                        <p class="text-base font-extrabold text-emerald-600">${child.nutritionTokens}</p>
-                    </div>
-                    <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 text-center col-span-1.5 bg-blue-50/30">
-                        <span class="text-lg">📚</span>
-                        <p class="text-[8px] text-blue-700 font-bold uppercase mt-0.5">School</p>
-                        <p class="text-base font-extrabold text-blue-600">${child.schoolTokens}</p>
-                    </div>
-                    <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 text-center col-span-1.5 bg-purple-50/30">
-                        <span class="text-lg">🤝</span>
-                        <p class="text-[8px] text-purple-700 font-bold uppercase mt-0.5">Community</p>
-                        <p class="text-base font-extrabold text-purple-600">${child.communityTokens}</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">Available Rewards</h3>
-                    
-                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">🥗 Healthy Canteen Meal Voucher</p>
-                            <p class="text-[10px] text-slate-500">Requires 2 Nutrition Tokens</p>
-                        </div>
-                        <button onclick="alert('Reward redeemed successfully!')" class="text-[10px] bg-emerald-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-emerald-700 transition">
-                            Redeem
-                        </button>
-                    </div>
-                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">📚 Student Excellence Badge</p>
-                            <p class="text-[10px] text-slate-500">Requires 3 School Tokens</p>
-                        </div>
-                        <button onclick="alert('Reward redeemed successfully!')" class="text-[10px] bg-blue-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-blue-700 transition">
-                            Redeem
-                        </button>
-                    </div>
-                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
-                        <div>
-                            <p class="text-xs font-bold text-slate-800">🤝 Peer Helper Leadership Award</p>
-                            <p class="text-[10px] text-slate-500">Requires 2 Community Tokens</p>
-                        </div>
-                        <button onclick="alert('Reward redeemed successfully!')" class="text-[10px] bg-purple-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-purple-700 transition">
-                            Redeem
-                        </button>
-                    </div>
-                </div>
             `;
         }
+
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             return `
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-indigo-400/30 pb-2.5">
                         <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Children Profile</span>
-                        
-                        <!-- Prominent Child Selector Dropdown -->
                         <div class="flex items-center space-x-1.5">
                             <span class="text-[10px] text-indigo-200 font-bold uppercase">Child:</span>
                             <select onchange="switchChildView(this.value)" class="bg-white text-indigo-900 text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none shadow-sm cursor-pointer border border-indigo-200">
@@ -466,348 +606,10 @@
                         <h2 class="text-xl font-bold">${child.name}'s Passport</h2>
                         <p class="text-xs text-indigo-100">${child.age} •${child.school}</p>
                     </div>
-                    <div class="bg-white/10 rounded-xl p-3 flex justify-between items-center text-xs">
-                        <div>
-                            <p class="text-indigo-200">Hashed Student Token</p>
-                            <p class="font-mono font-bold tracking-wider">${child.token}</p>
-                        </div>
-                        <span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">PDPA Active</span>
-                    </div>
-                </div>
-                <div class="flex space-x-2 overflow-x-auto py-1 hide-scrollbar">
-                    <button onclick="switchChildView('adam')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'adam' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
-                        <p class="text-xs font-bold text-slate-800">Adam</p>
-                        <p class="text-[10px] text-slate-500">SK Petaling Jaya</p>
-                    </button>
-                    <button onclick="switchChildView('maya')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'maya' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
-                        <p class="text-xs font-bold text-slate-800">Maya</p>
-                        <p class="text-[10px] text-slate-500">Taska Permata KEMAS</p>
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth Trajectory (WHO Standards)</h3>
-                        <span class="text-[10px] bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded-full">Healthy</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                            <p class="text-[10px] text-emerald-600 font-semibold uppercase">Height-for-Age</p>
-                            <p class="text-base font-bold text-slate-800 mt-0.5">${child.height}</p>
-                            <p class="text-[10px] text-emerald-700 mt-1 font-medium">HAZ: ${child.haz}</p>
-                        </div>
-                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
-                            <p class="text-[10px] text-blue-600 font-semibold uppercase">BMI-for-Age</p>
-                            <p class="text-base font-bold text-slate-800 mt-0.5">${child.bmi}</p>
-                            <p class="text-[10px] text-blue-700 mt-1 font-medium">BAZ: ${child.baz}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🌱 Eco-Habits & Zero Waste</h3>
-                        <span id="eco-token-badge" class="text-[10px] bg-teal-50 text-teal-700 font-bold px-2 py-0.5 rounded-full">${child.ecoTokens} Eco Tokens</span>
-                    </div>
-                    <p class="text-[11px] text-slate-600">Scan station QR code or upload live camera photo evidence for recycling and zero food waste.</p>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Eco Habit</label>
-                        <select id="eco-habit-type" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-teal-500">
-                            <option value="Zero Food Waste">🍽️ Clean Plate / Zero Food Waste</option>
-                            <option value="Plastic/Paper Recycling">♻️ Plastic Bottle & Paper Recycling</option>
-                            <option value="Reusable Container">🍱 Reusable Lunch Box & Tumbler</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="switchTab('scanner')" class="bg-slate-800 text-white py-2 rounded-lg font-bold text-xs shadow hover:bg-slate-700 transition">
-                            📷 Scan Station QR
-                        </button>
-                        <button onclick="logEcoHabitPhoto()" class="bg-teal-600 text-white py-2 rounded-lg font-bold text-xs shadow hover:bg-teal-700 transition">
-                            ⚡ AI Photo Capture
-                        </button>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">📚 School Attendance & Engagement</h3>
-                        <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">${child.schoolTokens} School Tokens</span>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-blue-50/50 rounded-lg flex justify-between items-center border border-blue-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">⏰ Punctual Daily Check-in</p>
-                                <p class="text-[10px] text-slate-500">On-time morning arrival at ${child.school}</p>
-                            </div>
-                            <button onclick="claimSchoolToken('Punctual Attendance')" class="text-[10px] bg-blue-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-blue-700 transition">
-                                + Log Arrival
-                            </button>
-                        </div>
-                        <div class="p-2.5 bg-blue-50/50 rounded-lg flex justify-between items-center border border-blue-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">🩺 Annual Health & Growth Check</p>
-                                <p class="text-[10px] text-slate-500">WHO HAZ/BAZ height & weight screening completed</p>
-                            </div>
-                            <button onclick="claimSchoolToken('Growth Screening')" class="text-[10px] bg-blue-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-blue-700 transition">
-                                + Log Check
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🤝 Social Responsibility & Leadership</h3>
-                        <span class="text-[10px] bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">${child.communityTokens} Community Tokens</span>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-purple-50/50 rounded-lg flex justify-between items-center border border-purple-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">🧑‍🤝‍🧑 Peer Buddy Assistance</p>
-                                <p class="text-[10px] text-slate-500">Helping peers during canteen & PE sessions</p>
-                            </div>
-                            <button onclick="claimCommunityToken('Peer Buddy')" class="text-[10px] bg-purple-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-purple-700 transition">
-                                + Log Duty
-                            </button>
-                        </div>
-                        <div class="p-2.5 bg-purple-50/50 rounded-lg flex justify-between items-center border border-purple-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">💡 Classroom Energy-Saving Captain</p>
-                                <p class="text-[10px] text-slate-500">Turning off classroom lights and air conditioning</p>
-                            </div>
-                            <button onclick="claimCommunityToken('Energy Captain')" class="text-[10px] bg-purple-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-purple-700 transition">
-                                + Log Duty
-                            </button>
-                        </div>
-                    </div>
                 </div>
             `;
         }
-        function renderSchoolPage() {
-            return `
-                <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Institutional Portal</span>
-                    <h2 class="text-xl font-bold">School & Teacher Dashboard</h2>
-                    <p class="text-xs text-indigo-100">SK Petaling Jaya • Years 1 to 6 (Classes A–D)</p>
-                </div>
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Overall Attendance & RNI Metrics</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Live Sync</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-slate-50 p-3 rounded-lg text-center">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Class Attendance</p>
-                            <p class="text-lg font-extrabold text-indigo-600 mt-0.5">96.8%</p>
-                        </div>
-                        <div class="bg-slate-50 p-3 rounded-lg text-center">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Plate Compliance</p>
-                            <p class="text-lg font-extrabold text-emerald-600 mt-0.5">91.4%</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- YEAR 1 -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">🎒 Year 1 Classes (A – D)</h3>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 1A (Pintar)</p>
-                                <p class="text-[10px] text-slate-500">Students: 32 • Teacher: Cikgu Aminah</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">98% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 1B (Cerdik)</p>
-                                <p class="text-[10px] text-slate-500">Students: 30 • Teacher: Cikgu Rahmat</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">95% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 1C (Bijak)</p>
-                                <p class="text-[10px] text-slate-500">Students: 31 • Teacher: Cikgu Siti</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">96% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 1D (Aktif)</p>
-                                <p class="text-[10px] text-slate-500">Students: 29 • Teacher: Cikgu Kumar</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">94% Present</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- YEAR 2 -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">🎒 Year 2 Classes (A – D)</h3>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 2A (Cemerlang) - <span class="text-blue-600">Adam's Class</span></p>
-                                <p class="text-[10px] text-slate-500">Students: 33 • Teacher: Cikgu Faridah</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">100% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 2B (Dedikasi)</p>
-                                <p class="text-[10px] text-slate-500">Students: 32 • Teacher: Cikgu Azman</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">97% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 2C (Inovatif)</p>
-                                <p class="text-[10px] text-slate-500">Students: 30 • Teacher: Cikgu Ling</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">93% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 2D (Dinamik)</p>
-                                <p class="text-[10px] text-slate-500">Students: 31 • Teacher: Cikgu Ravi</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">95% Present</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- YEAR 3 -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">🎒 Year 3 Classes (A – D)</h3>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 3A (Jujur)</p>
-                                <p class="text-[10px] text-slate-500">Students: 34 • Teacher: Cikgu Halim</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">96% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 3B (Setia)</p>
-                                <p class="text-[10px] text-slate-500">Students: 32 • Teacher: Cikgu Noraini</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">95% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 3C (Maju)</p>
-                                <p class="text-[10px] text-slate-500">Students: 30 • Teacher: Cikgu Wong</p>
-                            </div>
-                            <span class="text-[9px] bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg font-bold">91% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 3D (Usaha)</p>
-                                <p class="text-[10px] text-slate-500">Students: 31 • Teacher: Cikgu Devi</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">97% Present</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- YEAR 4 -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-purple-700 uppercase tracking-wider border-b border-slate-100 pb-2">🎓 Year 4 Classes (A – D)</h3>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 4A (Tekun)</p>
-                                <p class="text-[10px] text-slate-500">Students: 35 • Teacher: Cikgu Zulkifli</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">98% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 4B (Effisien)</p>
-                                <p class="text-[10px] text-slate-500">Students: 32 • Teacher: Cikgu Rosnah</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">94% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 4C (Proaktif)</p>
-                                <p class="text-[10px] text-slate-500">Students: 33 • Teacher: Cikgu Lee</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">96% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 4D (Gigih)</p>
-                                <p class="text-[10px] text-slate-500">Students: 30 • Teacher: Cikgu Muthu</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">95% Present</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- YEAR 5 -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-purple-700 uppercase tracking-wider border-b border-slate-100 pb-2">🎓 Year 5 Classes (A – D)</h3>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 5A (Amanah)</p>
-                                <p class="text-[10px] text-slate-500">Students: 34 • Teacher: Cikgu Khairul</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">97% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 5B (Ikhlas)</p>
-                                <p class="text-[10px] text-slate-500">Students: 32 • Teacher: Cikgu Salmah</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">94% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 5C (Muafakat)</p>
-                                <p class="text-[10px] text-slate-500">Students: 31 • Teacher: Cikgu Tan</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">96% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 5D (Muhibbah)</p>
-                                <p class="text-[10px] text-slate-500">Students: 30 • Teacher: Cikgu Arumugam</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">92% Present</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- YEAR 6 -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-purple-700 uppercase tracking-wider border-b border-slate-100 pb-2">🎓 Year 6 Classes (A – D)</h3>
-                    <div class="space-y-2">
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 6A (Bestari)</p>
-                                <p class="text-[10px] text-slate-500">Students: 36 • Teacher: Cikgu Razak</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">99% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 6B (Wawasan)</p>
-                                <p class="text-[10px] text-slate-500">Students: 34 • Teacher: Cikgu Norizan</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">95% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 6C (Gemilang)</p>
-                                <p class="text-[10px] text-slate-500">Students: 33 • Teacher: Cikgu Ng</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">97% Present</span>
-                        </div>
-                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div>
-                                <p class="text-xs font-bold text-slate-800">Year 6D (Terbilang)</p>
-                                <p class="text-[10px] text-slate-500">Students: 32 • Teacher: Cikgu Subramaniam</p>
-                            </div>
-                            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-lg font-bold">94% Present</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+
         function changeLaPaQChild(childKey) {
             selectedChild = childKey;
             switchTab('lapaq');
@@ -820,39 +622,14 @@
             selectedChild = childKey;
             switchTab('layer3');
         }
-        function claimRNIToken() {
-            const child = childrenData[selectedChild];
-            child.rniClaimed = true;
-            child.nutritionTokens += 1;
-            alert(`🎉 Daily RNI Balanced Diet Target Met! 1 Nutrition Token (🥗) minted directly to ${child.name}'s Impact Wallet.`);
-            switchTab('lapaq');
-        }
-        function logEcoHabitPhoto() {
-            const habit = document.getElementById('eco-habit-type').value;
-            const child = childrenData[selectedChild];
-            child.ecoTokens += 1;
-            alert(`🛡️ Anti-Cheat AI Verification Passed for [${habit}]!\nPerceptual hash verified • Geofence: Petaling Jaya Zone A.\n🎉 1 Eco-Token (🌱) minted to ${child.name}.`);
-            switchTab('layer3');
-        }
-        function claimSchoolToken(activity) {
-            const child = childrenData[selectedChild];
-            child.schoolTokens += 1;
-            alert(`📚 School Engagement Verified: [${activity}]!\n1 School Token (📚) minted to ${child.name}'s profile.`);
-            switchTab('layer3');
-        }
-        function claimCommunityToken(duty) {
-            const child = childrenData[selectedChild];
-            child.communityTokens += 1;
-            alert(`🤝 Peer Leadership Verified: [${duty}]!\n1 Community Token (🤝) minted to ${child.name}'s profile.`);
-            switchTab('layer3');
-        }
+
         const contentData = {
-            auth: renderAuthPage(),
-            layer1: ``, // Handled dynamically
-            layer3: ``, // Handled dynamically
-            tokens: ``, // Handled dynamically
-            lapaq: ``, // Handled dynamically
-            school: ``, // Handled dynamically
+            layer1: ``, 
+            home: ``, 
+            layer3: ``, 
+            tokens: ``, 
+            lapaq: ``, 
+            school: ``, 
             scanner: `
                 <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
@@ -868,55 +645,59 @@
                 </div>
             `
         };
+
         function switchTab(tabKey) {
-            // Role-based security checks:
-            // 1. School login cannot access parent/child profile, token wallet, or LaPaQ analytics tabs
-            if (currentUserRole === 'school' && ['layer1', 'layer3', 'tokens', 'lapaq'].includes(tabKey)) {
-                alert("🔒 Access Restricted: School Teacher accounts can only view the School Dashboard and QR Scanner.");
+            if (currentUserRole === 'partner' && ['home', 'layer3', 'tokens', 'lapaq'].includes(tabKey)) {
+                alert("🔒 Access Restricted: Organization Partner accounts can only view Partner Profile/Dashboard and QR Scanner.");
                 return;
             }
-            // 2. Parent login cannot access the School Dashboard tab
             if (currentUserRole === 'parent' && tabKey === 'school') {
-                alert("🔒 Access Restricted: Parent accounts do not have access to the School Administrator Dashboard.");
+                alert("🔒 Access Restricted: Parent accounts do not have access to the Partner Organization Dashboard.");
                 return;
             }
 
             if (html5QrCode && tabKey !== 'scanner') {
                 try { html5QrCode.stop(); } catch(e){}
             }
+
             const titles = {
-                auth: "Authentication",
-                layer1: "Home & Profile",
+                layer1: "Registration Gateway",
+                home: currentUserRole === 'partner' ? "Partner Profile Home" : "Parent Profile Home",
                 layer3: "Children Profile",
                 lapaq: "LaPaQ RNI Analytics",
-                school: "School Dashboard",
+                school: "Partner Dashboard",
                 scanner: "QR Code Scanner",
                 tokens: "Impact Tokens Wallet"
             };
             
             const titleElem = document.getElementById('app-title');
             if (titleElem) titleElem.innerText = titles[tabKey] || "ChildESG™ Mobile";
+
+            const partnerLabel = document.getElementById('nav-label-partner');
+            if (partnerLabel) partnerLabel.innerText = currentUserRole === 'partner' ? "Dashboard" : "Partner";
             
             const contentElem = document.getElementById('app-content');
             if (contentElem) {
-                if (tabKey === 'layer3') {
+                if (tabKey === 'layer1') {
+                    contentElem.innerHTML = renderRegistrationPage();
+                } else if (tabKey === 'home') {
+                    contentElem.innerHTML = currentUserRole === 'partner' ? renderPartnerProfilePage() : renderParentProfilePage();
+                } else if (tabKey === 'layer3') {
                     contentElem.innerHTML = renderChildProfile(selectedChild);
-                } else if (tabKey === 'auth') {
-                    contentElem.innerHTML = renderAuthPage();
                 } else if (tabKey === 'lapaq') {
                     contentElem.innerHTML = renderLaPaQPage();
                 } else if (tabKey === 'tokens') {
                     contentElem.innerHTML = renderTokensPage();
                 } else if (tabKey === 'school') {
-                    contentElem.innerHTML = renderSchoolPage();
+                    contentElem.innerHTML = renderPartnerDashboard();
                 } else {
-                    contentElem.innerHTML = contentData[tabKey] || contentData['auth'];
+                    contentElem.innerHTML = contentData[tabKey] || contentData['layer1'];
                 }
             }
-            ['layer1', 'layer3', 'lapaq', 'school', 'scanner', 'tokens'].forEach(key => {
+            ['layer1', 'home', 'layer3', 'lapaq', 'school', 'scanner', 'tokens'].forEach(key => {
                 const btn = document.getElementById(`nav-${key}`);
                 if (btn) {
-                    if (key === tabKey) {
+                    if (key === tabKey || (currentUserRole === 'partner' && key === 'school' && tabKey === 'home')) {
                         btn.classList.remove('text-slate-400');
                         btn.classList.add('text-emerald-600');
                     } else {
@@ -926,26 +707,7 @@
                 }
             });
         }
-        function selectTimeSpan(span) {
-            ['1', '7', '30', '90', '365', 'custom'].forEach(s => {
-                const btn = document.getElementById(`ts-${s}`);
-                if (btn) {
-                    if (s === span) {
-                        btn.className = "py-1.5 text-[10px] font-bold rounded-lg bg-blue-600 text-white transition";
-                    } else {
-                        btn.className = "py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition";
-                    }
-                }
-            });
-            const customPicker = document.getElementById('custom-date-picker');
-            if (customPicker) {
-                if (span === 'custom') {
-                    customPicker.classList.remove('hidden');
-                } else {
-                    customPicker.classList.add('hidden');
-                }
-            }
-        }
+
         function startScanner() {
             if (typeof Html5Qrcode !== 'undefined') {
                 html5QrCode = new Html5Qrcode("reader");
@@ -964,9 +726,9 @@
                 document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
             }
         }
-        // Initialize default view safely after DOM loads
+
         window.addEventListener('DOMContentLoaded', () => {
-            switchTab('auth');
+            switchTab('layer1');
         });
     </script>
 </body>
