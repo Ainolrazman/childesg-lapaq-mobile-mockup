@@ -36,10 +36,10 @@
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">Kemaih Ecosystem</span>
-                <h1 id="app-title" class="text-lg font-bold text-slate-900">Registration (Layer 1)</h1>
+                <h1 id="app-title" class="text-lg font-bold text-slate-900">Home</h1>
             </div>
-            <button onclick="switchTab('layer1')" class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs hover:bg-blue-200 transition">
-                PDPA
+            <button onclick="switchTab('layer2')" class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:bg-emerald-200 transition">
+                Profile
             </button>
         </header>
 
@@ -50,17 +50,13 @@
 
         <!-- Bottom Navigation Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
-            <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-blue-600 transition-all">
-                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span class="text-[8px] font-medium">Layer 1</span>
-            </button>
-            <button onclick="switchTab('layer2')" id="nav-layer2" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span class="text-[8px] font-medium">Layer 2</span>
+            <button onclick="switchTab('layer2')" id="nav-layer2" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[8px] font-medium">Home</span>
             </button>
             <button onclick="switchTab('layer3')" id="nav-layer3" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span class="text-[8px] font-medium">Layer 3</span>
+                <span class="text-[8px] font-medium">Children Profile</span>
             </button>
             <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -84,73 +80,66 @@
     <!-- App JavaScript Logic -->
     <script>
         let html5QrCode = null;
-        let selectedTimeSpan = '7'; // Default 7 days
+        let selectedChild = 'adam'; // Default active child
+
+        const childrenData = {
+            adam: {
+                name: "Adam",
+                age: "8 Yrs Old",
+                gender: "Boy",
+                school: "SK Petaling Jaya",
+                token: "#AB-34X-KEMAIH",
+                height: "132.5 cm",
+                haz: "+0.25 (Normal)",
+                bmi: "16.1 kg/m²",
+                baz: "-0.10 (Normal)",
+                playTime: "90 Mins",
+                tokensEarned: "3 Impact Tokens"
+            },
+            maya: {
+                name: "Maya",
+                age: "5 Yrs Old",
+                gender: "Girl",
+                school: "Taska Flabee",
+                token: "#MY-99Z-FLABEE",
+                height: "108.2 cm",
+                haz: "+0.10 (Normal)",
+                bmi: "15.4 kg/m²",
+                baz: "+0.05 (Normal)",
+                playTime: "60 Mins",
+                tokensEarned: "2 Impact Tokens"
+            }
+        };
 
         const contentData = {
-            // LAYER 1: Registration & PDPA Consent
+            // LAYER 1: Hidden Registration Flow (Accessible from Home)
             layer1: `
                 <div class="bg-gradient-to-br from-blue-700 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Portal Entry (Layer 1)</span>
-                    <h2 class="text-xl font-bold mt-1">Parent Account Registration</h2>
-                    <p class="text-xs text-blue-100 mt-1">Create account & accept PDPA data protection policies</p>
+                    <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Legal Portal</span>
+                    <h2 class="text-xl font-bold mt-1">PDPA Privacy Registration</h2>
+                    <p class="text-xs text-blue-100 mt-1">Data protection notice & cryptographic hashing consent</p>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Account Credentials</h3>
-                    
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Username</label>
-                        <input type="text" placeholder="e.g. guardian123" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Data Protection Notice</h3>
+                    <div class="p-3 bg-slate-50 rounded-lg text-[11px] text-slate-600 leading-relaxed space-y-2 border border-slate-100">
+                        <p><strong>1. Anonymized Hashing:</strong> Records are converted into token hashes before syncing.</p>
+                        <p><strong>2. Institutional Privacy:</strong> Schools access aggregated metrics without parent credentials.</p>
                     </div>
 
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 mb-1">Full Name</label>
-                        <input type="text" placeholder="e.g. Guardian Name" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Mobile Number</label>
-                            <input type="tel" placeholder="e.g. 012-3456789" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-medium text-slate-600 mb-1">Email Address</label>
-                            <input type="email" placeholder="e.g. parent@example.com" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-3 space-y-2">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">PDPA Data Protection Consent</h3>
-                        <div class="p-3 bg-slate-50 rounded-lg text-[11px] text-slate-600 leading-relaxed space-y-2 border border-slate-100">
-                            <p><strong>1. Anonymized Hashing:</strong> Medical & developmental records are hashed into token keys (e.g. <code>#HASH</code>) before syncing with school portals.</p>
-                            <p><strong>2. Institutional Privacy:</strong> School staff only access aggregated class health metrics without exposing parent personal info.</p>
-                        </div>
-
-                        <div class="space-y-2 pt-1">
-                            <div class="flex items-start space-x-2">
-                                <input type="checkbox" id="pdpa1" checked class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5">
-                                <label for="pdpa1" class="text-[11px] text-slate-700">I agree to the Malaysia PDPA Data Protection & Anonymization Policy.</label>
-                            </div>
-                            <div class="flex items-start space-x-2">
-                                <input type="checkbox" id="pdpa2" checked class="mt-0.5 rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5">
-                                <label for="pdpa2" class="text-[11px] text-slate-700">I authorize tokenized health & nutritional monitoring for registered children.</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="acceptRegistrationAndProceed()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition mt-2">
-                        ✓ Create Account & Proceed to Layer 2 Profile
+                    <button onclick="switchTab('layer2')" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition mt-2">
+                        ✓ Accept & Return to Home
                     </button>
                 </div>
             `,
 
-            // LAYER 2: Parent Profile & Registration of Children
+            // LAYER 2: Home (Parent Profile & Children Registration)
             layer2: `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
                     <div>
-                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Hub (Layer 2)</span>
-                        <h2 class="text-xl font-bold mt-1">Parent Profile & Children Registration</h2>
-                        <p class="text-xs text-emerald-100 mt-0.5">Manage parent details & register new children</p>
+                        <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Dashboard</span>
+                        <h2 class="text-xl font-bold mt-1">Welcome, Ainol</h2>
+                        <p class="text-xs text-emerald-100 mt-0.5">Kemaih Ecosystem Guardian Hub</p>
                     </div>
                     <button onclick="document.getElementById('add-child-form').scrollIntoView({behavior: 'smooth'})" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white text-xl font-bold transition shadow-inner">
                         +
@@ -158,7 +147,10 @@
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent Account Details</h3>
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Parent Account Details</h3>
+                        <button onclick="switchTab('layer1')" class="text-[10px] text-blue-600 font-bold underline">PDPA Terms</button>
+                    </div>
                     
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="p-2.5 bg-slate-50 rounded-lg">
@@ -184,29 +176,18 @@
                             </div>
                             <div>
                                 <label class="block text-[10px] font-medium text-slate-500 mb-1">Profession</label>
-                                <input type="text" placeholder="Technology Startup Founder" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                                <input type="text" placeholder="Technology Founder" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-[10px] font-medium text-slate-500 mb-1">Location / State in Malaysia</label>
+                            <label class="block text-[10px] font-medium text-slate-500 mb-1">Location / State</label>
                             <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
                                 <option>Selangor</option>
                                 <option>W.P. Kuala Lumpur</option>
                                 <option>Johor</option>
                                 <option>Penang</option>
                                 <option>Perak</option>
-                                <option>Kedah</option>
-                                <option>Kelantan</option>
-                                <option>Melaka</option>
-                                <option>Negeri Sembilan</option>
-                                <option>Pahang</option>
-                                <option>Perlis</option>
-                                <option>Sabah</option>
-                                <option>Sarawak</option>
-                                <option>Terengganu</option>
-                                <option>W.P. Labuan</option>
-                                <option>W.P. Putrajaya</option>
                             </select>
                         </div>
                     </div>
@@ -216,7 +197,32 @@
                     </button>
                 </div>
 
-                <!-- Registration of Children in Layer 2 -->
+                <!-- Active Children List -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Children</h3>
+                    
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Adam (Boy, 8 Yrs)</p>
+                            <p class="text-[10px] text-slate-500">SK Petaling Jaya • Token: #AB-34X-KEMAIH</p>
+                        </div>
+                        <button onclick="switchChildView('adam')" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-sm">
+                            View Profile →
+                        </button>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Maya (Girl, 5 Yrs)</p>
+                            <p class="text-[10px] text-slate-500">Taska Flabee • Token: #MY-99Z-FLABEE</p>
+                        </div>
+                        <button onclick="switchChildView('maya')" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition shadow-sm">
+                            View Profile →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Registration of Children in Home -->
                 <div id="add-child-form" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Register New Child</h3>
@@ -247,79 +253,16 @@
                         <input type="text" placeholder="e.g. SK Petaling Jaya / Taska Flabee" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
                     </div>
 
-                    <div class="border-t border-slate-100 pt-3 space-y-2">
-                        <h4 class="text-[11px] font-bold text-slate-700 uppercase">Health Profile & Medical Conditions</h4>
-                        
-                        <div>
-                            <label class="block text-[10px] font-medium text-slate-500 mb-1">1. Allergies (e.g. Seafood, Peanut, Dairy)</label>
-                            <input type="text" placeholder="e.g. Peanuts (or None)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-medium text-slate-500 mb-1">2. Asthmatic Condition</label>
-                            <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500">
-                                <option>No</option>
-                                <option>Yes (Mild)</option>
-                                <option>Yes (Severe)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button onclick="registerChildAndProceed()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-emerald-700 transition mt-2">
-                        + Submit Child Profile & Proceed to Layer 3
+                    <button onclick="alert('Child registered! Viewable under Children Profile.')" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-emerald-700 transition mt-2">
+                        + Register Child & Generate Token ID
                     </button>
                 </div>
             `,
 
-            // LAYER 3: Children Profile & Student Passport
+            // LAYER 3: Children Profile (With Child Selector)
             layer3: `
-                <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Individual Child Record (Layer 3)</span>
-                            <h2 class="text-xl font-bold mt-1">Adam's Impact Passport</h2>
-                            <p class="text-xs text-indigo-100 mt-0.5">8 Yrs Old • SK Petaling Jaya</p>
-                        </div>
-                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center font-bold text-lg">QR</div>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-3 flex justify-between items-center text-xs">
-                        <div>
-                            <p class="text-indigo-200">Hashed Student Token</p>
-                            <p class="font-mono font-bold tracking-wider">#AB-34X-KEMAIH</p>
-                        </div>
-                        <span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">PDPA Sync Active</span>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth & Anthropometrics (WHO Standards)</h3>
-                        <span class="text-[10px] bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded-full">Healthy</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                            <p class="text-[10px] text-emerald-600 font-semibold uppercase">Height-for-Age</p>
-                            <p class="text-base font-bold text-slate-800 mt-0.5">132.5 cm</p>
-                            <p class="text-[10px] text-emerald-700 mt-1 font-medium">HAZ: +0.25 (Normal)</p>
-                        </div>
-                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
-                            <p class="text-[10px] text-blue-600 font-semibold uppercase">BMI-for-Age</p>
-                            <p class="text-base font-bold text-slate-800 mt-0.5">16.1 kg/m²</p>
-                            <p class="text-[10px] text-blue-700 mt-1 font-medium">BAZ: -0.10 (Normal)</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Physical Activity & Time Tokens</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">3 Tokens</span>
-                    </div>
-                    <p class="text-xs text-slate-600">Total Play Time Today: <strong>90 Mins</strong> (Rate: 30 mins = 1 Impact Token)</p>
-                    <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-indigo-700 transition">
-                        📷 Scan Station QR to Log Activity
-                    </button>
+                <div id="child-profile-container">
+                    <!-- Dynamic Child Profile Content Rendered via JavaScript -->
                 </div>
             `,
 
@@ -331,7 +274,6 @@
                     <p class="text-xs text-slate-300 mt-1">Energy tracking & Recommended Nutrient Intake (RNI) compliance</p>
                 </div>
 
-                <!-- Calendar Time Span Selection -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
                     
@@ -350,14 +292,12 @@
                     </div>
                 </div>
 
-                <!-- RNI Status Bar Progress for Intake -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">RNI Intake Compliance</h3>
                         <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Target Met</span>
                     </div>
 
-                    <!-- 1. Calories -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Calories (Energy)</span>
@@ -368,7 +308,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. Carbohydrate -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Carbohydrate</span>
@@ -379,7 +318,6 @@
                         </div>
                     </div>
 
-                    <!-- 3. Protein -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Protein</span>
@@ -390,7 +328,6 @@
                         </div>
                     </div>
 
-                    <!-- 4. Fiber -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Fiber</span>
@@ -401,7 +338,6 @@
                         </div>
                     </div>
 
-                    <!-- 5. Sodium -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Sodium</span>
@@ -412,7 +348,6 @@
                         </div>
                     </div>
 
-                    <!-- 6. Calcium -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Calcium</span>
@@ -422,8 +357,6 @@
                             <div class="bg-purple-500 h-full w-[85%]"></div>
                         </div>
                     </div>
-
-                    <p class="text-[10px] text-slate-400 italic text-center pt-1">Nutritional data mapped against Malaysia RNI & ASEAN Local Food Standards.</p>
                 </div>
             `,
 
@@ -484,45 +417,118 @@
             `
         };
 
+        function renderChildProfile(childKey) {
+            const child = childrenData[childKey];
+            return `
+                <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Children Profile</span>
+                        
+                        <!-- Child Selector Choice -->
+                        <select onchange="switchChildView(this.value)" class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-lg outline-none border border-white/30 cursor-pointer">
+                            <option value="adam" ${childKey === 'adam' ? 'selected' : ''} class="text-slate-800">Adam (8 Yrs)</option>
+                            <option value="maya" ${childKey === 'maya' ? 'selected' : ''} class="text-slate-800">Maya (5 Yrs)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-bold">${child.name}'s Passport</h2>
+                        <p class="text-xs text-indigo-100">${child.age} • ${child.school}</p>
+                    </div>
+
+                    <div class="bg-white/10 rounded-xl p-3 flex justify-between items-center text-xs">
+                        <div>
+                            <p class="text-indigo-200">Hashed Student Token</p>
+                            <p class="font-mono font-bold tracking-wider">${child.token}</p>
+                        </div>
+                        <span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">PDPA Active</span>
+                    </div>
+                </div>
+
+                <!-- Child Quick Switch Cards -->
+                <div class="flex space-x-2 overflow-x-auto py-1 hide-scrollbar">
+                    <button onclick="switchChildView('adam')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'adam' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
+                        <p class="text-xs font-bold text-slate-800">Adam</p>
+                        <p class="text-[10px] text-slate-500">SK Petaling Jaya</p>
+                    </button>
+                    <button onclick="switchChildView('maya')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'maya' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
+                        <p class="text-xs font-bold text-slate-800">Maya</p>
+                        <p class="text-[10px] text-slate-500">Taska Flabee</p>
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth Trajectory (WHO Standards)</h3>
+                        <span class="text-[10px] bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded-full">Healthy</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                            <p class="text-[10px] text-emerald-600 font-semibold uppercase">Height-for-Age</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5">${child.height}</p>
+                            <p class="text-[10px] text-emerald-700 mt-1 font-medium">HAZ: ${child.haz}</p>
+                        </div>
+                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                            <p class="text-[10px] text-blue-600 font-semibold uppercase">BMI-for-Age</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5">${child.bmi}</p>
+                            <p class="text-[10px] text-blue-700 mt-1 font-medium">BAZ: ${child.baz}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Physical Activity & Tokens</h3>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${child.tokensEarned}</span>
+                    </div>
+                    <p class="text-xs text-slate-600">Active Play Today: <strong>${child.playTime}</strong></p>
+                    <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-indigo-700 transition">
+                        📷 Scan Station QR for ${child.name}
+                    </button>
+                </div>
+            `;
+        }
+
+        function switchChildView(childKey) {
+            selectedChild = childKey;
+            switchTab('layer3');
+        }
+
         function switchTab(tabKey) {
             if (html5QrCode && tabKey !== 'scanner') {
                 html5QrCode.stop().catch(() => {});
             }
 
             const titles = {
-                layer1: "Registration (Layer 1)",
-                layer2: "Parent Profile (Layer 2)",
-                layer3: "Children Profile (Layer 3)",
+                layer1: "Legal Registration",
+                layer2: "Home",
+                layer3: "Children Profile",
                 lapaq: "LaPaQ RNI Analytics",
                 school: "School Dashboard",
                 scanner: "QR Code Scanner",
                 sroi: "SROI Dashboard"
             };
             document.getElementById('app-title').innerText = titles[tabKey];
-            document.getElementById('app-content').innerHTML = contentData[tabKey];
+            
+            if (tabKey === 'layer3') {
+                document.getElementById('app-content').innerHTML = renderChildProfile(selectedChild);
+            } else {
+                document.getElementById('app-content').innerHTML = contentData[tabKey];
+            }
 
-            ['layer1', 'layer2', 'layer3', 'lapaq', 'school', 'scanner', 'sroi'].forEach(key => {
+            ['layer2', 'layer3', 'lapaq', 'school', 'scanner', 'sroi'].forEach(key => {
                 const btn = document.getElementById(`nav-${key}`);
                 if (btn) {
                     if (key === tabKey) {
                         btn.classList.remove('text-slate-400');
-                        btn.classList.add('text-blue-600');
+                        btn.classList.add('text-emerald-600');
                     } else {
-                        btn.classList.remove('text-blue-600');
+                        btn.classList.remove('text-emerald-600');
                         btn.classList.add('text-slate-400');
                     }
                 }
             });
-        }
-
-        function acceptRegistrationAndProceed() {
-            alert("Registration & PDPA Consent completed! Proceeding to Layer 2 Parent Profile...");
-            switchTab('layer2');
-        }
-
-        function registerChildAndProceed() {
-            alert("Child record successfully created! Proceeding to Layer 3 Child Profile...");
-            switchTab('layer3');
         }
 
         function selectTimeSpan(span) {
@@ -560,8 +566,8 @@
             });
         }
 
-        // Initialize default view to Layer 1 Registration
-        switchTab('layer1');
+        // Initialize default view to Home (Layer 2)
+        switchTab('layer2');
     </script>
 </body>
 </html>
