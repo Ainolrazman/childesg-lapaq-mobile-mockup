@@ -45,10 +45,12 @@
 
         <!-- Main Scrollable Screen Content Area -->
         <main id="app-content" class="flex-1 overflow-y-auto p-5 pb-24 hide-scrollbar space-y-5">
-            <!-- Dynamic Content Injected via JavaScript -->
+            <div class="p-4 bg-white rounded-xl shadow-sm text-center">
+                <p class="text-xs text-slate-500 font-bold">Loading ChildESG™ Platform...</p>
+            </div>
         </main>
 
-        <!-- Bottom Navigation Bar -->
+        <!-- Bottom Navigation Bar (SROI replaced with Tokens) -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -56,7 +58,7 @@
             </button>
             <button onclick="switchTab('layer3')" id="nav-layer3" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span class="text-[8px] font-medium">Children Profile</span>
+                <span class="text-[8px] font-medium">Children</span>
             </button>
             <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -70,9 +72,9 @@
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4m10-14h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4"/></svg>
                 <span class="text-[8px] font-medium">Scanner</span>
             </button>
-            <button onclick="switchTab('sroi')" id="nav-sroi" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
-                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span class="text-[8px] font-medium">SROI</span>
+            <button onclick="switchTab('tokens')" id="nav-tokens" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
+                <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 12v-2m0 0c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="text-[8px] font-medium">Tokens</span>
             </button>
         </nav>
     </div>
@@ -80,8 +82,8 @@
     <!-- App JavaScript Logic -->
     <script>
         let html5QrCode = null;
-        let selectedChild = 'adam'; // Default active child
-        let currentAuthTab = 'login'; // 'login' or 'register'
+        let selectedChild = 'adam'; 
+        let currentAuthTab = 'login'; 
 
         const childrenData = {
             adam: {
@@ -95,7 +97,8 @@
                 bmi: "16.1 kg/m²",
                 baz: "-0.10 (Normal)",
                 playTime: "90 Mins",
-                tokensEarned: "3 Impact Tokens"
+                tokensEarned: "3 Impact Tokens",
+                ecoTokens: "2 Tokens"
             },
             maya: {
                 name: "Maya",
@@ -108,7 +111,8 @@
                 bmi: "15.4 kg/m²",
                 baz: "+0.05 (Normal)",
                 playTime: "60 Mins",
-                tokensEarned: "2 Impact Tokens"
+                tokensEarned: "2 Impact Tokens",
+                ecoTokens: "1 Token"
             }
         };
 
@@ -202,7 +206,6 @@
         }
 
         const contentData = {
-            // UNLISTED AUTH
             auth: renderAuthPage(),
 
             // HOME / PARENT PROFILE
@@ -269,7 +272,6 @@
                     </button>
                 </div>
 
-                <!-- Active Children List -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Children</h3>
                     
@@ -294,7 +296,6 @@
                     </div>
                 </div>
 
-                <!-- Registration of Children -->
                 <div id="add-child-form" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Register New Child</h3>
@@ -331,14 +332,12 @@
                 </div>
             `,
 
-            // CHILDREN PROFILE
             layer3: `
                 <div id="child-profile-container">
                     <!-- Dynamic Child Profile Content Rendered via JavaScript -->
                 </div>
             `,
 
-            // LAPAQ ANALYTICS
             lapaq: `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
@@ -474,17 +473,51 @@
                 </div>
             `,
 
-            sroi: `
-                <div class="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-emerald-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Audit-Ready ESG</span>
-                    <h2 class="text-xl font-bold mt-1">SROI Valuation</h2>
-                    <p class="text-xs text-emerald-100 mt-1">Certified via Social Value Frameworks</p>
+            // TOKENS TAB (Replaced SROI)
+            tokens: `
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Impact Wallet</span>
+                    <h2 class="text-xl font-bold mt-1">Sustainability & Impact Tokens</h2>
+                    <p class="text-xs text-amber-100 mt-1">Earned through active play and zero-waste habits</p>
                 </div>
 
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center space-y-2">
-                    <p class="text-xs text-slate-400 font-bold uppercase">Social Return Ratio</p>
-                    <p class="text-3xl font-extrabold text-emerald-600">~RM 6.20</p>
-                    <p class="text-xs text-slate-600">Generated social value per RM 1.00 spent by corporate sponsors.</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center">
+                        <span class="text-2xl">🏃</span>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Impact Tokens</p>
+                        <p class="text-2xl font-extrabold text-amber-600 mt-0.5">5 Tokens</p>
+                        <p class="text-[9px] text-slate-500 mt-1">From physical activity</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center">
+                        <span class="text-2xl">🌱</span>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Eco-Tokens</p>
+                        <p class="text-2xl font-extrabold text-teal-600 mt-0.5">3 Tokens</p>
+                        <p class="text-[9px] text-slate-500 mt-1">From eco-habits</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">Available Rewards</h3>
+                    
+                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">⚽ School Sports Voucher</p>
+                            <p class="text-[10px] text-slate-500">Requires 5 Impact Tokens</p>
+                        </div>
+                        <button onclick="alert('Reward redeemed successfully!')" class="text-[10px] bg-amber-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-amber-700 transition">
+                            Redeem
+                        </button>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">🍱 Canteen Meal Discount</p>
+                            <p class="text-[10px] text-slate-500">Requires 3 Eco-Tokens</p>
+                        </div>
+                        <button onclick="alert('Reward redeemed successfully!')" class="text-[10px] bg-teal-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-teal-700 transition">
+                            Redeem
+                        </button>
+                    </div>
                 </div>
             `
         };
@@ -496,7 +529,6 @@
                     <div class="flex justify-between items-center">
                         <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Children Profile</span>
                         
-                        <!-- Child Selector Choice -->
                         <select onchange="switchChildView(this.value)" class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-lg outline-none border border-white/30 cursor-pointer">
                             <option value="adam" ${childKey === 'adam' ? 'selected' : ''} class="text-slate-800">Adam (8 Yrs)</option>
                             <option value="maya" ${childKey === 'maya' ? 'selected' : ''} class="text-slate-800">Maya (5 Yrs)</option>
@@ -517,7 +549,6 @@
                     </div>
                 </div>
 
-                <!-- Child Quick Switch Cards -->
                 <div class="flex space-x-2 overflow-x-auto py-1 hide-scrollbar">
                     <button onclick="switchChildView('adam')" class="flex-1 min-w-[130px] p-2.5 rounded-xl border text-left transition ${childKey === 'adam' ? 'bg-indigo-50 border-indigo-300' : 'bg-white border-slate-100'}">
                         <p class="text-xs font-bold text-slate-800">Adam</p>
@@ -556,7 +587,7 @@
                     </div>
                     <p class="text-xs text-slate-600">Active Play Today: <strong>${child.playTime}</strong></p>
                     <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-indigo-700 transition">
-                        📷 Scan Station QR for ${child.name}
+                        📷 Scan Station QR Code
                     </button>
                 </div>
             `;
@@ -569,7 +600,7 @@
 
         function switchTab(tabKey) {
             if (html5QrCode && tabKey !== 'scanner') {
-                html5QrCode.stop().catch(() => {});
+                try { html5QrCode.stop(); } catch(e){}
             }
 
             const titles = {
@@ -579,19 +610,24 @@
                 lapaq: "LaPaQ RNI Analytics",
                 school: "School Dashboard",
                 scanner: "QR Code Scanner",
-                sroi: "SROI Dashboard"
+                tokens: "Impact Tokens Wallet"
             };
-            document.getElementById('app-title').innerText = titles[tabKey];
             
-            if (tabKey === 'layer3') {
-                document.getElementById('app-content').innerHTML = renderChildProfile(selectedChild);
-            } else if (tabKey === 'auth') {
-                document.getElementById('app-content').innerHTML = renderAuthPage();
-            } else {
-                document.getElementById('app-content').innerHTML = contentData[tabKey];
+            const titleElem = document.getElementById('app-title');
+            if (titleElem) titleElem.innerText = titles[tabKey] || "ChildESG™ Mobile";
+            
+            const contentElem = document.getElementById('app-content');
+            if (contentElem) {
+                if (tabKey === 'layer3') {
+                    contentElem.innerHTML = renderChildProfile(selectedChild);
+                } else if (tabKey === 'auth') {
+                    contentElem.innerHTML = renderAuthPage();
+                } else {
+                    contentElem.innerHTML = contentData[tabKey] || contentData['auth'];
+                }
             }
 
-            ['layer1', 'layer3', 'lapaq', 'school', 'scanner', 'sroi'].forEach(key => {
+            ['layer1', 'layer3', 'lapaq', 'school', 'scanner', 'tokens'].forEach(key => {
                 const btn = document.getElementById(`nav-${key}`);
                 if (btn) {
                     if (key === tabKey) {
@@ -618,30 +654,38 @@
             });
 
             const customPicker = document.getElementById('custom-date-picker');
-            if (span === 'custom') {
-                customPicker.classList.remove('hidden');
-            } else {
-                customPicker.classList.add('hidden');
+            if (customPicker) {
+                if (span === 'custom') {
+                    customPicker.classList.remove('hidden');
+                } else {
+                    customPicker.classList.add('hidden');
+                }
             }
         }
 
         function startScanner() {
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 250, height: 150 } },
-                (decodedText) => {
-                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
-                    html5QrCode.stop().catch(() => {});
-                },
-                () => {}
-            ).catch(() => {
-                document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
-            });
+            if (typeof Html5Qrcode !== 'undefined') {
+                html5QrCode = new Html5Qrcode("reader");
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 150 } },
+                    (decodedText) => {
+                        document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
+                        html5QrCode.stop().catch(() => {});
+                    },
+                    () => {}
+                ).catch(() => {
+                    document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
+                });
+            } else {
+                document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
+            }
         }
 
-        // Initialize default view to the unlisted auth layer
-        switchTab('auth');
+        // Initialize default view safely after DOM loads
+        window.addEventListener('DOMContentLoaded', () => {
+            switchTab('auth');
+        });
     </script>
 </body>
 </html>
