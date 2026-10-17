@@ -869,9 +869,15 @@
             `
         };
         function switchTab(tabKey) {
-            // Role-based security check: School login cannot access parent, child, token, or LaPaQ analytics tabs
+            // Role-based security checks:
+            // 1. School login cannot access parent/child profile, token wallet, or LaPaQ analytics tabs
             if (currentUserRole === 'school' && ['layer1', 'layer3', 'tokens', 'lapaq'].includes(tabKey)) {
                 alert("🔒 Access Restricted: School Teacher accounts can only view the School Dashboard and QR Scanner.");
+                return;
+            }
+            // 2. Parent login cannot access the School Dashboard tab
+            if (currentUserRole === 'parent' && tabKey === 'school') {
+                alert("🔒 Access Restricted: Parent accounts do not have access to the School Administrator Dashboard.");
                 return;
             }
 
