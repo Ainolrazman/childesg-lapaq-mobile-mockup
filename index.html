@@ -50,7 +50,7 @@
             </div>
         </main>
 
-        <!-- Bottom Navigation Bar (SROI replaced with Tokens) -->
+        <!-- Bottom Navigation Bar -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -97,8 +97,10 @@
                 bmi: "16.1 kg/m²",
                 baz: "-0.10 (Normal)",
                 playTime: "90 Mins",
-                tokensEarned: "3 Impact Tokens",
-                ecoTokens: "2 Tokens"
+                tokensEarned: 5,
+                ecoTokens: 3,
+                rniStatus: "Balanced Target Met (100% RNI)",
+                rniClaimed: false
             },
             maya: {
                 name: "Maya",
@@ -111,8 +113,10 @@
                 bmi: "15.4 kg/m²",
                 baz: "+0.05 (Normal)",
                 playTime: "60 Mins",
-                tokensEarned: "2 Impact Tokens",
-                ecoTokens: "1 Token"
+                tokensEarned: 2,
+                ecoTokens: 1,
+                rniStatus: "Balanced Target Met (95% RNI)",
+                rniClaimed: false
             }
         };
 
@@ -134,7 +138,6 @@
                         </button>
                     </div>
 
-                    <!-- Login Form -->
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Username / Email</label>
@@ -149,7 +152,6 @@
                         </button>
                     </div>
 
-                    <!-- Register Form -->
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
                             <span class="text-[10px] font-bold text-blue-700 uppercase">PDPA Consent Included</span>
@@ -205,10 +207,141 @@
             switchTab('layer1');
         }
 
+        function renderLaPaQPage() {
+            const child = childrenData[selectedChild];
+            return `
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
+                        
+                        <!-- Child Profile Selector inside LaPaQ -->
+                        <select onchange="changeLaPaQChild(this.value)" class="bg-slate-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg outline-none border border-slate-600 cursor-pointer">
+                            <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>Adam (8 Yrs)</option>
+                            <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>Maya (5 Yrs)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-bold">${child.name}'s LaPaQ RNI Intake</h2>
+                        <p class="text-xs text-slate-300 mt-0.5">Recommended Nutrient Intake (RNI) compliance profile</p>
+                    </div>
+
+                    <!-- Balanced Diet Token Status Banner -->
+                    <div id="rni-token-banner" class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs">
+                        <div>
+                            <p class="text-slate-300 text-[10px] font-bold uppercase">Daily RNI Diet Target</p>
+                            <p class="font-bold text-emerald-400 mt-0.5">${child.rniStatus}</p>
+                        </div>
+                        ${child.rniClaimed 
+                            ? `<span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold border border-emerald-500/40">✓ Token Minted</span>` 
+                            : `<button onclick="claimRNIToken()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">⭐ Claim Token</button>`
+                        }
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
+                    
+                    <div class="grid grid-cols-3 gap-1.5 text-center">
+                        <button onclick="selectTimeSpan('1')" id="ts-1" class="py-1.5 text-[10px] font-bold rounded-lg bg-blue-600 text-white transition">1 Day</button>
+                        <button onclick="selectTimeSpan('7')" id="ts-7" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">7 Days</button>
+                        <button onclick="selectTimeSpan('30')" id="ts-30" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">30 Days</button>
+                        <button onclick="selectTimeSpan('90')" id="ts-90" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">90 Days</button>
+                        <button onclick="selectTimeSpan('365')" id="ts-365" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">365 Days</button>
+                        <button onclick="selectTimeSpan('custom')" id="ts-custom" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">Selected Dates</button>
+                    </div>
+
+                    <div id="custom-date-picker" class="hidden pt-2 flex space-x-2">
+                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">RNI Intake Compliance (${child.name})</h3>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Target Met</span>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Calories (Energy)</span>
+                            <span class="text-slate-800">1,620 / 1,800 kcal <span class="text-emerald-600 font-bold">(90%)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-emerald-500 h-full w-[90%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Carbohydrate</span>
+                            <span class="text-slate-800">225 / 240 g <span class="text-emerald-600 font-bold">(94%)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[94%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Protein</span>
+                            <span class="text-slate-800">42 / 45 g <span class="text-emerald-600 font-bold">(93%)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-indigo-500 h-full w-[93%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Fiber</span>
+                            <span class="text-slate-800">18 / 20 g <span class="text-emerald-600 font-bold">(90% Target Met)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-amber-500 h-full w-[90%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Sodium</span>
+                            <span class="text-slate-800">1,100 / 1,500 mg <span class="text-emerald-600 font-bold">(Optimal)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-teal-500 h-full w-[73%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Calcium</span>
+                            <span class="text-slate-800">680 / 800 mg <span class="text-emerald-600 font-bold">(85%)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-purple-500 h-full w-[85%]"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeLaPaQChild(childKey) {
+            selectedChild = childKey;
+            switchTab('lapaq');
+        }
+
+        function claimRNIToken() {
+            const child = childrenData[selectedChild];
+            child.rniClaimed = true;
+            child.ecoTokens += 1;
+            alert(`🎉 Balanced Diet RNI Target Met! 1 Eco-Token minted directly to ${child.name}'s Impact Passport.`);
+            switchTab('lapaq');
+        }
+
         const contentData = {
             auth: renderAuthPage(),
 
-            // HOME / PARENT PROFILE
             layer1: `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg flex justify-between items-center">
                     <div>
@@ -338,99 +471,6 @@
                 </div>
             `,
 
-            lapaq: `
-                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
-                    <h2 class="text-xl font-bold mt-1">LaPaQ RNI Intake Analytics</h2>
-                    <p class="text-xs text-slate-300 mt-1">Energy tracking & Recommended Nutrient Intake (RNI) compliance</p>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
-                    
-                    <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <button onclick="selectTimeSpan('1')" id="ts-1" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">1 Day</button>
-                        <button onclick="selectTimeSpan('7')" id="ts-7" class="py-1.5 text-[10px] font-bold rounded-lg bg-blue-600 text-white transition">7 Days</button>
-                        <button onclick="selectTimeSpan('30')" id="ts-30" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">30 Days</button>
-                        <button onclick="selectTimeSpan('90')" id="ts-90" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">90 Days</button>
-                        <button onclick="selectTimeSpan('365')" id="ts-365" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">365 Days</button>
-                        <button onclick="selectTimeSpan('custom')" id="ts-custom" class="py-1.5 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition">Selected Dates</button>
-                    </div>
-
-                    <div id="custom-date-picker" class="hidden pt-2 flex space-x-2">
-                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                        <input type="date" class="w-1/2 text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">RNI Intake Compliance</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Target Met</span>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Calories (Energy)</span>
-                            <span class="text-slate-800">1,620 / 1,800 kcal <span class="text-emerald-600 font-bold">(90%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-emerald-500 h-full w-[90%]"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Carbohydrate</span>
-                            <span class="text-slate-800">225 / 240 g <span class="text-emerald-600 font-bold">(94%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-blue-500 h-full w-[94%]"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Protein</span>
-                            <span class="text-slate-800">42 / 45 g <span class="text-emerald-600 font-bold">(93%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-indigo-500 h-full w-[93%]"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Fiber</span>
-                            <span class="text-slate-800">14 / 20 g <span class="text-amber-600 font-bold">(70% Gap)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-amber-500 h-full w-[70%]"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Sodium</span>
-                            <span class="text-slate-800">1,100 / 1,500 mg <span class="text-emerald-600 font-bold">(Optimal)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-teal-500 h-full w-[73%]"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-semibold">
-                            <span class="text-slate-700">Calcium</span>
-                            <span class="text-slate-800">680 / 800 mg <span class="text-emerald-600 font-bold">(85%)</span></span>
-                        </div>
-                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                            <div class="bg-purple-500 h-full w-[85%]"></div>
-                        </div>
-                    </div>
-                </div>
-            `,
-
             school: `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Institutional Portal</span>
@@ -473,26 +513,25 @@
                 </div>
             `,
 
-            // TOKENS TAB (Replaced SROI)
             tokens: `
                 <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Impact Wallet</span>
                     <h2 class="text-xl font-bold mt-1">Sustainability & Impact Tokens</h2>
-                    <p class="text-xs text-amber-100 mt-1">Earned through active play and zero-waste habits</p>
+                    <p class="text-xs text-amber-100 mt-1">Earned through active play, zero-waste habits, and balanced RNI diets</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center">
                         <span class="text-2xl">🏃</span>
                         <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Impact Tokens</p>
-                        <p class="text-2xl font-extrabold text-amber-600 mt-0.5">5 Tokens</p>
+                        <p class="text-2xl font-extrabold text-amber-600 mt-0.5">${childrenData[selectedChild].tokensEarned} Tokens</p>
                         <p class="text-[9px] text-slate-500 mt-1">From physical activity</p>
                     </div>
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center">
                         <span class="text-2xl">🌱</span>
                         <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Eco-Tokens</p>
-                        <p class="text-2xl font-extrabold text-teal-600 mt-0.5">3 Tokens</p>
-                        <p class="text-[9px] text-slate-500 mt-1">From eco-habits</p>
+                        <p class="text-2xl font-extrabold text-teal-600 mt-0.5">${childrenData[selectedChild].ecoTokens} Tokens</p>
+                        <p class="text-[9px] text-slate-500 mt-1">From eco-habits & RNI</p>
                     </div>
                 </div>
 
@@ -583,7 +622,7 @@
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Physical Activity & Tokens</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${child.tokensEarned}</span>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${child.tokensEarned} Impact Tokens</span>
                     </div>
                     <p class="text-xs text-slate-600">Active Play Today: <strong>${child.playTime}</strong></p>
                     <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-xs hover:bg-indigo-700 transition">
@@ -622,6 +661,8 @@
                     contentElem.innerHTML = renderChildProfile(selectedChild);
                 } else if (tabKey === 'auth') {
                     contentElem.innerHTML = renderAuthPage();
+                } else if (tabKey === 'lapaq') {
+                    contentElem.innerHTML = renderLaPaQPage();
                 } else {
                     contentElem.innerHTML = contentData[tabKey] || contentData['auth'];
                 }
