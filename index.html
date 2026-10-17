@@ -146,13 +146,7 @@
             "Year 2A (Cemerlang)": [
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendance: "Present", rni: "95% (Met)", status: "Normal" },
                 { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendance: "Present", rni: "92% (Met)", status: "Normal" },
-                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendance: "Present", rni: "88% (Met)", status: "Overweight Risk" },
-                { name: "Siti Zulaikha", token: "#SZ-44K-PJ03", attendance: "Late", rni: "90% (Met)", status: "Normal" },
-                { name: "Dev Nathan", token: "#DN-77L-PJ04", attendance: "Present", rni: "100% (Met)", status: "Normal" }
-            ],
-            "Year 1A (Pintar)": [
-                { name: "Afiq Haziq", token: "#AH-11P-PJ10", attendance: "Present", rni: "91% (Met)", status: "Normal" },
-                { name: "Chloe Lim", token: "#CL-22Q-PJ11", attendance: "Present", rni: "96% (Met)", status: "Normal" }
+                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendance: "Present", rni: "88% (Met)", status: "Overweight Risk" }
             ]
         };
 
@@ -222,34 +216,146 @@
             switchTab('home');
         }
 
-        function renderParentProfilePage() {
+        // SHARED ADD CHILD FORM COMPONENT
+        function renderAddChildSection() {
             return `
-                <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Parent Profile Home</span>
-                    <h2 class="text-xl font-bold">Welcome, Ainol Razman</h2>
-                    <p class="text-xs text-emerald-100">ChildESG™ Guardian Hub & Profile</p>
-                </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Registered Children</h3>
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
-                        <div><p class="text-xs font-bold text-slate-800">Adam (Boy, 8 Yrs)</p><p class="text-[10px] text-slate-500">SK Petaling Jaya • #AB-34X</p></div>
-                        <button onclick="switchChildView('adam'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold">View Profile →</button>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">👶 Add Child / Participant</h3>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Child's Full Name</label>
+                        <input type="text" placeholder="e.g. Nurul Ain / Hakim" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
                     </div>
-                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
-                        <div><p class="text-xs font-bold text-slate-800">Maya (Girl, 5 Yrs)</p><p class="text-[10px] text-slate-500">Taska Permata • #MY-99Z</p></div>
-                        <button onclick="switchChildView('maya'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold">View Profile →</button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Gender</label>
+                            <select class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                                <option>Boy</option>
+                                <option>Girl</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth</label>
+                            <input type="date" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
                     </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">School / Organization Center</label>
+                        <input type="text" placeholder="e.g. SK Petaling Jaya" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                    <button onclick="alert('Child / Participant registered successfully and added to system tracking!')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold text-xs transition">
+                        + Register / Add Child
+                    </button>
                 </div>
             `;
         }
 
+        // 1. PARENT GUARDIAN PAGE -> PARENTS GUARDIAN PROFILE
+        function renderParentProfilePage() {
+            return `
+                <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
+                    <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Home Profile</span>
+                    <h2 class="text-xl font-bold">Parents Guardian Profile</h2>
+                    <p class="text-xs text-emerald-100">Manage your personal guardian particulars</p>
+                </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">Profile Switch</span>
+                        <button onclick="currentUserRole='partner'; switchTab('home');" class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded-lg">Switch to Organization Profile →</button>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registered Name</label>
+                        <input type="text" value="Ainol Razman Ghazali" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address (Editable)</label>
+                        <input type="email" value="ainol.razman@example.com" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Phone Number (Editable)</label>
+                        <input type="tel" value="+6012-3456789" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State</label>
+                        <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                            <option selected>W.P. Kuala Lumpur / Selangor</option>
+                            <option>Johor</option>
+                            <option>Kedah</option>
+                            <option>Kelantan</option>
+                            <option>Melaka</option>
+                            <option>Negeri Sembilan</option>
+                            <option>Pahang</option>
+                            <option>Penang</option>
+                            <option>Perak</option>
+                            <option>Perlis</option>
+                            <option>Sabah</option>
+                            <option>Sarawak</option>
+                            <option>Terengganu</option>
+                            <option>W.P. Labuan</option>
+                            <option>W.P. Putrajaya</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (Optional)</label>
+                        <input type="text" value="Technology Founder" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth (Optional)</label>
+                        <input type="date" value="1969-05-12" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                    <button onclick="alert('Parent Guardian Profile updated successfully!')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
+                        Update / Register Guardian Profile
+                    </button>
+                </div>
+                ${renderAddChildSection()}
+            `;
+        }
+
+        // 2. ORGANIZATION PAGE -> PARTNER ORGANIZATION PROFILE
         function renderPartnerProfilePage() {
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Profile Home</span>
-                    <h2 class="text-xl font-bold">Kemaih Impact & Nutrition Network</h2>
-                    <p class="text-xs text-indigo-100">Organization Partner Administrator Profile</p>
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Home Profile</span>
+                    <h2 class="text-xl font-bold">Partner Organization Profile</h2>
+                    <p class="text-xs text-indigo-100">Manage institutional and partner contact particulars</p>
                 </div>
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">Profile Switch</span>
+                        <button onclick="currentUserRole='parent'; switchTab('home');" class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-1 rounded-lg">Switch to Parent Profile →</button>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registered Name of Organization</label>
+                        <input type="text" value="Kemaih Sdn Bhd" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registration Number</label>
+                        <input type="text" value="202001012345 (1389200-X)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address</label>
+                        <input type="email" value="admin@kemaih.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact Person</label>
+                        <input type="text" value="Ainol Razman" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Designation of Contact Person</label>
+                        <input type="text" value="Chief Executive Officer (CEO)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact Person Email Address</label>
+                        <input type="email" value="ainol@kemaih.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact Person Mobile Number</label>
+                        <input type="tel" value="+6012-3456789" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                    </div>
+                    <button onclick="alert('Partner Organization Profile updated successfully!')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
+                        Update / Register Organization Profile
+                    </button>
+                </div>
+                ${renderAddChildSection()}
             `;
         }
 
@@ -308,7 +414,6 @@
             }
         }
 
-        // CHILDREN PROFILE DASHBOARD WITH FULL COUNTERS & CALENDAR SPANS
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             let mult = 1;
@@ -332,7 +437,6 @@
                     </div>
                 </div>
 
-                <!-- Calendar Time Span Selector -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📅 Counter Calendar Span</h3>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
@@ -348,85 +452,41 @@
                     </div>
                 </div>
 
-                <!-- 1. 🏃 Impact Tokens & Active Hours -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-800">🏃 Impact (Physical Play / Activity)</span>
-                        <span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span>
-                    </div>
-                    <p class="text-[10px] text-slate-500">Registered via Partner QR. Active Hours: <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 Impact (Physical Play)</span><span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">Active Hours: <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
                     <button onclick="registerQRActivity('Impact Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition">📷 Scan Partner QR for Physical Play</button>
                 </div>
 
-                <!-- 2. 🌱 Eco-Habits & Food Waste (kg) -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-800">🌱 Eco-Habits (Zero Waste & Sustainability)</span>
-                        <span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span>
-                    </div>
-                    <p class="text-[10px] text-slate-500">Registered via Partner QR. Food Waste Diverted: <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
-                    <button onclick="registerQREco('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition">📷 Scan Partner QR for Zero Waste / Recycling</button>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 Eco-Habits (Zero Waste)</span><span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">Food Waste Diverted: <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
+                    <button onclick="registerQREco('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition">📷 Scan Partner QR for Zero Waste</button>
                 </div>
 
-                <!-- 3. 🥗 Nutrition Tokens (LaPaQ Daily Balance) -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-800">🥗 Nutrition Tokens (LaPaQ Daily Balance)</span>
-                        <span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span>
-                    </div>
-                    <p class="text-[10px] text-slate-500">Counted automatically via LaPaQ daily balanced meal intelligence engine.</p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 Nutrition Tokens</span><span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span></div>
                     <button onclick="switchTab('lapaq')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition">View LaPaQ RNI Analytics →</button>
                 </div>
 
-                <!-- 4. 📚 Activity Attendance & Active Hours -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-800">📚 Activity Attendance & Engagement</span>
-                        <span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span>
-                    </div>
-                    <p class="text-[10px] text-slate-500">Registered via Partner QR. Attendance Hours: <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
-                    <button onclick="registerQRAttendance('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition">📷 Scan Partner QR for Attendance Check-in</button>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 Activity Attendance</span><span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">Attendance Hours: <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
+                    <button onclick="registerQRAttendance('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition">📷 Scan Partner QR for Attendance</button>
                 </div>
 
-                <!-- 5. 🤝 Community & Leadership Tokens (Organizer & Peers) -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-800">🤝 Community & Leadership</span>
-                        <span class="text-xs font-extrabold text-purple-600">${child.communityTokens} Tokens</span>
-                    </div>
-                    <p class="text-[10px] text-slate-500">Rated and awarded directly by the Partner Organization Dashboard organizer and peers.</p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🤝 Community & Leadership</span><span class="text-xs font-extrabold text-purple-600">${child.communityTokens} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">Rated via Partner Organization Dashboard organizer & peers.</p>
                 </div>
             `;
         }
 
         function setChildTimeSpan(span) { childTimeSpan = span; switchTab('layer3'); }
+        function registerQRActivity(t) { const c = childrenData[selectedChild]; c.impactTokens += 10; c.activeHours += 1; c.totalTokens += 10; alert(`Registered [${t}]! +10 tokens`); switchTab('layer3'); }
+        function registerQREco(t) { const c = childrenData[selectedChild]; c.ecoTokens += 10; c.foodWasteKg += 0.5; c.totalTokens += 10; alert(`Registered [${t}]! +10 tokens`); switchTab('layer3'); }
+        function registerQRAttendance(t) { const c = childrenData[selectedChild]; c.activityTokens += 10; c.activityHours += 2; c.totalTokens += 10; alert(`Registered [${t}]! +10 tokens`); switchTab('layer3'); }
 
-        function registerQRActivity(type) {
-            const child = childrenData[selectedChild];
-            child.impactTokens += 10;
-            child.activeHours += 1.0;
-            child.totalTokens += 10;
-            alert(`🎉 Partner Organization QR Registered!\n[${type}] verified. +10 tokens and +1.0 active hour added!`);
-            switchTab('layer3');
-        }
-        function registerQREco(type) {
-            const child = childrenData[selectedChild];
-            child.ecoTokens += 10;
-            child.foodWasteKg += 0.5;
-            child.totalTokens += 10;
-            alert(`🌱 Eco-Habit Partner QR Registered!\n[${type}] verified. +10 tokens and +0.5 kg food waste reduction recorded!`);
-            switchTab('layer3');
-        }
-        function registerQRAttendance(type) {
-            const child = childrenData[selectedChild];
-            child.activityTokens += 10;
-            child.activityHours += 2.0;
-            child.totalTokens += 10;
-            alert(`📚 Attendance Partner QR Registered!\n[${type}] verified. +10 tokens and +2.0 active hours added!`);
-            switchTab('layer3');
-        }
-
-        // LAPAQ RNI ANALYTICS WITH 9 RNI BARS & TIME SPANS
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             let multiplier = 1;
@@ -473,21 +533,14 @@
                     </div>
                 </div>
 
-                <!-- Annual Health & Growth Check & Active Screening Inputs -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 Annual Health & Growth Check</h3>
                         <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Height (cm)</label>
-                            <input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Weight (kg)</label>
-                            <input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
-                        </div>
+                        <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Height (cm)</label><input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
+                        <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Weight (kg)</label><input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
                     </div>
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
                         <div class="flex justify-between"><span class="text-slate-500 font-semibold">Calculated BMI:</span><span id="res-bmi" class="font-bold text-slate-800">${child.bmi}</span></div>
@@ -496,7 +549,6 @@
                     </div>
                 </div>
 
-                <!-- Time Span selector for RNI -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
@@ -509,7 +561,6 @@
                     </div>
                 </div>
 
-                <!-- 9 RNI Bars Compliance Block -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">9 RNI Intake Bars Compliance</h3>
@@ -536,7 +587,6 @@
         }
 
         function selectRniTimeSpan(span) { rniTimeSpan = span; switchTab('lapaq'); }
-
         function recalculateGrowthMetrics() {
             const h = parseFloat(document.getElementById('input-height').value) || 100;
             const w = parseFloat(document.getElementById('input-weight').value) || 15;
@@ -546,7 +596,6 @@
             childrenData[selectedChild].weight = w;
             childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
         }
-
         function claimRNIToken() {
             const child = childrenData[selectedChild];
             child.rniClaimed = true;
@@ -556,7 +605,6 @@
             switchTab('lapaq');
         }
 
-        // IMPACT TOKENS WALLET & REWARD EXCHANGE SYSTEM
         function renderTokensPage() {
             const child = childrenData[selectedChild];
             return `
@@ -580,7 +628,6 @@
                     </div>
                 </div>
 
-                <!-- Token Reward Exchange System -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">🎁 Token Reward Exchange System</h3>
@@ -637,8 +684,8 @@
         };
 
         function switchTab(tabKey) {
-            if (currentUserRole === 'partner' && ['home', 'layer3', 'tokens', 'lapaq'].includes(tabKey)) {
-                alert("🔒 Access Restricted: Organization Partner accounts can only view Partner Profile/Dashboard and QR Scanner.");
+            if (currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
+                alert("🔒 Access Restricted: Organization Partner accounts can only view Partner Profile Home, Partner Dashboard, and QR Scanner.");
                 return;
             }
             if (currentUserRole === 'parent' && tabKey === 'school') {
@@ -650,7 +697,7 @@
 
             const titles = {
                 layer1: "Registration Gateway",
-                home: currentUserRole === 'partner' ? "Partner Profile Home" : "Parent Profile Home",
+                home: currentUserRole === 'partner' ? "Partner Organization Profile" : "Parents Guardian Profile",
                 layer3: "Children Profile",
                 lapaq: "LaPaQ RNI Analytics",
                 school: "Partner Dashboard",
