@@ -84,7 +84,6 @@
         let html5QrCode = null;
         let selectedChild = 'adam'; 
         let currentAuthTab = 'login'; 
-        let photoStream = null;
 
         const childrenData = {
             adam: {
@@ -98,11 +97,11 @@
                 bmi: "16.1 kg/m²",
                 baz: "-0.10 (Normal)",
                 playTime: "90 Mins",
-                tokensEarned: 5,      // Impact Tokens
-                ecoTokens: 3,         // Eco Tokens
-                nutritionTokens: 2,   // Nutrition Tokens
-                schoolTokens: 4,      // School Attendance Tokens
-                communityTokens: 2,   // Community Tokens
+                tokensEarned: 5,
+                ecoTokens: 3,
+                nutritionTokens: 2,
+                schoolTokens: 4,
+                communityTokens: 2,
                 rniStatus: "Balanced Target Met (100% RNI)",
                 rniClaimed: false
             },
@@ -220,6 +219,7 @@
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
+                        
                         <select onchange="changeLaPaQChild(this.value)" class="bg-slate-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg outline-none border border-slate-600 cursor-pointer">
                             <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>Adam (8 Yrs)</option>
                             <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>Maya (5 Yrs)</option>
@@ -231,7 +231,16 @@
                         <p class="text-xs text-slate-300 mt-0.5">Recommended Nutrient Intake (RNI) compliance profile</p>
                     </div>
 
-                    <div id="rni-token-banner" class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs">
+                    <!-- Connect / External Portal Login Button -->
+                    <div class="pt-1">
+                        <a href="https://lapaq.app:3000/login" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-md transition">
+                            <span>🔗 Connect / Login to LaPaQ Portal</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
+                    </div>
+
+                    <!-- Balanced Diet Token Status Banner -->
+                    <div id="rni-token-banner" class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
                         <div>
                             <p class="text-slate-300 text-[10px] font-bold uppercase">Daily RNI Diet Target</p>
                             <p class="font-bold text-emerald-400 mt-0.5">${child.rniStatus}</p>
@@ -267,6 +276,7 @@
                         <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Target Met</span>
                     </div>
 
+                    <!-- Macro & Micronutrient Progress Bars -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Calories (Energy)</span>
@@ -304,6 +314,27 @@
                         </div>
                         <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
                             <div class="bg-amber-500 h-full w-[90%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Added Micronutrients: Vitamin A & Vitamin C -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Vitamin A</span>
+                            <span class="text-slate-800">480 / 500 µg RE <span class="text-emerald-600 font-bold">(96%)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-orange-500 h-full w-[96%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700">Vitamin C</span>
+                            <span class="text-slate-800">38 / 40 mg <span class="text-emerald-600 font-bold">(95%)</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                            <div class="bg-rose-500 h-full w-[95%]"></div>
                         </div>
                     </div>
 
@@ -349,7 +380,6 @@
                     </div>
                 </div>
 
-                <!-- 5 Token Metrics Grid -->
                 <div class="grid grid-cols-3 gap-2">
                     <div class="bg-white rounded-xl p-2.5 shadow-sm border border-slate-100 text-center">
                         <span class="text-lg">🏃</span>
@@ -456,7 +486,6 @@
                     </button>
                 </div>
 
-                <!-- Growth Trajectory -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Growth Trajectory (WHO Standards)</h3>
@@ -477,12 +506,9 @@
                     </div>
                 </div>
 
-                <!-- 1. ECO-HABITS & ZERO WASTE TOKENS MODULE -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">
-                            🌱 Eco-Habits & Zero Waste
-                        </h3>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🌱 Eco-Habits & Zero Waste</h3>
                         <span id="eco-token-badge" class="text-[10px] bg-teal-50 text-teal-700 font-bold px-2 py-0.5 rounded-full">${child.ecoTokens} Eco Tokens</span>
                     </div>
 
@@ -507,12 +533,9 @@
                     </div>
                 </div>
 
-                <!-- 2. SCHOOL ATTENDANCE & INSTITUTIONAL ENGAGEMENT TOKENS MODULE -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">
-                            📚 School Attendance & Engagement
-                        </h3>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">📚 School Attendance & Engagement</h3>
                         <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">${child.schoolTokens} School Tokens</span>
                     </div>
 
@@ -539,12 +562,9 @@
                     </div>
                 </div>
 
-                <!-- 3. SOCIAL RESPONSIBILITY & PEER LEADERSHIP TOKENS MODULE -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">
-                            🤝 Social Responsibility & Leadership
-                        </h3>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🤝 Social Responsibility & Leadership</h3>
                         <span class="text-[10px] bg-purple-50 text-purple-700 font-bold px-2 py-0.5 rounded-full">${child.communityTokens} Community Tokens</span>
                     </div>
 
