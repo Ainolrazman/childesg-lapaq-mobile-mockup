@@ -130,3 +130,213 @@
                         </div>
                     </div>
                     <button onclick="linkChildDemo()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-blue-700 transition">
+                        + Link Child & Generate Tokenized Passport
+                    </button>
+                </div>
+
+                <div id="linked-children" class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Linked Child Tokens</h3>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs font-bold text-slate-800">Adam (Primary 3)</p>
+                            <p class="text-[10px] font-mono text-slate-500">Token: #AB-34X-KEMAIH</p>
+                        </div>
+                        <button onclick="switchTab('passport')" class="text-[10px] bg-emerald-500 text-white px-2.5 py-1 rounded-md font-bold">
+                            View Passport →
+                        </button>
+                    </div>
+                </div>
+            `,
+            school: `
+                <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Institutional Portal</span>
+                    <h2 class="text-xl font-bold mt-1">School & Teacher Dashboard</h2>
+                    <p class="text-xs text-indigo-100 mt-1">Anonymized class monitoring & badge scanning</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Class Summary (Primary 3 Alpha)</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-50 p-3 rounded-lg text-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Active Tokens</p>
+                            <p class="text-lg font-extrabold text-blue-600 mt-0.5">32 Students</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg text-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Plate Compliance</p>
+                            <p class="text-lg font-extrabold text-emerald-600 mt-0.5">91.4%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">PDPA Privacy Verification</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">Teachers monitor aggregated nutritional milestones and scan student tokens without viewing underlying parent credentials or legal PII.</p>
+                    <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-indigo-700 transition">
+                        📷 Open Token Scanner
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Token Check-ins</h3>
+                    <div class="flex justify-between items-center text-xs py-2 border-b border-slate-100">
+                        <span class="font-mono text-slate-700">Token #AB-34X-KEMAIH</span>
+                        <span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px]">Verified Plate</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs py-2">
+                        <span class="font-mono text-slate-700">Token #KY-889-MCOIN</span>
+                        <span class="bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px]">Verified Plate</span>
+                    </div>
+                </div>
+            `,
+            passport: `
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-5 text-white shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="bg-blue-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Secure Tokenized ID</span>
+                            <h2 class="text-xl font-bold mt-1">Student Impact Passport</h2>
+                        </div>
+                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center font-bold text-lg">QR</div>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-3 flex justify-between items-center text-xs">
+                        <div>
+                            <p class="text-blue-200">Hashed Student Token</p>
+                            <p class="font-mono font-bold tracking-wider">#AB-34X-KEMAIH</p>
+                        </div>
+                        <span class="bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold">PDPA Verified</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Today's Milestone & Verification</h3>
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold">✓</div>
+                        <div>
+                            <p class="text-sm font-semibold text-slate-800">The Conscious Plate Logged</p>
+                            <p class="text-xs text-slate-500">Suku-Suku Separuh standard verified</p>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div class="bg-emerald-500 h-full w-3/4"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-2 text-right">Weekly Goal: 4/5 Healthy Plates Completed</p>
+                </div>
+            `,
+            flabee: `
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">B2C Maternal Interface</span>
+                    <h2 class="text-xl font-bold mt-1">Flabee Care</h2>
+                    <p class="text-xs text-amber-100 mt-1">First 1,000 Days & Early Childhood (0-2)</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Maternal & Infant Status</h3>
+                    <div class="flex justify-between items-center p-3 bg-orange-50 rounded-lg border border-orange-100">
+                        <div>
+                            <p class="text-xs text-orange-600 font-semibold">Current Phase</p>
+                            <p class="text-sm font-bold text-slate-800">Infant Growth Tracking (Month 14)</p>
+                        </div>
+                        <span class="text-xs bg-orange-600 text-white px-2.5 py-1 rounded-full font-bold">Sync Active</span>
+                    </div>
+                </div>
+            `,
+            lapaq: `
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
+                    <h2 class="text-xl font-bold mt-1">LaPaQ Analytics</h2>
+                    <p class="text-xs text-slate-300 mt-1">RNI Gap Analysis & Food Composition Intelligence</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">ASEAN Local Food Mapping</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between p-2.5 bg-slate-50 rounded-md">
+                            <span class="font-medium text-slate-700">Calcium Target (B40 Cohort)</span>
+                            <span class="font-bold text-emerald-600">Met via Local Anchovies</span>
+                        </div>
+                    </div>
+                </div>
+            `,
+            scanner: `
+                <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
+                    <h2 class="text-xl font-bold mt-1">Barcode & QR Scanner</h2>
+                    <p class="text-xs text-violet-100 mt-1">Scan meal ingredients or student impact badges</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
+                    <div id="reader" class="w-full overflow-hidden rounded-lg bg-slate-100"></div>
+                    <div id="scan-result" class="p-3 bg-slate-50 rounded-lg text-xs text-slate-700 font-mono">
+                        Status: Camera ready. Aim at a barcode or QR code.
+                    </div>
+                    <button onclick="startScanner()" class="w-full bg-violet-600 text-white py-2.5 rounded-xl font-semibold text-sm shadow-md hover:bg-violet-700 transition">Start Camera Scanner</button>
+                </div>
+            `,
+            sroi: `
+                <div class="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-lg">
+                    <span class="bg-emerald-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Audit-Ready ESG</span>
+                    <h2 class="text-xl font-bold mt-1">SROI Valuation</h2>
+                    <p class="text-xs text-emerald-100 mt-1">Certified via Social Value Malaysia (SVM)</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 text-center space-y-2">
+                    <p class="text-xs text-slate-400 font-bold uppercase">Social Return Ratio</p>
+                    <p class="text-3xl font-extrabold text-emerald-600">~RM 6.20</p>
+                    <p class="text-xs text-slate-600">Generated of verified social value per RM 1.00 spent by corporate sponsors.</p>
+                </div>
+            `
+        };
+
+        function switchTab(tabKey) {
+            if (html5QrCode && tabKey !== 'scanner') {
+                html5QrCode.stop().catch(() => {});
+            }
+
+            const titles = {
+                register: "Parent Onboarding",
+                school: "School Portal",
+                passport: "ChildESG Passport",
+                flabee: "Flabee Care",
+                lapaq: "LaPaQ Intelligence",
+                scanner: "Barcode Scanner",
+                sroi: "SROI & ESG Dashboard"
+            };
+            document.getElementById('app-title').innerText = titles[tabKey];
+            document.getElementById('app-content').innerHTML = contentData[tabKey];
+
+            ['register', 'school', 'passport', 'flabee', 'lapaq', 'scanner', 'sroi'].forEach(key => {
+                const btn = document.getElementById(`nav-${key}`);
+                if (key === tabKey) {
+                    btn.classList.remove('text-slate-400');
+                    btn.classList.add('text-blue-600');
+                } else {
+                    btn.classList.remove('text-blue-600');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+        }
+
+        function linkChildDemo() {
+            alert("Child profile successfully linked! Hashed Token generated: #AB-34X-KEMAIH");
+            switchTab('passport');
+        }
+
+        function startScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 150 } },
+                (decodedText, decodedResult) => {
+                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
+                    html5QrCode.stop();
+                },
+                (errorMessage) => {}
+            ).catch(err => {
+                document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
+            });
+        }
+
+        // Initialize default tab on load
+        switchTab('register');
+    </script>
+</body>
+</html>
