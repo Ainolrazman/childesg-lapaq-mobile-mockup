@@ -312,7 +312,7 @@
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">PDPA Privacy Verification</h3>
                     <p class="text-xs text-slate-600 leading-relaxed">Teachers log attendance and meal completions via secure token badge scans without exposing parent credentials.</p>
                     <button onclick="switchTab('scanner')" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-semibold text-xs shadow-md hover:bg-indigo-700 transition">
-                        📷 Scan Student Badge / Attendance QR
+                        📷 Open QR Code Scanner
                     </button>
                 </div>
 
@@ -375,8 +375,8 @@
                         </div>
                     </div>
 
-                    <button onclick="alert('Physical activity time logged! Impact Token minted to passport record.')" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-xs shadow hover:bg-emerald-700 transition">
-                        + Log Physical Activity Time
+                    <button onclick="switchTab('scanner')" class="w-full bg-emerald-600 text-white py-2 rounded-lg font-semibold text-xs shadow hover:bg-emerald-700 transition">
+                        📷 Scan Activity QR Code
                     </button>
                 </div>
 
@@ -408,8 +408,8 @@
                         </div>
                     </div>
 
-                    <button onclick="alert('Eco-habit verified! Sustainability Token minted.')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-lg font-semibold text-xs transition">
-                        + Log Eco-Habit Check-in
+                    <button onclick="switchTab('scanner')" class="w-full bg-teal-600 text-white py-2 rounded-lg font-semibold text-xs shadow hover:bg-teal-700 transition">
+                        📷 Scan Eco-Habit / Canteen QR Code
                     </button>
                 </div>
 
@@ -487,16 +487,29 @@
             scanner: `
                 <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
-                    <h2 class="text-xl font-bold mt-1">Barcode & QR Scanner</h2>
-                    <p class="text-xs text-violet-100 mt-1">Scan meal ingredients or student impact badges</p>
+                    <h2 class="text-xl font-bold mt-1">QR & Badge Scanner</h2>
+                    <p class="text-xs text-violet-100 mt-1">Scan physical activity or eco-habit station QR codes</p>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
                     <div id="reader" class="w-full overflow-hidden rounded-lg bg-slate-100"></div>
                     <div id="scan-result" class="p-3 bg-slate-50 rounded-lg text-xs text-slate-700 font-mono">
-                        Status: Camera ready. Aim at a barcode or QR code.
+                        Status: Camera ready. Aim at Activity (ACT-) or Eco-Habit (ECO-) QR codes.
                     </div>
+                    
                     <button onclick="startScanner()" class="w-full bg-violet-600 text-white py-2.5 rounded-xl font-semibold text-sm shadow-md hover:bg-violet-700 transition">Start Camera Scanner</button>
+
+                    <div class="border-t border-slate-100 pt-3 space-y-2">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Test Simulation (Without Camera)</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="simulateScan('ACT-RUN-01')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold py-2 rounded-lg border border-emerald-200 transition">
+                                ⚽ Sim Scan: Physical Activity
+                            </button>
+                            <button onclick="simulateScan('ECO-BOTTLE-01')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-semibold py-2 rounded-lg border border-teal-200 transition">
+                                🌱 Sim Scan: Eco-Habit
+                            </button>
+                        </div>
+                    </div>
                 </div>
             `,
             sroi: `
@@ -526,7 +539,7 @@
                 passport: "ChildESG Passport",
                 flabee: "Flabee Care",
                 lapaq: "LaPaQ Intelligence",
-                scanner: "Barcode Scanner",
+                scanner: "QR Code Scanner",
                 sroi: "SROI & ESG Dashboard"
             };
             document.getElementById('app-title').innerText = titles[tabKey];
@@ -564,13 +577,34 @@
                 { facingMode: "environment" },
                 { fps: 10, qrbox: { width: 250, height: 150 } },
                 (decodedText, decodedResult) => {
-                    document.getElementById('scan-result').innerText = `Scanned Success: ${decodedText}`;
-                    html5QrCode.stop();
+                    handleScannedCode(decodedText);
+                    html5QrCode.stop().catch(() => {});
                 },
                 (errorMessage) => {}
             ).catch(err => {
                 document.getElementById('scan-result').innerText = `Camera error or permission denied.`;
             });
+        }
+
+        function simulateScan(code) {
+            if (html5QrCode) {
+                html5QrCode.stop().catch(() => {});
+            }
+            handleScannedCode(code);
+        }
+
+        function handleScannedCode(code) {
+            let resultEl = document.getElementById('scan-result');
+            if (code.startsWith("ACT-")) {
+                resultEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ Scanned [${code}]:</span> Physical activity time logged (+1 Impact Token minted)!`;
+                alert("Physical activity station QR scanned successfully! Impact Token minted to Student Passport.");
+            } else if (code.startsWith("ECO-")) {
+                resultEl.innerHTML = `<span class="text-teal-600 font-bold">✓ Scanned [${code}]:</span> Eco-habit verified (+1 Sustainability Token minted)!`;
+                alert("Eco-habit station QR scanned successfully! Sustainability Token minted to Student Passport.");
+            } else {
+                resultEl.innerHTML = `<span class="text-blue-600 font-bold">✓ Scanned [${code}]:</span> Student badge verified!`;
+                alert("Student token badge verified successfully!");
+            }
         }
 
         // Initialize directly to Layer 2
