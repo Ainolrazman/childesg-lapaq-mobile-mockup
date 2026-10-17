@@ -217,13 +217,17 @@
             const child = childrenData[selectedChild];
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
                         <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
                         
-                        <select onchange="changeLaPaQChild(this.value)" class="bg-slate-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg outline-none border border-slate-600 cursor-pointer">
-                            <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>Adam (8 Yrs)</option>
-                            <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>Maya (5 Yrs)</option>
-                        </select>
+                        <!-- Prominent Child Selector Dropdown -->
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-[10px] text-slate-300 font-bold uppercase">Child:</span>
+                            <select onchange="changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none border border-blue-400 shadow-sm cursor-pointer">
+                                <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
+                                <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div>
@@ -233,7 +237,7 @@
 
                     <!-- Connect / External Portal Login Button -->
                     <div class="pt-1">
-                        <a href="https://lapaq.app:3000/login" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-md transition">
+                        <a href="https://lapaq.app:3000/login" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-md transition">
                             <span>🔗 Connect / Login to LaPaQ Portal</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
@@ -317,7 +321,7 @@
                         </div>
                     </div>
 
-                    <!-- Added Micronutrients: Vitamin A & Vitamin C -->
+                    <!-- Micronutrients: Vitamin A & Vitamin C -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-semibold">
                             <span class="text-slate-700">Vitamin A</span>
@@ -452,13 +456,17 @@
             const child = childrenData[childKey];
             return `
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center border-b border-indigo-400/30 pb-2.5">
                         <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Children Profile</span>
                         
-                        <select onchange="switchChildView(this.value)" class="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-lg outline-none border border-white/30 cursor-pointer">
-                            <option value="adam" ${childKey === 'adam' ? 'selected' : ''} class="text-slate-800">Adam (8 Yrs)</option>
-                            <option value="maya" ${childKey === 'maya' ? 'selected' : ''} class="text-slate-800">Maya (5 Yrs)</option>
-                        </select>
+                        <!-- Prominent Child Selector Dropdown -->
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-[10px] text-indigo-200 font-bold uppercase">Child:</span>
+                            <select onchange="switchChildView(this.value)" class="bg-white text-indigo-900 text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none shadow-sm cursor-pointer border border-indigo-200">
+                                <option value="adam" ${childKey === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
+                                <option value="maya" ${childKey === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div>
@@ -587,6 +595,148 @@
                             <button onclick="claimCommunityToken('Energy Captain')" class="text-[10px] bg-purple-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-purple-700 transition">
                                 + Log Duty
                             </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSchoolPage() {
+            return `
+                <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Institutional Portal</span>
+                    <h2 class="text-xl font-bold">School & Teacher Dashboard</h2>
+                    <p class="text-xs text-indigo-100">SK Petaling Jaya • Registered Cohort Monitoring</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Overall Attendance & RNI Metrics</h3>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Live Sync</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-50 p-3 rounded-lg text-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Class Attendance</p>
+                            <p class="text-lg font-extrabold text-indigo-600 mt-0.5">96.8%</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg text-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase">Plate Compliance</p>
+                            <p class="text-lg font-extrabold text-emerald-600 mt-0.5">91.4%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. YEAR 1 - 3 COHORT LISTING -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">🎒 Year 1 – Year 3 Students</h3>
+                            <p class="text-[10px] text-slate-500">Lower Primary Cohort (Ages 7 – 9)</p>
+                        </div>
+                        <span class="text-[10px] bg-indigo-50 text-indigo-700 font-extrabold px-2 py-0.5 rounded-full">4 Students</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Adam Bin Ainol</p>
+                                <p class="text-[10px] text-slate-500">Year 2 Cemerlang • ID: #AB-34X-KEMAIH</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 100%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Siti Nurhaliza Binti Ahmad</p>
+                                <p class="text-[10px] text-slate-500">Year 1 Pintar • ID: #SN-88B-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 92%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Tan Wei Ming</p>
+                                <p class="text-[10px] text-slate-500">Year 3 Jujur • ID: #TW-12K-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 95%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Kavitha A/P Gopal</p>
+                                <p class="text-[10px] text-slate-500">Year 2 Cemerlang • ID: #KV-45M-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold block">Late</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 88%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. YEAR 4 - 6 COHORT LISTING -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">🎓 Year 4 – Year 6 Students</h3>
+                            <p class="text-[10px] text-slate-500">Upper Primary Cohort (Ages 10 – 12)</p>
+                        </div>
+                        <span class="text-[10px] bg-purple-50 text-purple-700 font-extrabold px-2 py-0.5 rounded-full">4 Students</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Muhammad Danish Bin Rizal</p>
+                                <p class="text-[10px] text-slate-500">Year 5 Amanah • ID: #MD-77P-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 96%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Sarah Binti Zulkifli</p>
+                                <p class="text-[10px] text-slate-500">Year 6 Bestari • ID: #SB-90Z-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 100%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Lucas Lee Jun Hao</p>
+                                <p class="text-[10px] text-slate-500">Year 4 Tekun • ID: #LL-33X-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 90%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Nur Anisa Binti Ismail</p>
+                                <p class="text-[10px] text-slate-500">Year 6 Bestari • ID: #NA-61R-SKPJ</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold block">Present</span>
+                                <span class="text-[9px] text-slate-400 font-semibold mt-0.5 block">Plate: 94%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -770,32 +920,6 @@
                 </div>
             `,
 
-            school: `
-                <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg">
-                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Institutional Portal</span>
-                    <h2 class="text-xl font-bold mt-1">School & Teacher Dashboard</h2>
-                    <p class="text-xs text-indigo-100 mt-1">Attendance linkage & anonymized token monitoring</p>
-                </div>
-
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Attendance Correlation</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Live Sync</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-slate-50 p-3 rounded-lg text-center">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Class Attendance</p>
-                            <p class="text-lg font-extrabold text-indigo-600 mt-0.5">96.8%</p>
-                        </div>
-                        <div class="bg-slate-50 p-3 rounded-lg text-center">
-                            <p class="text-[10px] text-slate-400 font-bold uppercase">Plate Compliance</p>
-                            <p class="text-lg font-extrabold text-emerald-600 mt-0.5">91.4%</p>
-                        </div>
-                    </div>
-                </div>
-            `,
-
             scanner: `
                 <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
@@ -841,6 +965,8 @@
                     contentElem.innerHTML = renderLaPaQPage();
                 } else if (tabKey === 'tokens') {
                     contentElem.innerHTML = renderTokensPage();
+                } else if (tabKey === 'school') {
+                    contentElem.innerHTML = renderSchoolPage();
                 } else {
                     contentElem.innerHTML = contentData[tabKey] || contentData['auth'];
                 }
