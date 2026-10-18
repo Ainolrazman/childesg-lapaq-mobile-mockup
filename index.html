@@ -140,9 +140,9 @@
 
         const participantGroups = {
             "Vegan Cooking Class Cohort 3/2026": [
-                { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", status: "Normal" },
-                { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendanceRate: "90%", status: "Normal" },
-                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendanceRate: "75%", status: "Overweight Risk" }
+                { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", stars: 5, status: "Normal" },
+                { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendanceRate: "90%", stars: 4, status: "Normal" },
+                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendanceRate: "75%", stars: 3, status: "Overweight Risk" }
             ]
         };
 
@@ -458,14 +458,16 @@
                     <div class="space-y-2">
             `;
             
-            // Loop through existing participants and display attendance rate
+            // Loop through existing participants and display awarded stars and attendance rate
             roster.forEach(p => {
                 const isGoodAttendance = parseFloat(p.attendanceRate) >= 80;
+                let starsDisplay = '⭐'.repeat(p.stars) + '☆'.repeat(5 - p.stars);
                 html += `
                     <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 flex justify-between items-center text-xs">
                         <div>
                             <p class="font-bold text-slate-800">${p.name}</p>
                             <p class="text-[10px] text-slate-500 font-mono">${p.token} • Attendance: <strong class="${isGoodAttendance ? 'text-emerald-600' : 'text-amber-600'}">${p.attendanceRate}</strong></p>
+                            <p class="text-[11px] text-amber-500 mt-0.5 tracking-tight" title="${p.stars} out of 5 stars awarded">Awarded Stars: <span class="font-bold">${starsDisplay}</span> (${p.stars}/5)</p>
                         </div>
                         <button onclick="rateCommunityToken('${p.name}')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-2.5 py-1 rounded-lg text-[10px]">⭐ Rate & Award</button>
                     </div>
@@ -527,11 +529,25 @@
         function rateCommunityToken(studentName) {
             const rating = prompt(`Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
             if (rating) {
-                const key = studentName.toLowerCase().includes('adam') ? 'adam' : 'maya';
-                childrenData[key].communityTokens += parseInt(rating) * 10;
-                childrenData[key].totalTokens += parseInt(rating) * 10;
-                alert(`🤝 Community & Leadership Rating Saved! Awarded ${parseInt(rating) * 10} tokens to${studentName}.`);
-                switchTab('school');
+                const parsedRating = parseInt(rating);
+                if (!isNaN(parsedRating) && parsedRating >= 1 && parsedRating <= 5) {
+                    const group = participantGroups[activeParticipantGroup];
+                    if (group) {
+                        const participant = group.find(p => p.name === studentName);
+                        if (participant) {
+                            participant.stars = parsedRating;
+                        }
+                    }
+                    const key = studentName.toLowerCase().includes('adam') ? 'adam' : 'maya';
+                    if (childrenData[key]) {
+                        childrenData[key].communityTokens += parsedRating * 10;
+                        childrenData[key].totalTokens += parsedRating * 10;
+                    }
+                    alert(`🤝 Community & Leadership Rating Saved! Awarded ${parsedRating} stars (${parsedRating * 10} tokens) to${studentName}.`);
+                    switchTab('school');
+                } else {
+                    alert("❌ Please enter a valid number between 1 and 5.");
+                }
             }
         }
 
