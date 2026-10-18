@@ -89,6 +89,46 @@
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
 
+        // Master profile data object storing state for both roles
+        const userProfiles = {
+            parent: {
+                name: "Ainol Razman Ghazali",
+                email: "ainol.razman@example.com",
+                phone: "+6012-3456789",
+                state: "W.P. Kuala Lumpur / Selangor",
+                address: "No. 12, Jalan SS2/24, Petaling Jaya, Selangor",
+                dob: "1969-05-12",
+                occupation: "Technology Founder"
+            },
+            partner: {
+                orgName: "Kemaih Sdn Bhd",
+                regNumber: "202001012345 (1389200-X)",
+                email: "admin@kemaih.my",
+                contactPerson: "Ainol Razman",
+                designation: "Chief Executive Officer (CEO)",
+                personEmail: "ainol@kemaih.my",
+                personPhone: "+6012-3456789"
+            }
+        };
+
+        const malaysiaStatesOptions = `
+            <option>W.P. Kuala Lumpur / Selangor</option>
+            <option>Johor</option>
+            <option>Kedah</option>
+            <option>Kelantan</option>
+            <option>Melaka</option>
+            <option>Negeri Sembilan</option>
+            <option>Pahang</option>
+            <option>Penang</option>
+            <option>Perak</option>
+            <option>Perlis</option>
+            <option>Sabah</option>
+            <option>Sarawak</option>
+            <option>Terengganu</option>
+            <option>W.P. Labuan</option>
+            <option>W.P. Putrajaya</option>
+        `;
+
         const childrenData = {
             adam: {
                 name: "Adam",
@@ -111,7 +151,11 @@
                 communityTokens: 100,
                 totalTokens: 1250,
                 rniStatus: "Balanced Target Met (100% RNI)",
-                rniClaimed: false
+                rniClaimed: false,
+                courses: [
+                    { name: "Vegan Cooking Class Cohort 3/2026", attendance: "100%", stars: 5, status: "Completed" },
+                    { name: "Junior Eco-Warrior Bootcamp 2/2026", attendance: "95%", stars: 5, status: "Active" }
+                ]
             },
             maya: {
                 name: "Maya",
@@ -134,7 +178,10 @@
                 communityTokens: 60,
                 totalTokens: 820,
                 rniStatus: "Balanced Target Met (95% RNI)",
-                rniClaimed: false
+                rniClaimed: false,
+                courses: [
+                    { name: "Zero Waste Kids Workshop Cohort 1/2026", attendance: "90%", stars: 4, status: "Active" }
+                ]
             }
         };
 
@@ -167,7 +214,7 @@
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Register Role</label>
-                            <select id="register-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
+                            <select id="register-role-select" onchange="toggleRegisterFields(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
                                 <option value="parent">👤 Parent / Guardian Account</option>
                                 <option value="partner">🏢 Organization Partner Account</option>
                             </select>
@@ -176,12 +223,15 @@
                             <span class="text-[10px] font-bold text-blue-700 uppercase">PDPA Consent Included</span>
                             <p class="text-[10px] text-blue-600 mt-0.5">Registration creates your account and registers PDPA hashing consent.</p>
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Name / Organization Name</label>
-                            <input type="text" placeholder="e.g. Guardian Name or Organization" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+
+                        <!-- Dynamic Register Form Fields based on role selection -->
+                        <div id="register-fields-container" class="space-y-2.5 pt-1">
+                            <!-- Rendered dynamically -->
                         </div>
+
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">✓ Register & Go to Home Profile</button>
                     </div>
+
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
@@ -204,15 +254,114 @@
             `;
         }
 
-        function setAuthMode(mode) { currentAuthTab = mode; switchTab('layer1'); }
+        function toggleRegisterFields(role) {
+            const container = document.getElementById('register-fields-container');
+            if (!container) return;
+            if (role === 'parent') {
+                container.innerHTML = `
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name:</label>
+                        <input type="text" id="reg-p-name" placeholder="Full Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.name}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <input type="email" id="reg-p-email" placeholder="email@example.com" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.email}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Phone Number:</label>
+                        <input type="tel" id="reg-p-phone" placeholder="+6012-3456789" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.phone}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State:</label>
+                        <select id="reg-p-state" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                            ${malaysiaStatesOptions}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Home Address:</label>
+                        <textarea id="reg-p-address" placeholder="Full residential address" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" rows="2">${userProfiles.parent.address}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth:</label>
+                        <input type="date" id="reg-p-dob" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.dob}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (optional):</label>
+                        <input type="text" id="reg-p-occ" placeholder="e.g. Engineer / Manager" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.occupation}">
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Organization:</label>
+                        <input type="text" id="reg-o-name" placeholder="Organization Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.orgName}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registration Number:</label>
+                        <input type="text" id="reg-o-regno" placeholder="Registration No." class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.regNumber}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <input type="email" id="reg-o-email" placeholder="org@email.my" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.email}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person:</label>
+                        <input type="text" id="reg-o-contact" placeholder="Contact Person Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.contactPerson}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Designation of Contact Person:</label>
+                        <input type="text" id="reg-o-desig" placeholder="e.g. Director / CEO" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.designation}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Email Address:</label>
+                        <input type="email" id="reg-o-pemail" placeholder="person@email.my" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.personEmail}">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Phone Number:</label>
+                        <input type="tel" id="reg-o-pphone" placeholder="+6012-3456789" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.personPhone}">
+                    </div>
+                `;
+            }
+        }
+
+        function setAuthMode(mode) { 
+            currentAuthTab = mode; 
+            switchTab('layer1'); 
+            if (mode === 'register') {
+                setTimeout(() => {
+                    const sel = document.getElementById('register-role-select');
+                    if (sel) toggleRegisterFields(sel.value);
+                }, 50);
+            }
+        }
+
         function handleLoginSubmit() {
             currentUserRole = document.getElementById('login-role-select').value;
             alert("Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
+
         function handleRegisterSubmit() {
-            currentUserRole = document.getElementById('register-role-select').value;
-            alert("Account registered & PDPA consent stored! Loading Home Profile...");
+            const roleSel = document.getElementById('register-role-select').value;
+            currentUserRole = roleSel;
+            if (roleSel === 'parent') {
+                userProfiles.parent.name = document.getElementById('reg-p-name').value;
+                userProfiles.parent.email = document.getElementById('reg-p-email').value;
+                userProfiles.parent.phone = document.getElementById('reg-p-phone').value;
+                userProfiles.parent.state = document.getElementById('reg-p-state').value;
+                userProfiles.parent.address = document.getElementById('reg-p-address').value;
+                userProfiles.parent.dob = document.getElementById('reg-p-dob').value;
+                userProfiles.parent.occupation = document.getElementById('reg-p-occ').value;
+            } else {
+                userProfiles.partner.orgName = document.getElementById('reg-o-name').value;
+                userProfiles.partner.regNumber = document.getElementById('reg-o-regno').value;
+                userProfiles.partner.email = document.getElementById('reg-o-email').value;
+                userProfiles.partner.contactPerson = document.getElementById('reg-o-contact').value;
+                userProfiles.partner.designation = document.getElementById('reg-o-desig').value;
+                userProfiles.partner.personEmail = document.getElementById('reg-o-pemail').value;
+                userProfiles.partner.personPhone = document.getElementById('reg-o-pphone').value;
+            }
+            alert("Account registered & details saved! Loading Home Profile...");
             switchTab('home');
         }
 
@@ -274,54 +423,9 @@
             `;
         }
 
-        // ADD PROGRAM COMPONENT (For Partner Dashboard Only)
-        function renderAddProgramSection() {
-            return `
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">➕ Add New Program / Cohort</h3>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Program</label>
-                        <input type="text" placeholder="e.g. Vegan Cooking Class" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Cohort Number</label>
-                            <input type="text" placeholder="e.g. 3/2026" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date Program Begins</label>
-                            <input type="date" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Location State</label>
-                        <select class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                            <option selected>W.P. Kuala Lumpur / Selangor</option>
-                            <option>Johor</option>
-                            <option>Kedah</option>
-                            <option>Kelantan</option>
-                            <option>Melaka</option>
-                            <option>Negeri Sembilan</option>
-                            <option>Pahang</option>
-                            <option>Penang</option>
-                            <option>Perak</option>
-                            <option>Perlis</option>
-                            <option>Sabah</option>
-                            <option>Sarawak</option>
-                            <option>Terengganu</option>
-                            <option>W.P. Labuan</option>
-                            <option>W.P. Putrajaya</option>
-                        </select>
-                    </div>
-                    <button onclick="alert('New Program / Cohort registered successfully!')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold text-xs transition">
-                        + Register / Add Program
-                    </button>
-                </div>
-            `;
-        }
-
         // 1. PARENT GUARDIAN PAGE -> PARENTS GUARDIAN PROFILE
         function renderParentProfilePage() {
+            const p = userProfiles.parent;
             return `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Home Profile</span>
@@ -334,55 +438,71 @@
                         <button onclick="currentUserRole='partner'; switchTab('home');" class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded-lg">Switch to Organization Profile →</button>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registered Name</label>
-                        <input type="text" value="Ainol Razman Ghazali" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name:</label>
+                        <input type="text" id="hp-name" value="${p.name}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address (Editable)</label>
-                        <input type="email" value="ainol.razman@example.com" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-blue-600">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <input type="email" id="hp-email" value="${p.email}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-blue-600">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Phone Number (Editable)</label>
-                        <input type="tel" value="+6012-3456789" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Phone Number:</label>
+                        <input type="tel" id="hp-phone" value="${p.phone}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State</label>
-                        <select class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
-                            <option selected>W.P. Kuala Lumpur / Selangor</option>
-                            <option>Johor</option>
-                            <option>Kedah</option>
-                            <option>Kelantan</option>
-                            <option>Melaka</option>
-                            <option>Negeri Sembilan</option>
-                            <option>Pahang</option>
-                            <option>Penang</option>
-                            <option>Perak</option>
-                            <option>Perlis</option>
-                            <option>Sabah</option>
-                            <option>Sarawak</option>
-                            <option>Terengganu</option>
-                            <option>W.P. Labuan</option>
-                            <option>W.P. Putrajaya</option>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State:</label>
+                        <select id="hp-state" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                            <option ${p.state.includes('Kuala Lumpur') ? 'selected' : ''}>W.P. Kuala Lumpur / Selangor</option>
+                            <option ${p.state === 'Johor' ? 'selected' : ''}>Johor</option>
+                            <option ${p.state === 'Kedah' ? 'selected' : ''}>Kedah</option>
+                            <option ${p.state === 'Kelantan' ? 'selected' : ''}>Kelantan</option>
+                            <option ${p.state === 'Melaka' ? 'selected' : ''}>Melaka</option>
+                            <option ${p.state === 'Negeri Sembilan' ? 'selected' : ''}>Negeri Sembilan</option>
+                            <option ${p.state === 'Pahang' ? 'selected' : ''}>Pahang</option>
+                            <option ${p.state === 'Penang' ? 'selected' : ''}>Penang</option>
+                            <option ${p.state === 'Perak' ? 'selected' : ''}>Perak</option>
+                            <option ${p.state === 'Perlis' ? 'selected' : ''}>Perlis</option>
+                            <option ${p.state === 'Sabah' ? 'selected' : ''}>Sabah</option>
+                            <option ${p.state === 'Sarawak' ? 'selected' : ''}>Sarawak</option>
+                            <option ${p.state === 'Terengganu' ? 'selected' : ''}>Terengganu</option>
+                            <option ${p.state === 'W.P. Labuan' ? 'selected' : ''}>W.P. Labuan</option>
+                            <option ${p.state === 'W.P. Putrajaya' ? 'selected' : ''}>W.P. Putrajaya</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (Optional)</label>
-                        <input type="text" value="Technology Founder" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Home Address:</label>
+                        <textarea id="hp-address" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold" rows="2">${p.address}</textarea>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth (Optional)</label>
-                        <input type="date" value="1969-05-12" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth:</label>
+                        <input type="date" id="hp-dob" value="${p.dob}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
-                    <button onclick="alert('Parent Guardian Profile updated successfully!')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
-                        Update / Register Guardian Profile
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (optional):</label>
+                        <input type="text" id="hp-occ" value="${p.occupation}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                    <button onclick="updateParentProfile()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
+                        Update
                     </button>
                 </div>
                 ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
 
+        function updateParentProfile() {
+            userProfiles.parent.name = document.getElementById('hp-name').value;
+            userProfiles.parent.email = document.getElementById('hp-email').value;
+            userProfiles.parent.phone = document.getElementById('hp-phone').value;
+            userProfiles.parent.state = document.getElementById('hp-state').value;
+            userProfiles.parent.address = document.getElementById('hp-address').value;
+            userProfiles.parent.dob = document.getElementById('hp-dob').value;
+            userProfiles.parent.occupation = document.getElementById('hp-occ').value;
+            alert("Parents Guardian Profile updated successfully!");
+        }
+
         // 2. ORGANIZATION PAGE -> PARTNER ORGANIZATION PROFILE (WITH ORGANIZED PROGRAMS & PARTICIPANTS)
         function renderPartnerProfilePage() {
+            const o = userProfiles.partner;
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Home Profile</span>
@@ -395,35 +515,35 @@
                         <button onclick="currentUserRole='parent'; switchTab('home');" class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-1 rounded-lg">Switch to Parent Profile →</button>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registered Name of Organization</label>
-                        <input type="text" value="Kemaih Sdn Bhd" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Organization:</label>
+                        <input type="text" id="ho-name" value="${o.orgName}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registration Number</label>
-                        <input type="text" value="202001012345 (1389200-X)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registration Number:</label>
+                        <input type="text" id="ho-regno" value="${o.regNumber}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address</label>
-                        <input type="email" value="admin@kemaih.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <input type="email" id="ho-email" value="${o.email}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact Person</label>
-                        <input type="text" value="Ainol Razman" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person:</label>
+                        <input type="text" id="ho-contact" value="${o.contactPerson}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Designation of Contact Person</label>
-                        <input type="text" value="Chief Executive Officer (CEO)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Designation of Contact Person:</label>
+                        <input type="text" id="ho-desig" value="${o.designation}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact Person Email Address</label>
-                        <input type="email" value="ainol@kemaih.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Email Address:</label>
+                        <input type="email" id="ho-pemail" value="${o.personEmail}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact Person Mobile Number</label>
-                        <input type="tel" value="+6012-3456789" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Phone Number:</label>
+                        <input type="tel" id="ho-pphone" value="${o.personPhone}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
-                    <button onclick="alert('Partner Organization Profile updated successfully!')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
-                        Update / Register Organization Profile
+                    <button onclick="updatePartnerProfile()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
+                        Update
                     </button>
                 </div>
 
@@ -454,6 +574,17 @@
                     </div>
                 </div>
             `;
+        }
+
+        function updatePartnerProfile() {
+            userProfiles.partner.orgName = document.getElementById('ho-name').value;
+            userProfiles.partner.regNumber = document.getElementById('ho-regno').value;
+            userProfiles.partner.email = document.getElementById('ho-email').value;
+            userProfiles.partner.contactPerson = document.getElementById('ho-contact').value;
+            userProfiles.partner.designation = document.getElementById('ho-desig').value;
+            userProfiles.partner.personEmail = document.getElementById('ho-pemail').value;
+            userProfiles.partner.personPhone = document.getElementById('ho-pphone').value;
+            alert("Partner Organization Profile updated successfully!");
         }
 
         function renderPartnerDashboard() {
@@ -494,7 +625,6 @@
                     <div class="space-y-2">
             `;
             
-            // Loop through existing participants and display awarded stars and attendance rate
             roster.forEach(p => {
                 const isGoodAttendance = parseFloat(p.attendanceRate) >= 80;
                 let starsDisplay = '⭐'.repeat(p.stars) + '☆'.repeat(5 - p.stars);
@@ -510,7 +640,6 @@
                 `;
             });
 
-            // ADD PARTICIPANT SECTION
             html += `
                     </div>
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 mt-4">
@@ -526,21 +655,7 @@
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State</label>
                             <select class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg mb-2">
-                                <option selected>W.P. Kuala Lumpur / Selangor</option>
-                                <option>Johor</option>
-                                <option>Kedah</option>
-                                <option>Kelantan</option>
-                                <option>Melaka</option>
-                                <option>Negeri Sembilan</option>
-                                <option>Pahang</option>
-                                <option>Penang</option>
-                                <option>Perak</option>
-                                <option>Perlis</option>
-                                <option>Sabah</option>
-                                <option>Sarawak</option>
-                                <option>Terengganu</option>
-                                <option>W.P. Labuan</option>
-                                <option>W.P. Putrajaya</option>
+                                ${malaysiaStatesOptions}
                             </select>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Address</label>
                             <textarea placeholder="Enter full address" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" rows="2"></textarea>
@@ -607,6 +722,28 @@
                     <div>
                         <h2 class="text-xl font-bold">${child.name}'s Passport & Activity Counters</h2>
                         <p class="text-xs text-indigo-100">${child.age} •${child.school}</p>
+                    </div>
+                </div>
+
+                <!-- LIST OF COURSES ATTENDED -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 List of Courses Attended</h3>
+                    <div class="space-y-2">
+                        ${child.courses && child.courses.length > 0 ? child.courses.map(c => {
+                            let starsStr = '⭐'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
+                            return `
+                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-xs font-bold text-slate-800">${c.name}</p>
+                                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${c.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${c.status}</span>
+                                    </div>
+                                    <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                                        <span>Attendance: <strong class="text-emerald-600">${c.attendance}</strong></span>
+                                        <span class="text-amber-500 font-bold">${starsStr} (${c.stars}/5)</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('') : '<p class="text-xs text-slate-400 italic">No courses attended yet.</p>'}
                     </div>
                 </div>
 
@@ -912,7 +1049,10 @@
             if (partnerLabel) partnerLabel.innerText = currentUserRole === 'partner' ? "Dashboard" : "Partner";
             
             const content = document.getElementById('app-content');
-            if (tabKey === 'layer1') content.innerHTML = renderRegistrationPage();
+            if (tabKey === 'layer1') {
+                content.innerHTML = renderRegistrationPage();
+                setTimeout(() => toggleRegisterFields('parent'), 50);
+            }
             else if (tabKey === 'home') content.innerHTML = currentUserRole === 'partner' ? renderPartnerProfilePage() : renderParentProfilePage();
             else if (tabKey === 'layer3') content.innerHTML = renderChildProfile(selectedChild);
             else if (tabKey === 'lapaq') content.innerHTML = renderLaPaQPage();
