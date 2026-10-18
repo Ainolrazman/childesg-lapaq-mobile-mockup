@@ -143,6 +143,11 @@
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", stars: 5, status: "Normal" },
                 { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendanceRate: "90%", stars: 4, status: "Normal" },
                 { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendanceRate: "75%", stars: 3, status: "Overweight Risk" }
+            ],
+            "Zero Waste Kids Workshop Cohort 1/2026": [
+                { name: "Siti Aminah", token: "#SA-11X-KL01", attendanceRate: "95%", stars: 5, status: "Normal" },
+                { name: "Daniel Wong", token: "#DW-22Y-KL02", attendanceRate: "88%", stars: 4, status: "Normal" },
+                { name: "Aishah Binti Omar", token: "#AO-33Z-KL03", attendanceRate: "92%", stars: 5, status: "Normal" }
             ]
         };
 
@@ -376,7 +381,7 @@
             `;
         }
 
-        // 2. ORGANIZATION PAGE -> PARTNER ORGANIZATION PROFILE
+        // 2. ORGANIZATION PAGE -> PARTNER ORGANIZATION PROFILE (WITH ORGANIZED PROGRAMS & PARTICIPANTS)
         function renderPartnerProfilePage() {
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
@@ -421,6 +426,33 @@
                         Update / Register Organization Profile
                     </button>
                 </div>
+
+                <!-- LIST OF PROGRAMS ORGANIZED & PARTICIPANTS -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 List of Programs Organized & Participants</h3>
+                    <div class="space-y-2.5">
+                        <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-slate-100 flex justify-between items-center cursor-pointer transition">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Vegan Cooking Class Cohort 3/2026</p>
+                                <p class="text-[10px] text-slate-500">Began: 01 Oct 2026 • State: W.P. Kuala Lumpur / Selangor</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-extrabold text-indigo-600">33 Participants</span>
+                                <p class="text-[9px] text-emerald-600 font-bold">Active →</p>
+                            </div>
+                        </div>
+                        <div onclick="openParticipantGroup('Zero Waste Kids Workshop Cohort 1/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-slate-100 flex justify-between items-center cursor-pointer transition">
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">Zero Waste Kids Workshop Cohort 1/2026</p>
+                                <p class="text-[10px] text-slate-500">Began: 15 Aug 2026 • State: Penang</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs font-extrabold text-indigo-600">25 Participants</span>
+                                <p class="text-[9px] text-emerald-600 font-bold">Active →</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             `;
         }
 
@@ -436,6 +468,10 @@
                     <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">👥 Registered Cohorts</h3>
                     <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
                         <div><p class="text-xs font-bold text-slate-800">Vegan Cooking Class Cohort 3/2026</p><p class="text-[10px] text-slate-500">Participants: 33 • Lead: Cikgu Faridah</p></div>
+                        <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
+                    </div>
+                    <div onclick="openParticipantGroup('Zero Waste Kids Workshop Cohort 1/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
+                        <div><p class="text-xs font-bold text-slate-800">Zero Waste Kids Workshop Cohort 1/2026</p><p class="text-[10px] text-slate-500">Participants: 25 • Lead: Ainol Razman</p></div>
                         <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
                     </div>
                 </div>
