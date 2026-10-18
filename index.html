@@ -111,11 +111,7 @@
                 communityTokens: 100,
                 totalTokens: 1250,
                 rniStatus: "Balanced Target Met (100% RNI)",
-                rniClaimed: false,
-                courses: [
-                    { name: "Vegan Cooking Class Cohort 3/2026", attendance: "100%", stars: 5, status: "Completed" },
-                    { name: "Junior Eco-Warrior Bootcamp 2/2026", attendance: "95%", stars: 5, status: "Active" }
-                ]
+                rniClaimed: false
             },
             maya: {
                 name: "Maya",
@@ -138,10 +134,7 @@
                 communityTokens: 60,
                 totalTokens: 820,
                 rniStatus: "Balanced Target Met (95% RNI)",
-                rniClaimed: false,
-                courses: [
-                    { name: "Zero Waste Kids Workshop Cohort 1/2026", attendance: "90%", stars: 4, status: "Active" }
-                ]
+                rniClaimed: false
             }
         };
 
@@ -614,28 +607,6 @@
                     <div>
                         <h2 class="text-xl font-bold">${child.name}'s Passport & Activity Counters</h2>
                         <p class="text-xs text-indigo-100">${child.age} •${child.school}</p>
-                    </div>
-                </div>
-
-                <!-- LIST OF COURSES ATTENDED -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 List of Courses Attended</h3>
-                    <div class="space-y-2">
-                        ${child.courses && child.courses.length > 0 ? child.courses.map(c => {
-                            let starsStr = '⭐'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
-                            return `
-                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
-                                    <div class="flex justify-between items-center">
-                                        <p class="text-xs font-bold text-slate-800">${c.name}</p>
-                                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${c.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${c.status}</span>
-                                    </div>
-                                    <div class="flex justify-between text-[10px] text-slate-500 font-mono">
-                                        <span>Attendance: <strong class="text-emerald-600">${c.attendance}</strong></span>
-                                        <span class="text-amber-500 font-bold">${starsStr} (${c.stars}/5)</span>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('') : '<p class="text-xs text-slate-400 italic">No courses attended yet.</p>'}
                     </div>
                 </div>
 
