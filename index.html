@@ -33,6 +33,44 @@
         <!-- App Header -->
         <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
             <div>
+                <span class="text-[10px] font-bold trackingHere is the updated prototype. I have added the **Attendance Rate** (e.g., 100%, 90%, 75%) to the participant data and displayed it directly next to their token ID in the Partner Dashboard's Participant Group view. I also added dynamic coloring so that good attendance (80%+) is green, and lower attendance is amber.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChildESG™ Mobile Prototype</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <!-- HTML5 QR Code Scanner Library CDN -->
+    <script src="[https://unpkg.com/html5-qrcode](https://unpkg.com/html5-qrcode)" type="text/javascript"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap)" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-0 sm:p-4">
+    <!-- Mobile Device Frame Container -->
+    <div class="w-full sm:max-w-[400px] h-screen sm:h-[844px] bg-slate-50 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-8 sm:border-slate-800">
+        
+        <!-- Top Status Bar Mock -->
+        <div class="bg-slate-900 text-white px-6 py-3 flex justify-between items-center text-xs font-semibold shrink-0">
+            <span>10:34</span>
+            <div class="w-20 h-4 bg-slate-800 rounded-full mx-auto absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
+            <div class="flex space-x-1.5 items-center">
+                <span>5G</span>
+                <div class="w-5 h-2.5 border border-white rounded-sm p-0.5 flex items-center">
+                    <div class="w-full h-full bg-white rounded-2xs"></div>
+                </div>
+            </div>
+        </div>
+        <!-- App Header -->
+        <header class="bg-white border-b border-slate-200 px-5 py-3.5 flex justify-between items-center shrink-0">
+            <div>
                 <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
                 <h1 id="app-title" class="text-lg font-bold text-slate-900">Registration Gateway</h1>
             </div>
@@ -140,9 +178,9 @@
 
         const participantGroups = {
             "Vegan Cooking Class Cohort 3/2026": [
-                { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendance: "Present", rni: "95% (Met)", status: "Normal" },
-                { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendance: "Present", rni: "92% (Met)", status: "Normal" },
-                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendance: "Present", rni: "88% (Met)", status: "Overweight Risk" }
+                { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", status: "Normal" },
+                { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendanceRate: "90%", status: "Normal" },
+                { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendanceRate: "75%", status: "Overweight Risk" }
             ]
         };
 
@@ -458,11 +496,15 @@
                     <div class="space-y-2">
             `;
             
-            // Loop through existing participants
+            // Loop through existing participants and display attendance rate
             roster.forEach(p => {
+                const isGoodAttendance = parseFloat(p.attendanceRate) >= 80;
                 html += `
                     <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                        <div><p class="font-bold text-slate-800">${p.name}</p><p class="text-[10px] text-slate-500 font-mono">${p.token}</p></div>
+                        <div>
+                            <p class="font-bold text-slate-800">${p.name}</p>
+                            <p class="text-[10px] text-slate-500 font-mono">${p.token} • Attendance: <strong class="${isGoodAttendance ? 'text-emerald-600' : 'text-amber-600'}">${p.attendanceRate}</strong></p>
+                        </div>
                         <button onclick="rateCommunityToken('${p.name}')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-2.5 py-1 rounded-lg text-[10px]">⭐ Rate & Award</button>
                     </div>
                 `;
