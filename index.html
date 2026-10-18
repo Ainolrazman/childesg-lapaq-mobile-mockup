@@ -457,6 +457,8 @@
                     </div>
                     <div class="space-y-2">
             `;
+            
+            // Loop through existing participants
             roster.forEach(p => {
                 html += `
                     <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 flex justify-between items-center text-xs">
@@ -465,7 +467,56 @@
                     </div>
                 `;
             });
-            html += `</div></div>`;
+
+            // ADD PARTICIPANT SECTION
+            html += `
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 mt-4">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">➕ Add Participant to Cohort</h3>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Participant Name</label>
+                            <input type="text" placeholder="e.g. Adam bin Ainol" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth</label>
+                            <input type="date" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State</label>
+                            <select class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg mb-2">
+                                <option selected>W.P. Kuala Lumpur / Selangor</option>
+                                <option>Johor</option>
+                                <option>Kedah</option>
+                                <option>Kelantan</option>
+                                <option>Melaka</option>
+                                <option>Negeri Sembilan</option>
+                                <option>Pahang</option>
+                                <option>Penang</option>
+                                <option>Perak</option>
+                                <option>Perlis</option>
+                                <option>Sabah</option>
+                                <option>Sarawak</option>
+                                <option>Terengganu</option>
+                                <option>W.P. Labuan</option>
+                                <option>W.P. Putrajaya</option>
+                            </select>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Full Address</label>
+                            <textarea placeholder="Enter full address" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" rows="2"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Parent/Guardian</label>
+                            <input type="text" placeholder="e.g. Ainol Razman" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Parent/Guardian Contact</label>
+                            <input type="tel" placeholder="+6012-3456789" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <button onclick="alert('Participant successfully added to the cohort!')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-bold text-xs transition mt-1">
+                            + Add Participant
+                        </button>
+                    </div>
+                </div>
+            `;
             return html;
         }
 
