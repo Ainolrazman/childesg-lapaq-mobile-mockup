@@ -139,7 +139,7 @@
         };
 
         const participantGroups = {
-            "Year 2A (Cemerlang)": [
+            "Vegan Cooking Class Cohort 3/2026": [
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendance: "Present", rni: "95% (Met)", status: "Normal" },
                 { name: "Nurul Ain", token: "#NA-88Y-PJ01", attendance: "Present", rni: "92% (Met)", status: "Normal" },
                 { name: "Marcus Tan", token: "#MT-12Z-PJ02", attendance: "Present", rni: "88% (Met)", status: "Overweight Risk" }
@@ -211,7 +211,7 @@
             switchTab('home');
         }
 
-        // REGISTERED CHILDREN LIST COMPONENT FOR BOTH PROFILES
+        // REGISTERED CHILDREN LIST COMPONENT (For Parent Profile Only)
         function renderRegisteredChildrenList() {
             return `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
@@ -236,7 +236,7 @@
             `;
         }
 
-        // SHARED ADD CHILD FORM COMPONENT
+        // ADD CHILD COMPONENT (For Parent Profile Only)
         function renderAddChildSection() {
             return `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
@@ -264,6 +264,52 @@
                     </div>
                     <button onclick="alert('Child / Participant registered successfully and added to system tracking!')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold text-xs transition">
                         + Register / Add Child
+                    </button>
+                </div>
+            `;
+        }
+
+        // ADD PROGRAM COMPONENT (For Partner Dashboard Only)
+        function renderAddProgramSection() {
+            return `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">➕ Add New Program / Cohort</h3>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Program</label>
+                        <input type="text" placeholder="e.g. Vegan Cooking Class" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Cohort Number</label>
+                            <input type="text" placeholder="e.g. 3/2026" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date Program Begins</label>
+                            <input type="date" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Location State</label>
+                        <select class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                            <option selected>W.P. Kuala Lumpur / Selangor</option>
+                            <option>Johor</option>
+                            <option>Kedah</option>
+                            <option>Kelantan</option>
+                            <option>Melaka</option>
+                            <option>Negeri Sembilan</option>
+                            <option>Pahang</option>
+                            <option>Penang</option>
+                            <option>Perak</option>
+                            <option>Perlis</option>
+                            <option>Sabah</option>
+                            <option>Sarawak</option>
+                            <option>Terengganu</option>
+                            <option>W.P. Labuan</option>
+                            <option>W.P. Putrajaya</option>
+                        </select>
+                    </div>
+                    <button onclick="alert('New Program / Cohort registered successfully!')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold text-xs transition">
+                        + Register / Add Program
                     </button>
                 </div>
             `;
@@ -388,12 +434,12 @@
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">👥 Registered Cohorts</h3>
-                    <div onclick="openParticipantGroup('Year 2A (Cemerlang)')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
-                        <div><p class="text-xs font-bold text-slate-800">Year 2A (Cemerlang)</p><p class="text-[10px] text-slate-500">Participants: 33 • Lead: Cikgu Faridah</p></div>
+                    <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
+                        <div><p class="text-xs font-bold text-slate-800">Vegan Cooking Class Cohort 3/2026</p><p class="text-[10px] text-slate-500">Participants: 33 • Lead: Cikgu Faridah</p></div>
                         <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
                     </div>
                 </div>
-                ${renderRegisteredChildrenList()}${renderAddChildSection()}
+                ${renderAddProgramSection()}
             `;
         }
 
