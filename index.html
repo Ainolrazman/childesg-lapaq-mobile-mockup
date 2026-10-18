@@ -468,18 +468,12 @@
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 Impact (Physical Play)</span><span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Active Hours: <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="registerQRActivity('Impact Physical Play')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-2 rounded-lg text-xs transition">📷 Scan QR</button>
-                        <button onclick="mockScanAction('Physical Play')" class="bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-2 px-2 rounded-lg text-xs transition">⚡ Mock Scan</button>
-                    </div>
+                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Physical Play</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 Eco-Habits (Zero Waste)</span><span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Food Waste Diverted: <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="registerQREco('Eco Zero Waste')" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-2 rounded-lg text-xs transition">📷 Scan QR</button>
-                        <button onclick="mockScanAction('Eco Zero Waste')" class="bg-teal-100 hover:bg-teal-200 text-teal-800 font-bold py-2 px-2 rounded-lg text-xs transition">⚡ Mock Scan</button>
-                    </div>
+                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Zero Waste</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 Nutrition Tokens</span><span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span></div>
@@ -488,10 +482,7 @@
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 Activity Attendance</span><span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Attendance Hours: <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="registerQRAttendance('Activity Attendance')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-lg text-xs transition">📷 Scan QR</button>
-                        <button onclick="mockScanAction('Activity Attendance')" class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold py-2 px-2 rounded-lg text-xs transition">⚡ Mock Scan</button>
-                    </div>
+                    <button onclick="openLiveScannerModal('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Attendance</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🤝 Community & Leadership</span><span class="text-xs font-extrabold text-purple-600">${child.communityTokens} Tokens</span></div>
@@ -500,18 +491,15 @@
             `;
         }
         function setChildTimeSpan(span) { childTimeSpan = span; switchTab('layer3'); }
-        function registerQRActivity(t) { const c = childrenData[selectedChild]; c.impactTokens += 10; c.activeHours += 1; c.totalTokens += 10; alert(`Registered [${t}]! +10 tokens`); switchTab('layer3'); }
-        function registerQREco(t) { const c = childrenData[selectedChild]; c.ecoTokens += 10; c.foodWasteKg += 0.5; c.totalTokens += 10; alert(`Registered [${t}]! +10 tokens`); switchTab('layer3'); }
-        function registerQRAttendance(t) { const c = childrenData[selectedChild]; c.activityTokens += 10; c.activityHours += 2; c.totalTokens += 10; alert(`Registered [${t}]! +10 tokens`); switchTab('layer3'); }
-        function mockScanAction(category) {
-            const c = childrenData[selectedChild];
-            c.totalTokens += 20;
-            if (category.includes('Physical Play')) { c.impactTokens += 20; c.activeHours += 2; }
-            else if (category.includes('Zero Waste')) { c.ecoTokens += 20; c.foodWasteKg += 1.0; }
-            else if (category.includes('Attendance')) { c.activityTokens += 20; c.activityHours += 3; }
-            alert(`⚡ Mock QR Scan Successful for [${category}]!\n+20 Tokens minted to${c.name}'s wallet.`);
-            switchTab('layer3');
+        
+        function openLiveScannerModal(category) {
+            switchTab('scanner');
+            setTimeout(() => {
+                startScanner();
+                document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
+            }, 300);
         }
+
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             let multiplier = 1;
@@ -701,12 +689,11 @@
                     <p class="text-xs text-violet-100 mt-1">Scan physical activity or eco-habit station QR codes</p>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
-                    <div id="reader" class="w-full overflow-hidden rounded-lg bg-slate-100"></div>
+                    <div id="reader" class="w-full overflow-hidden rounded-lg bg-slate-100 min-h-[200px]"></div>
                     <div id="scan-result" class="p-3 bg-slate-50 rounded-lg text-xs text-slate-700 font-mono">
                         Status: Camera ready. Aim at Partner Organization station QR code.
                     </div>
                     <button onclick="startScanner()" class="w-full bg-violet-600 text-white py-2.5 rounded-xl font-semibold text-sm shadow hover:bg-violet-700 transition">Start Camera Scanner</button>
-                    <button onclick="simulateSuccessfulScan()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition">⚡ Simulate Successful Scan (Test Mode)</button>
                 </div>
             `
         };
@@ -754,6 +741,9 @@
         }
         function startScanner() {
             if (typeof Html5Qrcode !== 'undefined') {
+                if (html5QrCode) {
+                    try { html5QrCode.stop().catch(() => {}); } catch(e){}
+                }
                 html5QrCode = new Html5Qrcode("reader");
                 html5QrCode.start(
                     { facingMode: "environment" },
@@ -765,17 +755,15 @@
                         document.getElementById('scan-result').innerText = `Success! Partner QR Scanned: ${decodedText}. +20 Tokens Minted!`;
                         html5QrCode.stop().catch(() => {});
                     },
-                    () => {}
-                ).catch(() => { document.getElementById('scan-result').innerText = `Camera error or permission denied. Use simulate button below.`; });
+                    (errorMessage) => {
+                        // scanning in progress frame error ignore
+                    }
+                ).catch((err) => { 
+                    document.getElementById('scan-result').innerText = `Camera error or permission denied: Please use Localhost or HTTPS.`; 
+                });
             } else {
                 document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
             }
-        }
-        function simulateSuccessfulScan() {
-            const child = childrenData[selectedChild];
-            child.totalTokens += 20;
-            child.impactTokens += 20;
-            document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +20 Tokens Minted to ${child.name}!`;
         }
         window.addEventListener('DOMContentLoaded', () => { switchTab('layer1'); });
     </script>
