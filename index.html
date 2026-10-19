@@ -278,7 +278,16 @@
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`; }  function getMaxCalendarDateString() { const d = new Date(); d.setFullYear(d.getFullYear() + 1); const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`;
+            return `${year}-${month}-${day}`;
+        }
+
+        function getMaxCalendarDateString() {
+            const d = new Date();
+            d.setFullYear(d.getFullYear() + 1);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         const todayDateStr = getTodayDateString();
@@ -1224,6 +1233,27 @@
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Portal Rakan Kongsi' : 'Partner Portal'}</span>
                     <h2 class="text-xl font-bold">${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h2>
                     <p class="text-xs text-indigo-100">${userProfiles.partner.orgName} & ${isBm ? 'Pusat Komuniti' : 'Community Centers'}</p>
+                </div>
+
+                <!-- RESTORED: Organization Partner Assessment & Certification Section -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-indigo-200 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center">
+                            <span>🏆 ${isBm ? 'Penilaian & Pensijilan Rakan Kongsi' : 'Partner Assessment & Certification'}</span>
+                        </h3>
+                        <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ESG Certified Issuer</span>
+                    </div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">
+                        ${isBm ? 'Sebagai organisasi rakan kongsi yang disahkan, anda boleh menilai aktiviti fizikal, tabiat sifar sisa, dan pematuhan pemakanan kanak-kanak serta mengeluarkan lencana ESG digital.' : 'As an authorized partner organization, you can assess child physical activity, zero-waste habits, and nutrition compliance to issue official digital ESG badges and impact tokens.'}
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button onclick="alert(currentLang === 'bm' ? 'Mod Penilaian Batch Dibuka: Sila imbas atau pilih kumpulan peserta untuk penilaian berpusat.' : 'Batch Assessment Mode Opened: Ready to assess registered child cohorts.')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-bold text-xs transition shadow-xs">
+                            📋 ${isBm ? 'Penilaian Kelompok' : 'Batch Assessment'}
+                        </button>
+                        <button onclick="alert(currentLang === 'bm' ? 'Sijil Impak Rasmi & Lencana LEDGER berjaya dicetak untuk semua peserta aktif.' : 'Official Impact Certificates & Ledger Badges successfully minted and issued to all active cohort participants.')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl font-bold text-xs transition shadow-xs">
+                            🎖️ ${isBm ? 'Cetak Sijil ESG' : 'Issue ESG Certificate'}
+                        </button>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
