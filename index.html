@@ -108,6 +108,7 @@
         let activeParticipantGroup = '';
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
+        let partnerCertTab = 'overview';
         
         // Helper to get today's date in YYYY-MM-DD format dynamically
         function getTodayDateString() {
@@ -727,12 +728,184 @@
                 pendingHtml = `<p class="text-xs text-slate-400 italic text-center py-2">No pending course applications at this time.</p>`;
             }
 
+            let certSectionHtml = '';
+            if (partnerCertTab === 'overview') {
+                certSectionHtml = `
+                    <div class="space-y-3 animate-in fade-in duration-200">
+                        <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-xl p-4 text-white shadow-md border border-indigo-500/30 space-y-2.5">
+                            <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2">
+                                <span class="text-[9px] uppercase tracking-wider font-bold text-indigo-300">ESG Maturity & Certification</span>
+                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">Silver Verified • Level 3</span>
+                            </div>
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <p class="text-[10px] text-slate-300">Overall ChildESG Score</p>
+                                    <h3 class="text-2xl font-black text-emerald-400">82 <span class="text-xs font-normal text-slate-400">/ 100</span></h3>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[9px] font-mono text-indigo-300 block">Audit ID: CHILDESG-2025-0515-001</span>
+                                    <span class="text-[9px] text-slate-400">Valid until annual audit cycle</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Certification Tier Breakdown & Payment Triggers -->
+                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Certification Tier Breakdown & Investment</span>
+                            <div class="space-y-2 text-xs">
+                                <div class="p-2.5 bg-white rounded-lg border border-slate-100 flex justify-between items-center">
+                                    <div>
+                                        <p class="font-bold text-slate-800">Level 1: Baseline Assessment</p>
+                                        <p class="text-[9px] text-slate-500">4–6 pages report • RM999</p>
+                                    </div>
+                                    <button onclick="triggerTierPayment('Level 1 Baseline Assessment', 999)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">Click here to Pay</button>
+                                </div>
+                                <div class="p-2.5 bg-white rounded-lg border border-slate-100 flex justify-between items-center">
+                                    <div>
+                                        <p class="font-bold text-slate-800">Level 2: Executive Assessment</p>
+                                        <p class="text-[9px] text-slate-500">≈15 pages report • RM2,699</p>
+                                    </div>
+                                    <button onclick="triggerTierPayment('Level 2 Executive Assessment', 2699)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">Click here to Pay</button>
+                                </div>
+                                <div class="p-2.5 bg-white rounded-lg border border-indigo-100 bg-indigo-50/40 flex justify-between items-center">
+                                    <div>
+                                        <p class="font-bold text-indigo-900">Level 3: Comprehensive & Certification</p>
+                                        <p class="text-[9px] text-indigo-600">≈45–60 pages report • RM15,800</p>
+                                    </div>
+                                    <button onclick="triggerTierPayment('Level 3 Comprehensive Assessment', 15800)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">Click here to Pay</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (partnerCertTab === 'pillars') {
+                certSectionHtml = `
+                    <div class="space-y-3 animate-in fade-in duration-200">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">The 3 Pillars of ESG Scorecard (40+ Indicators)</span>
+                            <div class="space-y-2.5">
+                                <div class="space-y-1">
+                                    <div class="flex justify-between font-semibold">
+                                        <span class="text-slate-800">🌱 Environmental (E)</span>
+                                        <span class="text-teal-600 font-bold">78/100</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-teal-500 h-full" style="width: 78%"></div>
+                                    </div>
+                                    <p class="text-[9px] text-slate-500">Covers green learning, climate literacy, energy, emissions & waste recycling.</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex justify-between font-semibold">
+                                        <span class="text-slate-800">🤝 Social (S)</span>
+                                        <span class="text-blue-600 font-bold">86/100</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-blue-600 h-full" style="width: 86%"></div>
+                                    </div>
+                                    <p class="text-[9px] text-slate-500">Covers child safety & safeguarding, mental wellbeing, nutrition & family engagement.</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex justify-between font-semibold">
+                                        <span class="text-slate-800">⚖️ Governance (G)</span>
+                                        <span class="text-indigo-600 font-bold">81/100</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-indigo-600 h-full" style="width: 81%"></div>
+                                    </div>
+                                    <p class="text-[9px] text-slate-500">Covers leadership commitment, child protection policies, transparency & data privacy.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (partnerCertTab === 'risks') {
+                certSectionHtml = `
+                    <div class="space-y-3 animate-in fade-in duration-200 text-xs">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Risk Heat Map & Gap Analysis Matrix (5x5 Grid)</span>
+                            <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 space-y-1.5">
+                                <p class="font-bold text-amber-900">⚠️ Top Priority Identified Risks</p>
+                                <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                                    <li><strong>Child Mental Wellbeing & Stress:</strong> Moderate Likelihood / High Impact</li>
+                                    <li><strong>Digital Safety & Screen Time:</strong> High Likelihood / Moderate Impact</li>
+                                    <li><strong>Climate Education Practical Effectiveness:</strong> Low Likelihood / High Impact</li>
+                                    <li><strong>Emergency & Health Preparedness:</strong> Low Likelihood / Critical Impact</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (partnerCertTab === 'roadmap') {
+                certSectionHtml = `
+                    <div class="space-y-3 animate-in fade-in duration-200 text-xs">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Actionable Roadmap & Evidence Repository</span>
+                            <div class="space-y-2">
+                                <div class="p-2 bg-white rounded border border-slate-100">
+                                    <p class="font-bold text-slate-800">1. Short-Term Milestone (1–3 Months)</p>
+                                    <p class="text-[10px] text-slate-600">Update child safeguarding policy & enhance staff digital safety protocols.</p>
+                                </div>
+                                <div class="p-2 bg-white rounded border border-slate-100">
+                                    <p class="font-bold text-slate-800">2. Medium-Term Milestone (3–6 Months)</p>
+                                    <p class="text-[10px] text-slate-600">Integrate LaPaQ nutrition metrics into daily school feeding curriculum.</p>
+                                </div>
+                                <div class="p-2 bg-white rounded border border-slate-100">
+                                    <p class="font-bold text-slate-800">3. Long-Term Milestone (6–12 Months)</p>
+                                    <p class="text-[10px] text-slate-600">Achieve Gold Tier Certification & complete full independent audit review.</p>
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t border-slate-200 space-y-1.5">
+                                <label class="block text-[10px] font-bold text-slate-700 uppercase">📁 Upload Evidence Point (200+ Audit Files)</label>
+                                <div class="flex gap-2">
+                                    <input type="file" class="w-full text-[10px] bg-white p-1.5 border border-slate-300 rounded-lg">
+                                    <button onclick="alert('Evidence document uploaded successfully and added to audit trail repository!')" class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px]">Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (partnerCertTab === 'reports') {
+                certSectionHtml = `
+                    <div class="space-y-3 animate-in fade-in duration-200 text-xs">
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5">
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Strategic Report Export Hub</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="exportAuditReport('Grant Submissions & NGO Funding')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
+                                    🎁 Grant & NGO Funding PDF
+                                </button>
+                                <button onclick="exportAuditReport('Investor Due Diligence')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
+                                    💼 Investor Due Diligence
+                                </button>
+                                <button onclick="exportAuditReport('Sustainability-Linked Bank Loans')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
+                                    🏦 Sustainable Bank Loans
+                                </button>
+                                <button onclick="exportAuditReport('Corporate CSR & GRI/ISSB Reporting')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
+                                    📊 Corporate GRI / ISSB
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Portal</span>
                     <h2 class="text-xl font-bold">Partner Organization Dashboard</h2>
                     <p class="text-xs text-indigo-100">${userProfiles.partner.orgName} & Community Centers</p>
                 </div>
+
+                <!-- Certification Module Sub-Nav Tabs -->
+                <div class="bg-white rounded-xl p-2 shadow-sm border border-slate-100 flex justify-between text-[10px] font-bold">
+                    <button onclick="setCertTab('overview')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'overview' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Overview</button>
+                    <button onclick="setCertTab('pillars')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'pillars' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">3 Pillars</button>
+                    <button onclick="setCertTab('risks')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'risks' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Risk Matrix</button>
+                    <button onclick="setCertTab('roadmap')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'roadmap' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Roadmap</button>
+                    <button onclick="setCertTab('reports')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'reports' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Reports</button>
+                </div>
+
+                <!-- Dynamic Certification Section Container -->
+                ${certSectionHtml}
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-amber-700 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center justify-between">
@@ -756,6 +929,19 @@
                     </div>
                 </div>
             `;
+        }
+
+        function setCertTab(tab) {
+            partnerCertTab = tab;
+            switchTab('school');
+        }
+
+        function triggerTierPayment(tierName, amount) {
+            alert(`Secure Payment Gateway: Proceeding to payment for [${tierName}] amounting to RM ${amount.toLocaleString()}. Redirecting to FPX / Credit Card processor...`);
+        }
+
+        function exportAuditReport(reportType) {
+            alert(`📥 Report Generated Successfully!\nYour audit-ready PDF for [${reportType}] has been compiled and downloaded for ${userProfiles.partner.orgName}.`);
         }
 
         function approveApplication(index) {
