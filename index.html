@@ -175,7 +175,6 @@
         let activeParticipantGroup = '';
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
-        let partnerCertTab = 'overview';
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
@@ -281,15 +280,22 @@
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`; }  function getMaxCalendarDateString() { const d = new Date(); d.setFullYear(d.getFullYear() + 1); const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`;
+            return `${year}-${month}-${day}`;
+        }
+
+        function getMaxCalendarDateString() {
+            const d = new Date();
+            d.setFullYear(d.getFullYear() + 1);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
         }
 
         const todayDateStr = getTodayDateString();
         const maxDateStr = getMaxCalendarDateString();
         let customRniFromDate = '2026-10-01';
         let customRniToDate = todayDateStr;
-        let childCustomFromDate = '2026-10-01';
-        let childCustomToDate = todayDateStr;
 
         function updateStatusBarTime() {
             const now = new Date();
@@ -811,7 +817,14 @@
                                 <input type="text" id="market-prog-name" placeholder="e.g. Junior Green Science Workshop" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">3. ${isBm ? 'Jangka Masa Kalendar (Hingga 12 Bulan)' : 'Calendar Date Range (Within 12 Months)'}</label>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="block text-[10px] font-bold text-slate-500 uppercase">3. ${isBm ? 'Ringkasan & Penerangan Program (Maks 120 Kata)' : 'Program Summary & Description (Max 150 Words)'}</label>
+                                    <span id="word-count-indicator" class="text-[9px] font-bold text-slate-400">0 / 150 words</span>
+                                </div>
+                                <textarea id="market-prog-desc" rows="3" oninput="checkProgramDescriptionWordCount()" placeholder="Enter a brief summary and description of the program/activity (max 150 words)..." class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">4. ${isBm ? 'Jangka Masa Kalendar (Hingga 12 Bulan)' : 'Calendar Date Range (Within 12 Months)'}</label>
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
                                         <span class="text-[9px] text-slate-400 font-bold uppercase block mb-0.5">From (Today)</span>
@@ -877,6 +890,23 @@
             }
         }
 
+        function checkProgramDescriptionWordCount() {
+            const descInput = document.getElementById('market-prog-desc');
+            const indicator = document.getElementById('word-count-indicator');
+            if (!descInput || !indicator) return;
+            
+            const text = descInput.value.trim();
+            const words = text === "" ? [] : text.split(/\s+/);
+            const count = words.length;
+            
+            indicator.innerText = `${count} / 150 words`;
+            if (count > 150) {
+                indicator.className = "text-[9px] font-bold text-red-600";
+            } else {
+                indicator.className = "text-[9px] font-bold text-slate-400";
+            }
+        }
+
         function handleMarketplaceAddProgram() {
             const isBm = currentLang === 'bm';
             const catSelect = document.getElementById('market-prog-category').value;
@@ -891,11 +921,23 @@
             }
 
             const progName = document.getElementById('market-prog-name').value.trim();
+            const progDesc = document.getElementById('market-prog-desc').value.trim();
             const startDate = document.getElementById('market-prog-start').value;
             const endDate = document.getElementById('market-prog-end').value;
 
             if (!progName) {
                 alert(isBm ? "Sila masukkan nama program atau aktiviti." : "Please enter the name of the program or activity.");
+                return;
+            }
+
+            if (!progDesc) {
+                alert(isBm ? "Sila masukkan ringkasan dan penerangan program." : "Please enter the program summary and description.");
+                return;
+            }
+
+            const wordCount = progDesc.split(/\s+/).length;
+            if (wordCount > 150) {
+                alert(isBm ? `Penerangan program melebihi had 150 kata (Kini: ${wordCount} kata). Sila pendekkan.` : `Program description exceeds the 150-word limit (Current: ${wordCount} words). Please shorten it.`);
                 return;
             }
 
@@ -908,7 +950,7 @@
                 org: userProfiles.partner.orgName,
                 title: progName,
                 category: finalCategory,
-                desc: isBm ? "Program baru yang dianjurkan oleh institusi rakan kongsi." : "New community and ESG activity organized by institutional partner.",
+                desc: progDesc,
                 slots: "30 Available",
                 reward: "150 Impact Tokens",
                 badge: "🌱 New Partner Event",
@@ -1292,11 +1334,6 @@
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             const isBm = currentLang === 'bm';
-            let mult = 1;
-            if (childTimeSpan === '7') mult = 7;
-            if (childTimeSpan === '14') mult = 14;
-            if (childTimeSpan === '30') mult = 30;
-            if (childTimeSpan === 'custom') mult = 12;
             
             const orgOptions = Object.keys(organizationCoursesMap).map(org => `<option value="${org}">${org}</option>`).join('');
 
@@ -1330,7 +1367,7 @@
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="bg-white/5 p-2.5 rounded-xl border border-white/10">
                             <span class="text-[9px] text-slate-400 uppercase font-bold block">${isBm ? 'Khidmat Sukarela' : 'Volunteer & Service'}</span>
-                            <strong class="text-amber-400 text-sm font-black">${(child.volunteerHours * (childTimeSpan !== '1' ? mult/5 : 1)).toFixed(1)} hrs</strong>
+                            <strong class="text-amber-400 text-sm font-black">${child.volunteerHours} hrs</strong>
                         </div>
                         <div class="bg-white/5 p-2.5 rounded-xl border border-white/10">
                             <span class="text-[9px] text-slate-400 uppercase font-bold block">${isBm ? 'Kursus Pembelajaran ESG' : 'ESG Learning Courses'}</span>
@@ -1410,47 +1447,23 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${isBm ? '📅 Jangka Masa Kalendar Kaunter' : '📅 Counter Calendar Span'}</h3>
-                    <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <button onclick="setChildTimeSpan('1')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '1' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">1 ${isBm ? 'Hari' : 'Day'}</button>
-                        <button onclick="setChildTimeSpan('7')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '7' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">7 ${isBm ? 'Hari' : 'Days'}</button>
-                        <button onclick="setChildTimeSpan('14')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '14' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">14 ${isBm ? 'Hari' : 'Days'}</button>
-                        <button onclick="setChildTimeSpan('30')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '30' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">30 ${isBm ? 'Hari' : 'Days'}</button>
-                        <button onclick="setChildTimeSpan('custom')" class="py-1.5 text-[10px] font-bold rounded-lg col-span-2 ${childTimeSpan === 'custom' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">${isBm ? 'Tarikh Ditetapkan' : 'Defined Dates (From - To)'}</button>
-                    </div>
-                    <div id="child-custom-date" class="${childTimeSpan === 'custom' ? 'block' : 'hidden'} pt-2 space-y-2 border-t border-slate-100 mt-2">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase block">${isBm ? 'Pilih Julat Tarikh' : 'Select Custom Date Range'}</span>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">${isBm ? 'Dari Tarikh' : 'From Date'}</label>
-                                <input type="date" id="child-from-date" value="${childCustomFromDate}" max="${todayDateStr}" onchange="updateChildCustomDates()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
-                            </div>
-                            <div>
-                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">${isBm ? 'Hingga Tarikh' : 'To Date (Max: Today)'}</label>
-                                <input type="date" id="child-to-date" value="${childCustomToDate}" max="${todayDateStr}" onchange="updateChildCustomDates()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Impak (Permainan Fizikal)' : 'Impact (Physical Play)'}</span><span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">${isBm ? 'Jam Aktif:' : 'Active Hours:'} <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Impak (Permainan Fizikal)' : 'Impact (Physical Play)'}</span><span class="text-xs font-extrabold text-amber-600">${child.impactTokens} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Jam Aktif:' : 'Active Hours:'} <strong class="text-slate-800">${child.activeHours} hrs</strong></p>
                     <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Fizikal)' : 'Scan Partner QR for Physical Play'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko (Sifar Sisa)' : 'Eco-Habits (Zero Waste)'}</span><span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">${isBm ? 'Sisa Makanan Dialih Keluar:' : 'Food Waste Diverted:'} <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko (Sifar Sisa)' : 'Eco-Habits (Zero Waste)'}</span><span class="text-xs font-extrabold text-teal-600">${child.ecoTokens} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Sisa Makanan Dialih Keluar:' : 'Food Waste Diverted:'} <strong class="text-emerald-600">${child.foodWasteKg} kg</strong></p>
                     <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Sifar Sisa)' : 'Scan Partner QR for Zero Waste'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 ${isBm ? 'Token Pemakanan' : 'Nutrition Tokens'}</span><span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span></div>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 ${isBm ? 'Token Pemakanan' : 'Nutrition Tokens'}</span><span class="text-xs font-extrabold text-emerald-600">${child.nutritionTokens} Tokens</span></div>
                     <button onclick="switchTab('lapaq')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition">${isBm ? 'Lihat Analisis RNI LaPaQ →' : 'View LaPaQ RNI Analytics →'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 ${isBm ? 'Kehadiran Aktiviti' : 'Activity Attendance'}</span><span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">${isBm ? 'Jam Kehadiran:' : 'Attendance Hours:'} <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 ${isBm ? 'Kehadiran Aktiviti' : 'Activity Attendance'}</span><span class="text-xs font-extrabold text-blue-600">${child.activityTokens} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Jam Kehadiran:' : 'Attendance Hours:'} <strong class="text-slate-800">${child.activityHours} hrs</strong></p>
                     <button onclick="openLiveScannerModal('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Kehadiran)' : 'Scan Partner QR for Attendance'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
@@ -1465,16 +1478,6 @@
             if (!courseSelect) return;
             const courses = organizationCoursesMap[selectedOrg] || [];
             courseSelect.innerHTML = courses.map(c => `<option value="${c}">${c}</option>`).join('');
-        }
-
-        function updateChildCustomDates() {
-            const fromInput = document.getElementById('child-from-date');
-            const toInput = document.getElementById('child-to-date');
-            if (fromInput && toInput) {
-                if (toInput.value > todayDateStr) toInput.value = todayDateStr;
-                childCustomFromDate = fromInput.value;
-                childCustomToDate = toInput.value;
-            }
         }
 
         function submitNewCourseApplication() {
@@ -1504,7 +1507,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
@@ -1532,8 +1535,6 @@
                 switchTab('home');
             }
         }
-
-        function setChildTimeSpan(span) { childTimeSpan = span; switchTab('layer3'); }
         
         function openLiveScannerModal(category) {
             switchTab('scanner');
@@ -1546,23 +1547,17 @@
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
-            let multiplier = 1;
-            if (rniTimeSpan === '3') multiplier = 3;
-            if (rniTimeSpan === '7') multiplier = 7;
-            if (rniTimeSpan === '14') multiplier = 14;
-            if (rniTimeSpan === '30') multiplier = 30;
-            if (rniTimeSpan === 'custom') multiplier = 12;
             
             const rniMetrics = [
-                { name: isBm ? "Kalori (Kcal)" : "Calories (Kcal)", current: Math.round(1620 * multiplier), target: Math.round(1800 * multiplier), unit: "kcal", color: "bg-emerald-500" },
-                { name: isBm ? "Karbohidrat" : "Carbohydrate", current: Math.round(225 * multiplier), target: Math.round(240 * multiplier), unit: "g", color: "bg-blue-500" },
-                { name: isBm ? "Protein" : "Protein", current: Math.round(42 * multiplier), target: Math.round(45 * multiplier), unit: "g", color: "bg-indigo-500" },
-                { name: isBm ? "Serat" : "Fiber", current: Math.round(18 * multiplier), target: Math.round(20 * multiplier), unit: "g", color: "bg-amber-500" },
-                { name: isBm ? "Kalsium" : "Calcium", current: Math.round(680 * multiplier), target: Math.round(800 * multiplier), unit: "mg", color: "bg-purple-500" },
-                { name: isBm ? "Zat Besi" : "Iron", current: Math.round(11 * multiplier), target: Math.round(12 * multiplier), unit: "mg", color: "bg-teal-500" },
-                { name: isBm ? "Kalium" : "Potassium", current: Math.round(2100 * multiplier), target: Math.round(2300 * multiplier), unit: "mg", color: "bg-sky-500" },
-                { name: isBm ? "Vitamin A" : "Vitamin A", current: Math.round(480 * multiplier), target: Math.round(500 * multiplier), unit: "µg RE", color: "bg-orange-500" },
-                { name: isBm ? "Vitamin C" : "Vitamin C", current: Math.round(38 * multiplier), target: Math.round(40 * multiplier), unit: "mg", color: "bg-rose-500" }
+                { name: isBm ? "Kalori (Kcal)" : "Calories (Kcal)", current: 1620, target: 1800, unit: "kcal", color: "bg-emerald-500" },
+                { name: isBm ? "Karbohidrat" : "Carbohydrate", current: 225, target: 240, unit: "g", color: "bg-blue-500" },
+                { name: isBm ? "Protein" : "Protein", current: 42, target: 45, unit: "g", color: "bg-indigo-500" },
+                { name: isBm ? "Serat" : "Fiber", current: 18, target: 20, unit: "g", color: "bg-amber-500" },
+                { name: isBm ? "Kalsium" : "Calcium", current: 680, target: 800, unit: "mg", color: "bg-purple-500" },
+                { name: isBm ? "Zat Besi" : "Iron", current: 11, target: 12, unit: "mg", color: "bg-teal-500" },
+                { name: isBm ? "Kalium" : "Potassium", current: 2100, target: 2300, unit: "mg", color: "bg-sky-500" },
+                { name: isBm ? "Vitamin A" : "Vitamin A", current: 480, target: 500, unit: "µg RE", color: "bg-orange-500" },
+                { name: isBm ? "Vitamin C" : "Vitamin C", current: 38, target: 40, unit: "mg", color: "bg-rose-500" }
             ];
 
             let growthSvgContent = '';
@@ -1862,7 +1857,6 @@
             else if (tabKey === 'tokens') content.innerHTML = renderTokensPage();
             else content.innerHTML = contentData[tabKey];
 
-            // Highlight active bottom tab buttons (layer1 / Register and home)
             ['layer1', 'home'].forEach(k => {
                 const btn = document.getElementById(`nav-${k}`);
                 if (btn) {
