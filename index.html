@@ -75,17 +75,9 @@
                         <span>🏷️</span>
                         <span id="menu-item-programs">Partner Programs & Activities</span>
                     </button>
-                    <button onclick="switchTab('layer3'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
-                        <span>👶</span>
-                        <span id="menu-item-children">Children Profile & Passport</span>
-                    </button>
                     <button onclick="switchTab('lapaq'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
                         <span>🥗</span>
                         <span id="menu-item-lapaq">LaPaQ RNI Intelligence</span>
-                    </button>
-                    <button onclick="switchTab('school'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
-                        <span>🏢</span>
-                        <span id="menu-item-partner">Partner Organization Dashboard</span>
                     </button>
                     <button onclick="switchTab('scanner'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
                         <span>📷</span>
@@ -206,9 +198,7 @@
                 menuTitle: "More Menu Choices",
                 menu: {
                     programs: "Partner Programs & Activities",
-                    children: "Children Profile & Passport",
                     lapaq: "LaPaQ RNI Intelligence",
-                    partner: "Partner Organization Dashboard",
                     scanner: "QR Code Scanner",
                     tokens: "Impact Tokens Wallet"
                 },
@@ -230,9 +220,7 @@
                 menuTitle: "Pilihan Menu Lanjutan",
                 menu: {
                     programs: "Program & Aktiviti Rakan Kongsi",
-                    children: "Profil Kanak-kanak & Pasport",
                     lapaq: "Analisis RNI LaPaQ",
-                    partner: "Pemuka Organisasi Rakan Kongsi",
                     scanner: "Pengimbas Kod QR",
                     tokens: "Dompet Token Impak"
                 },
@@ -266,9 +254,7 @@
             document.getElementById('nav-label-home').innerText = i18n[currentLang].home;
             document.getElementById('drawer-menu-title').innerText = i18n[currentLang].menuTitle;
             document.getElementById('menu-item-programs').innerText = i18n[currentLang].menu.programs;
-            document.getElementById('menu-item-children').innerText = i18n[currentLang].menu.children;
             document.getElementById('menu-item-lapaq').innerText = i18n[currentLang].menu.lapaq;
-            document.getElementById('menu-item-partner').innerText = i18n[currentLang].menu.partner;
             document.getElementById('menu-item-scanner').innerText = i18n[currentLang].menu.scanner;
             document.getElementById('menu-item-tokens').innerText = i18n[currentLang].menu.tokens;
             switchTab(activeTabKey);
@@ -1074,7 +1060,19 @@
                         ${isBm ? 'Kemaskini' : 'Update'}
                     </button>
                 </div>
-                ${renderRegisteredChildrenList()}${renderAddChildSection()}
+                ${renderRegisteredChildrenList()}
+                ${renderAddChildSection()}
+                <!-- Moved Children Profile & Passport section to bottom of Parents Guardian Home Profile -->
+                <div class="bg-gradient-to-br from-indigo-900 to-blue-900 rounded-xl p-4 text-white shadow-sm border border-indigo-200 space-y-3">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider flex items-center">👶 ${isBm ? 'Profil Kanak-kanak & Pasport' : 'Children Profile & Passport'}</h3>
+                        <span class="text-[9px] bg-indigo-500/40 text-indigo-200 font-bold px-2 py-0.5 rounded-full">Hub</span>
+                    </div>
+                    <p class="text-[11px] text-indigo-100">${isBm ? 'Akses pantas ke pasport digital, metrik pertumbuhan dan lencana impak anak anda.' : 'Quick access to your children digital passport, growth metrics, and impact badges.'}</p>
+                    <button onclick="switchTab('layer3')" class="w-full bg-white hover:bg-slate-100 text-indigo-900 font-bold py-2.5 rounded-xl text-xs transition shadow">
+                        ${isBm ? 'Buka Profil Kanak-kanak →' : 'Open Children Profile →'}
+                    </button>
+                </div>
             `;
         }
         function updateParentProfile() {
@@ -1158,6 +1156,17 @@
                         </div>
                     </div>
                 </div>
+                <!-- Moved Partner Organization Dashboard section to bottom of Partner Organization Home Profile -->
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-xl p-4 text-white shadow-sm border border-indigo-300 space-y-3">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                        <h3 class="text-xs font-bold uppercase tracking-wider flex items-center">🏢 ${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h3>
+                        <span class="text-[9px] bg-indigo-500/40 text-indigo-200 font-bold px-2 py-0.5 rounded-full">Management</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300">${isBm ? 'Akses penuh ke kad skor ESG, pematuhan pensijilan, dan pengurusan roster peserta.' : 'Full access to ESG scorecard, certification tiers compliance, and participant roster management.'}</p>
+                    <button onclick="switchTab('school')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                        ${isBm ? 'Buka Pemuka Rakan Kongsi →' : 'Open Partner Dashboard →'}
+                    </button>
+                </div>
             `;
         }
         function updatePartnerProfile() {
@@ -1194,7 +1203,7 @@
             let layerContentHtml = '';
             if (partnerDashboardLayer === 'esg') {
                 layerContentHtml = `
-                    <!-- Partner Overall Score & Star Rating Box (Updated to High-Contrast Dark Theme) -->
+                    <!-- Partner Overall Score & Star Rating Box (High-Contrast Dark Theme) -->
                     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 border border-slate-700 rounded-2xl p-4 text-white shadow-xl space-y-3 relative overflow-hidden">
                         <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500/10 rounded-full blur-xl pointer-events-none"></div>
                         <div class="flex justify-between items-center border-b border-slate-700 pb-2">
