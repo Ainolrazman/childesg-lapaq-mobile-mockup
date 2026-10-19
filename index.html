@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,9 +15,9 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-slate-900 flex items-center justify-center min-h-[100dvh] p-0 sm:p-4 overflow-hidden">
-    <!-- Universal Responsive Mobile Frame Container (Centered on Desktop & Scaled for All Phones) -->
-    <div class="w-full sm:max-w-[400px] h-[100dvh] sm:h-[844px] bg-slate-50 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-8 sm:border-slate-800">
+<body class="bg-slate-900 flex items-center justify-center min-h-[100dvh] p-0 overflow-hidden">
+    <!-- Responsive Container: Full screen on mobile, Centered Phone Frame on Desktop -->
+    <div class="w-full h-[100dvh] sm:max-w-[400px] sm:h-[844px] bg-slate-50 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-8 sm:border-slate-800">
         
         <!-- Top Status Bar Mock (Static & Locked) -->
         <div class="bg-slate-900 text-white px-6 py-2.5 flex justify-between items-center text-xs font-semibold shrink-0 z-20">
@@ -1025,7 +1024,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
@@ -1284,10 +1283,10 @@
             const child = childrenData[selectedChild];
             if (child.totalTokens >= tokenCost) {
                 child.totalTokens -= tokenCost;
-                alert(`🎉 Successfully Redeemed: [${rewardName}]!\n${tokenCost} tokens deducted from ${child.name}'s wallet balance.`);
+                alert(`🎉 Successfully Redeemed: [${rewardName}]!\n${tokenCost} tokens deducted from${child.name}'s wallet balance.`);
                 switchTab('tokens');
             } else {
-                alert(`❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires ${tokenCost} tokens for this reward.`);
+                alert(`❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
             }
         }
 
@@ -1404,4 +1403,3 @@
     </script>
 </body>
 </html>
-```
