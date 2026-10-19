@@ -42,13 +42,30 @@
             </button>
         </header>
         <!-- Main Scrollable Screen Content Area -->
-        <main id="app-content" class="flex-1 overflow-y-auto p-5 pb-24 hide-scrollbar space-y-5">
+        <main id="app-content" class="flex-1 overflow-y-auto p-5 pb-24 hide-scrollbar space-y-5 relative">
             <div class="p-4 bg-white rounded-xl shadow-sm text-center">
                 <p class="text-xs text-slate-500 font-bold">Loading ChildESG™ Platform...</p>
             </div>
         </main>
+
+        <!-- Custom Application Received Modal Overlay -->
+        <div id="custom-modal-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+                    ✓
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-base font-bold text-slate-900">Application Received!</h3>
+                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Your course/activity application has been successfully submitted and forwarded to the partner organization for approval.</p>
+                </div>
+                <button onclick="closeModalOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                    OK
+                </button>
+            </div>
+        </div>
+
         <!-- Bottom Navigation Bar -->
-        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-50">
+        <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-40">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                 <span class="text-[8px] font-medium">Register</span>
@@ -159,12 +176,14 @@
         // Pending applications array for Partner Dashboard
         let pendingApplications = [
             {
+                childKey: "adam",
                 childName: "Adam bin Ainol",
                 courseName: "AI Nutrition & Health Junior Bootcamp",
                 parentName: "Ainol Razman Ghazali",
                 contact: "+6012-3456789 / ainol.razman@example.com"
             },
             {
+                childKey: "maya",
                 childName: "Maya binti Ainol",
                 courseName: "Child Growth Tracking Workshop",
                 parentName: "Ainol Razman Ghazali",
@@ -215,6 +234,9 @@
                 courses: [
                     { name: "Vegan Cooking Class Cohort 3/2026", attendance: "100%", stars: 5, status: "Completed" },
                     { name: "Junior Eco-Warrior Bootcamp 2/2026", attendance: "95%", stars: 5, status: "Active" }
+                ],
+                appliedCourses: [
+                    { name: "AI Nutrition & Health Junior Bootcamp", org: "Kemaih Sdn Bhd", status: "Pending Approval" }
                 ]
             },
             maya: {
@@ -241,6 +263,9 @@
                 rniClaimed: false,
                 courses: [
                     { name: "Zero Waste Kids Workshop Cohort 1/2026", attendance: "90%", stars: 4, status: "Active" }
+                ],
+                appliedCourses: [
+                    { name: "Child Growth Tracking Workshop", org: "Kemaih Sdn Bhd", status: "Pending Approval" }
                 ]
             }
         };
@@ -633,7 +658,6 @@
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
             
-            // Render pending applications list
             let pendingHtml = '';
             if (pendingApplications.length > 0) {
                 pendingHtml = pendingApplications.map((app, idx) => `
@@ -693,7 +717,17 @@
         function approveApplication(index) {
             const app = pendingApplications[index];
             if (!app) return;
-            alert(`✅ Application Approved!\n${app.childName} has been successfully enrolled into "${app.courseName}".`);
+            
+            // Update child's appliedCourses status from Pending Approval to Approved
+            const childObj = childrenData[app.childKey];
+            if (childObj && childObj.appliedCourses) {
+                const targetApp = childObj.appliedCourses.find(ac => app.courseName.includes(ac.name) || ac.name.includes(app.courseName));
+                if (targetApp) {
+                    targetApp.status = "Approved";
+                }
+            }
+
+            alert(`✅ Application Approved!\n${app.childName} has been successfully approved for "${app.courseName}".`);
             pendingApplications.splice(index, 1);
             switchTab('school');
         }
@@ -837,6 +871,27 @@
                     </button>
                 </div>
 
+                <!-- LIST COURSE / ACTIVITY APPLIED -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📋 List course/Activity Applied</h3>
+                    <div class="space-y-2">
+                        ${child.appliedCourses && child.appliedCourses.length > 0 ? child.appliedCourses.map(ac => {
+                            let badge = ac.status === 'Approved'
+                                ? `<span class="text-[9px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">✓ Approved</span>`
+                                : `<span class="text-[9px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">⏳ Pending Approval</span>`;
+                            return `
+                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center text-xs">
+                                    <div>
+                                        <p class="font-bold text-slate-800">${ac.name}</p>
+                                        <p class="text-[10px] text-slate-500">Org: ${ac.org}</p>
+                                    </div>
+                                    <div>${badge}</div>
+                                </div>
+                            `;
+                        }).join('') : '<p class="text-xs text-slate-400 italic">No course or activity applications submitted yet.</p>'}
+                    </div>
+                </div>
+
                 <!-- LIST OF COURSES ATTENDED -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 List of Courses Attended</h3>
@@ -922,17 +977,47 @@
             const courseName = courseSelect.value;
             
             const child = childrenData[selectedChild];
+            if (!child.appliedCourses) child.appliedCourses = [];
+            
+            if (child.appliedCourses.some(ac => ac.name === courseName)) {
+                showModalOverlay(`Notice: ${child.name} has already applied for "${courseName}".`);
+                return;
+            }
+
+            // Add to applied courses list with Pending status
+            child.appliedCourses.push({
+                name: courseName,
+                org: org,
+                status: "Pending Approval"
+            });
             
             // Add to pending applications queue so partner dashboard can view it
             pendingApplications.push({
+                childKey: selectedChild,
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
                 contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`
             });
             
-            alert(`🎉 Success! Application submitted for ${child.name} to "${courseName}" (${org}). A notification has been sent to the Partner Organization Dashboard.`);
-            switchTab('layer3');
+            showModalOverlay(`Application Received!\n\nApplication for ${child.name} to join "${courseName}" under ${org} has been submitted successfully and is pending partner organization approval.`);
+        }
+
+        function showModalOverlay(message) {
+            const msgEl = document.getElementById('modal-message');
+            const overlay = document.getElementById('custom-modal-overlay');
+            if (msgEl && overlay) {
+                msgEl.innerText = message;
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        function closeModalOverlay() {
+            const overlay = document.getElementById('custom-modal-overlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                switchTab('layer3');
+            }
         }
 
         function setChildTimeSpan(span) { childTimeSpan = span; switchTab('layer3'); }
