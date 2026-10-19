@@ -31,20 +31,26 @@
             </div>
         </div>
 
-        <!-- App Header (Static & Locked with Multi-Lingual Toggle) -->
-        <header class="bg-white border-b border-slate-200 px-4 py-2.5 flex justify-between items-center shrink-0 z-20 shadow-xs">
-            <div>
-                <span class="text-[9px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
-                <h1 id="app-title" class="text-sm font-bold text-slate-900">Registration Gateway</h1>
+        <!-- App Header (Static & Locked with Flag Language Toggle) -->
+        <header class="bg-white border-b border-slate-200 px-3 py-2.5 flex justify-between items-center shrink-0 z-20 shadow-xs">
+            <div class="overflow-hidden pr-1">
+                <span class="text-[9px] font-bold tracking-wider text-blue-600 uppercase block">ChildESG™ Mobile</span>
+                <h1 id="app-title" class="text-xs font-bold text-slate-900 truncate">Registration Gateway</h1>
             </div>
-            <div class="flex items-center space-x-2">
-                <!-- Multi-Lingual Toggle (Bahasa Melayu / English) -->
+            <div class="flex items-center space-x-1.5 shrink-0">
+                <!-- Multi-Lingual Toggle with Great Britain & Malaysia Flags -->
                 <div class="bg-slate-100 p-0.5 rounded-lg flex items-center border border-slate-200">
-                    <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs">EN</button>
-                    <button onclick="setLanguage('bm')" id="lang-btn-bm" class="px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900">BM</button>
+                    <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs flex items-center space-x-1">
+                        <span>🇬🇧</span>
+                        <span>EN</span>
+                    </button>
+                    <button onclick="setLanguage('bm')" id="lang-btn-bm" class="px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900 flex items-center space-x-1">
+                        <span>🇲🇾</span>
+                        <span>BM</span>
+                    </button>
                 </div>
-                <button onclick="switchTab('layer1')" id="nav-logout-btn" class="px-2.5 py-1.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-[10px] hover:bg-slate-200 transition">
-                    🚪 Logout
+                <button onclick="switchTab('layer1')" id="nav-logout-btn" class="px-2 py-1.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-[10px] hover:bg-slate-200 transition">
+                    🚪
                 </button>
             </div>
         </header>
@@ -116,13 +122,12 @@
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
         let partnerCertTab = 'overview';
-        let currentLang = 'en'; // Default language: English
+        let currentLang = 'en'; 
         let activeTabKey = 'layer1';
 
-        // Dictionary for Multi-Lingual Support (English & Bahasa Melayu)
         const i18n = {
             en: {
-                logout: "🚪 Logout",
+                logout: "🚪",
                 register: "Register",
                 home: "Home",
                 children: "Children",
@@ -141,7 +146,7 @@
                 }
             },
             bm: {
-                logout: "🚪 Daftar Keluar",
+                logout: "🚪",
                 register: "Daftar",
                 home: "Utama",
                 children: "Kanak-kanak",
@@ -167,15 +172,14 @@
             const btnBm = document.getElementById('lang-btn-bm');
             if (btnEn && btnBm) {
                 if (lang === 'en') {
-                    btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs";
-                    btnBm.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900";
+                    btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs flex items-center space-x-1";
+                    btnBm.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900 flex items-center space-x-1";
                 } else {
-                    btnBm.className = "px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs";
-                    btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900";
+                    btnBm.className = "px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs flex items-center space-x-1";
+                    btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900 flex items-center space-x-1";
                 }
             }
 
-            // Update static nav labels
             document.getElementById('nav-logout-btn').innerText = i18n[currentLang].logout;
             document.getElementById('nav-label-register').innerText = i18n[currentLang].register;
             document.getElementById('nav-label-home').innerText = i18n[currentLang].home;
@@ -185,11 +189,9 @@
             document.getElementById('nav-label-scanner').innerText = i18n[currentLang].scanner;
             document.getElementById('nav-label-tokens').innerText = i18n[currentLang].tokens;
 
-            // Refresh current tab view
             switchTab(activeTabKey);
         }
         
-        // Helper to get today's date in YYYY-MM-DD format dynamically
         function getTodayDateString() {
             const d = new Date();
             const year = d.getFullYear();
@@ -204,7 +206,6 @@
         let childCustomFromDate = '2026-10-01';
         let childCustomToDate = todayDateStr;
 
-        // Status Bar Real-Time Clock
         function updateStatusBarTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -1338,7 +1339,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
