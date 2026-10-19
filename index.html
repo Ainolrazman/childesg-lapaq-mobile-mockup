@@ -349,6 +349,7 @@
         const featuredProgramsList = [
             {
                 org: "Kemaih Sdn Bhd",
+                rating: "⭐⭐⭐⭐⭐",
                 title: "AI Nutrition & Health Junior Bootcamp",
                 category: "Nutrition and Health",
                 desc: "An immersive program teaching children and teens the fundamentals of balanced nutrition, caloric tracking, and artificial intelligence in food science.",
@@ -360,6 +361,7 @@
             },
             {
                 org: "KEMAS (Jabatan Kemajuan Masyarakat)",
+                rating: "⭐⭐⭐⭐⭐",
                 title: "Taska Permata Early Literacy Program",
                 category: "Community & Leadership",
                 desc: "Interactive reading, phonics, and cognitive development sessions tailored for early childhood growth across community centers.",
@@ -371,6 +373,7 @@
             },
             {
                 org: "Universiti Kebangsaan Malaysia (UKM)",
+                rating: "⭐⭐⭐⭐⭐",
                 title: "Young Nutritionist Discovery Workshop",
                 category: "Nutrition and Health",
                 desc: "Led by expert nutritionists, kids learn food grouping, RNI metrics, and healthy cooking habits through hands-on experiments.",
@@ -382,6 +385,7 @@
             },
             {
                 org: "Malaysian Nature Society (MNS)",
+                rating: "⭐⭐⭐⭐⭐",
                 title: "Junior Eco-Warrior Forest Walk",
                 category: "Environment",
                 desc: "Outdoor guided exploration focusing on local flora and fauna biodiversity conservation and tree planting.",
@@ -393,6 +397,7 @@
             },
             {
                 org: "Kuala Lumpur Junior Rugby Club",
+                rating: "⭐⭐⭐⭐",
                 title: "Basic Rugby Skills & Teamwork Clinic",
                 category: "Physical & Sports",
                 desc: "Non-contact touch rugby drills designed to foster teamwork, agility, stamina, and cardiovascular health.",
@@ -404,6 +409,7 @@
             },
             {
                 org: "Jaya Grocer Community Kitchen",
+                rating: "⭐⭐⭐⭐⭐",
                 title: "Junior Healthy Cooking & Baking Masterclass",
                 category: "Nutrition and Health",
                 desc: "Hands-on culinary class teaching children how to prepare wholesome meals with zero food waste ingredients.",
@@ -852,7 +858,10 @@
                         <div>
                             <span class="text-[9px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full uppercase">${prog.category}</span>
                             <h3 class="text-xs font-bold text-slate-900 mt-1">${prog.title}</h3>
-                            <p class="text-[10px] text-indigo-600 font-semibold">🏢 ${prog.org}</p>
+                            <p class="text-[10px] text-indigo-600 font-semibold flex items-center space-x-1.5 mt-0.5">
+                                <span>🏢 ${prog.org}</span>
+                                <span class="text-amber-500 tracking-tighter" title="Partner Star Rating">${prog.rating || '⭐⭐⭐⭐⭐'}</span>
+                            </p>
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
@@ -940,6 +949,7 @@
             }
             featuredProgramsList.unshift({
                 org: userProfiles.partner.orgName,
+                rating: "⭐⭐⭐⭐⭐",
                 title: progName,
                 category: finalCategory,
                 desc: progDesc,
@@ -1062,7 +1072,7 @@
                 </div>
                 ${renderRegisteredChildrenList()}
                 ${renderAddChildSection()}
-                <!-- Moved Children Profile & Passport section to bottom of Parents Guardian Home Profile -->
+                <!-- Children Profile & Passport section at bottom of Parents Guardian Home Profile -->
                 <div class="bg-gradient-to-br from-indigo-900 to-blue-900 rounded-xl p-4 text-white shadow-sm border border-indigo-200 space-y-3">
                     <div class="flex justify-between items-center border-b border-white/10 pb-2">
                         <h3 class="text-xs font-bold uppercase tracking-wider flex items-center">👶 ${isBm ? 'Profil Kanak-kanak & Pasport' : 'Children Profile & Passport'}</h3>
@@ -1156,7 +1166,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Moved Partner Organization Dashboard section to bottom of Partner Organization Home Profile -->
+                <!-- Partner Organization Dashboard section at bottom of Partner Organization Home Profile -->
                 <div class="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-xl p-4 text-white shadow-sm border border-indigo-300 space-y-3">
                     <div class="flex justify-between items-center border-b border-white/10 pb-2">
                         <h3 class="text-xs font-bold uppercase tracking-wider flex items-center">🏢 ${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h3>
