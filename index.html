@@ -54,9 +54,9 @@
                 <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
                     ✓
                 </div>
-                <div class="space-y-1">
-                    <h3 id="modal-title" class="text-base font-bold text-slate-900">Application Received!</h3>
-                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Your course/activity application has been successfully submitted and forwarded to the partner organization.</p>
+                <div class="space-y-1.5">
+                    <h3 id="modal-title" class="text-base font-bold text-slate-900">Application Received</h3>
+                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Thank you for applying for the course / activity.<br><br>A registration form has been send to the your Email (ainol.razman@example.com), please fill in the form and email back to us.</p>
                 </div>
                 <button onclick="closeModalOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
                     OK
@@ -739,14 +739,14 @@
             
             const emailAddr = app.parentEmail || userProfiles.parent.email;
             
-            // Switch to Parent profile view first so the user sees the pop-up note delivered to the Parents Guardian Profile layer
+            // Switch to Parent Profile view first so the user sees the pop-up delivered to the Parents Guardian Profile layer
             currentUserRole = 'parent';
             switchTab('home');
 
             // Trigger the exact requested pop-up note
             showModalOverlay(
-                "Application & Form Notice", 
-                `We have received your application and have sent the application form via your email (${emailAddr}).`
+                "Application Received", 
+                `Thank you for applying for the course / activity.\n\nA registration form has been send to the your Email (${emailAddr}), please fill in the form and email back to us.`
             );
         }
 
@@ -1014,8 +1014,8 @@
             });
             
             showModalOverlay(
-                "Application Received!", 
-                `Your course/activity application for ${child.name} to join "${courseName}" has been successfully submitted and forwarded to the partner organization (${org}).`
+                "Application Received", 
+                `Thank you for applying for the course / activity.\n\nA registration form has been send to the your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
 
@@ -1308,9 +1308,9 @@
                     { fps: 10, qrbox: { width: 250, height: 150 } },
                     (decodedText) => {
                         const child = childrenData[selectedChild];
-                        child.totalTokens += 20;
-                        child.impactTokens += 20;
-                        document.getElementById('scan-result').innerText = `Success! Partner QR Scanned: ${decodedText}. +20 Tokens Minted!`;
+                        child.totalTokens += 25;
+                        child.impactTokens += 25;
+                        document.getElementById('scan-result').innerText = `Success! Partner QR Scanned: ${decodedText}. +25 Tokens Minted!`;
                         html5QrCode.stop().catch(() => {});
                     },
                     (errorMessage) => {
@@ -1325,9 +1325,9 @@
         }
         function simulateSuccessfulScan() {
             const child = childrenData[selectedChild];
-            child.totalTokens += 20;
-            child.impactTokens += 20;
-            document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +20 Tokens Minted to ${child.name}!`;
+            child.totalTokens += 25;
+            child.impactTokens += 25;
+            document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +25 Tokens Minted to ${child.name}!`;
         }
         window.addEventListener('DOMContentLoaded', () => { switchTab('layer1'); });
     </script>
