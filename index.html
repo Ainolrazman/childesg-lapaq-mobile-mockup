@@ -31,15 +31,22 @@
             </div>
         </div>
 
-        <!-- App Header (Static & Locked) -->
-        <header class="bg-white border-b border-slate-200 px-5 py-3 flex justify-between items-center shrink-0 z-20 shadow-xs">
+        <!-- App Header (Static & Locked with Multi-Lingual Toggle) -->
+        <header class="bg-white border-b border-slate-200 px-4 py-2.5 flex justify-between items-center shrink-0 z-20 shadow-xs">
             <div>
-                <span class="text-[10px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
-                <h1 id="app-title" class="text-base font-bold text-slate-900">Registration Gateway</h1>
+                <span class="text-[9px] font-bold tracking-wider text-blue-600 uppercase">ChildESG™ Mobile</span>
+                <h1 id="app-title" class="text-sm font-bold text-slate-900">Registration Gateway</h1>
             </div>
-            <button onclick="switchTab('layer1')" class="px-3 py-1.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-[10px] hover:bg-slate-200 transition">
-                🚪 Logout / Auth
-            </button>
+            <div class="flex items-center space-x-2">
+                <!-- Multi-Lingual Toggle (Bahasa Melayu / English) -->
+                <div class="bg-slate-100 p-0.5 rounded-lg flex items-center border border-slate-200">
+                    <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs">EN</button>
+                    <button onclick="setLanguage('bm')" id="lang-btn-bm" class="px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900">BM</button>
+                </div>
+                <button onclick="switchTab('layer1')" id="nav-logout-btn" class="px-2.5 py-1.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-[10px] hover:bg-slate-200 transition">
+                    🚪 Logout
+                </button>
+            </div>
         </header>
 
         <!-- Main Scrollable Screen Content Area (Independent Fluid Scroll) -->
@@ -59,7 +66,7 @@
                     <h3 id="modal-title" class="text-base font-bold text-slate-900">Application Received</h3>
                     <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Thank you for applying for the course / activity.<br><br>A registration form will be sent to your Email (ainol.razman@example.com), please fill in the form and email back to us.</p>
                 </div>
-                <button onclick="closeModalOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+                <button onclick="closeModalOverlay()" id="modal-ok-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
                     OK
                 </button>
             </div>
@@ -69,19 +76,19 @@
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1 py-2 flex justify-around items-center shrink-0 z-40">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-1 text-emerald-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                <span class="text-[8px] font-medium">Register</span>
+                <span id="nav-label-register" class="text-[8px] font-medium">Register</span>
             </button>
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span class="text-[8px] font-medium">Home</span>
+                <span id="nav-label-home" class="text-[8px] font-medium">Home</span>
             </button>
             <button onclick="switchTab('layer3')" id="nav-layer3" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <span class="text-[8px] font-medium">Children</span>
+                <span id="nav-label-children" class="text-[8px] font-medium">Children</span>
             </button>
             <button onclick="switchTab('lapaq')" id="nav-lapaq" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <span class="text-[8px] font-medium">LaPaQ</span>
+                <span id="nav-label-lapaq" class="text-[8px] font-medium">LaPaQ</span>
             </button>
             <button onclick="switchTab('school')" id="nav-school" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
@@ -89,11 +96,11 @@
             </button>
             <button onclick="switchTab('scanner')" id="nav-scanner" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4m10-14h4a2 2 0 012 2v4m0 6v4a2 2 0 01-2 2h-4"/></svg>
-                <span class="text-[8px] font-medium">Scanner</span>
+                <span id="nav-label-scanner" class="text-[8px] font-medium">Scanner</span>
             </button>
             <button onclick="switchTab('tokens')" id="nav-tokens" class="flex flex-col items-center py-1 px-1 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-4 h-4 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V6m0 12v-2m0 0c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="text-[8px] font-medium">Tokens</span>
+                <span id="nav-label-tokens" class="text-[8px] font-medium">Tokens</span>
             </button>
         </nav>
     </div>
@@ -109,6 +116,78 @@
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
         let partnerCertTab = 'overview';
+        let currentLang = 'en'; // Default language: English
+        let activeTabKey = 'layer1';
+
+        // Dictionary for Multi-Lingual Support (English & Bahasa Melayu)
+        const i18n = {
+            en: {
+                logout: "🚪 Logout",
+                register: "Register",
+                home: "Home",
+                children: "Children",
+                lapaq: "LaPaQ",
+                dashboard: "Dashboard",
+                scanner: "Scanner",
+                tokens: "Tokens",
+                titles: {
+                    layer1: "Registration Gateway",
+                    home: "Profile Management",
+                    layer3: "Children Profile",
+                    lapaq: "LaPaQ RNI Analytics",
+                    school: "Partner Dashboard",
+                    scanner: "QR Code Scanner",
+                    tokens: "Impact Tokens Wallet"
+                }
+            },
+            bm: {
+                logout: "🚪 Daftar Keluar",
+                register: "Daftar",
+                home: "Utama",
+                children: "Kanak-kanak",
+                lapaq: "LaPaQ",
+                dashboard: "Pemuka",
+                scanner: "Pengimbas",
+                tokens: "Token",
+                titles: {
+                    layer1: "Gerbang Pendaftaran",
+                    home: "Pengurusan Profil",
+                    layer3: "Profil Kanak-kanak",
+                    lapaq: "Analisis RNI LaPaQ",
+                    school: "Pemuka Rakan Kongsi",
+                    scanner: "Pengimbas Kod QR",
+                    tokens: "Dompet Token Impak"
+                }
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const btnEn = document.getElementById('lang-btn-en');
+            const btnBm = document.getElementById('lang-btn-bm');
+            if (btnEn && btnBm) {
+                if (lang === 'en') {
+                    btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs";
+                    btnBm.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900";
+                } else {
+                    btnBm.className = "px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs";
+                    btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900";
+                }
+            }
+
+            // Update static nav labels
+            document.getElementById('nav-logout-btn').innerText = i18n[currentLang].logout;
+            document.getElementById('nav-label-register').innerText = i18n[currentLang].register;
+            document.getElementById('nav-label-home').innerText = i18n[currentLang].home;
+            document.getElementById('nav-label-children').innerText = i18n[currentLang].children;
+            document.getElementById('nav-label-lapaq').innerText = i18n[currentLang].lapaq;
+            document.getElementById('nav-label-partner').innerText = currentUserRole === 'partner' ? (currentLang === 'bm' ? 'Pemuka' : 'Dashboard') : (currentLang === 'bm' ? 'Rakan' : 'Partner');
+            document.getElementById('nav-label-scanner').innerText = i18n[currentLang].scanner;
+            document.getElementById('nav-label-tokens').innerText = i18n[currentLang].tokens;
+
+            // Refresh current tab view
+            switchTab(activeTabKey);
+        }
         
         // Helper to get today's date in YYYY-MM-DD format dynamically
         function getTodayDateString() {
@@ -324,51 +403,52 @@
         };
 
         function renderRegistrationPage() {
+            const isBm = currentLang === 'bm';
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">ChildESG™ Gateway</span>
-                    <h2 class="text-xl font-bold">Registration & Authentication</h2>
-                    <p class="text-xs text-slate-300">Sign in or register as Parent or Organization Partner</p>
+                    <h2 class="text-xl font-bold">${isBm ? 'Pendaftaran & Pengesahan' : 'Registration & Authentication'}</h2>
+                    <p class="text-xs text-slate-300">${isBm ? 'Log masuk atau daftar sebagai Ibu Bapa atau Rakan Kongsi' : 'Sign in or register as Parent or Organization Partner'}</p>
                 </div>
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
                     <div class="flex bg-slate-100 p-1 rounded-xl">
-                        <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">📝 Register</button>
-                        <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">🔐 Login</button>
+                        <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
+                        <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
                     </div>
                     
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Register Role</label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran' : 'Select Register Role'}</label>
                             <select id="register-role-select" onchange="toggleRegisterFields(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
-                                <option value="parent">👤 Parent / Guardian Account</option>
-                                <option value="partner">🏢 Organization Partner Account</option>
+                                <option value="parent">${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
+                                <option value="partner">${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
                             </select>
                         </div>
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
-                            <span class="text-[10px] font-bold text-blue-700 uppercase">PDPA Consent Included</span>
-                            <p class="text-[10px] text-blue-600 mt-0.5">Registration creates your account and registers PDPA hashing consent.</p>
+                            <span class="text-[10px] font-bold text-blue-700 uppercase">${isBm ? 'Persetujuan PDPA Termasuk' : 'PDPA Consent Included'}</span>
+                            <p class="text-[10px] text-blue-600 mt-0.5">${isBm ? 'Pendaftaran mencipta akaun anda dan merekodkan persetujuan PDPA.' : 'Registration creates your account and registers PDPA hashing consent.'}</p>
                         </div>
                         <div id="register-fields-container" class="space-y-2.5 pt-1"></div>
-                        <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">✓ Register & Go to Home Profile</button>
+                        <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">${isBm ? '✓ Daftar & Pergi ke Profil Utama' : '✓ Register & Go to Home Profile'}</button>
                     </div>
 
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Log Masuk' : 'Select Login Role'}</label>
                             <select id="login-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
-                                <option value="parent">👤 Parent / Guardian Account</option>
-                                <option value="partner">🏢 Organization Partner Account</option>
+                                <option value="parent">${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
+                                <option value="partner">${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Username / Email</label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
                             <input type="text" placeholder="guardian123 or partner@organization.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Password</label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Kata Laluan' : 'Password'}</label>
                             <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
-                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">Sign In → Go to Home Profile</button>
+                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
                     </div>
                 </div>
             `;
@@ -376,68 +456,69 @@
 
         function toggleRegisterFields(role) {
             const container = document.getElementById('register-fields-container');
+            const isBm = currentLang === 'bm';
             if (!container) return;
             if (role === 'parent') {
                 container.innerHTML = `
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Penuh:' : 'Name:'}</label>
                         <input type="text" id="reg-p-name" placeholder="Full Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.name}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat E-mel:' : 'Email Address:'}</label>
                         <input type="email" id="reg-p-email" placeholder="email@example.com" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.email}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Phone Number:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nombor Telefon:' : 'Phone Number:'}</label>
                         <input type="tel" id="reg-p-phone" placeholder="+6012-3456789" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.phone}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Negeri:' : 'State:'}</label>
                         <select id="reg-p-state" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             ${malaysiaStatesOptions}
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Home Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat Kediaman:' : 'Home Address:'}</label>
                         <textarea id="reg-p-address" placeholder="Full residential address" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" rows="2">${userProfiles.parent.address}</textarea>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tarikh Lahir:' : 'Date of Birth:'}</label>
                         <input type="date" id="reg-p-dob" max="${todayDateStr}" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.dob}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (optional):</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pekerjaan (pilihan):' : 'Occupation (optional):'}</label>
                         <input type="text" id="reg-p-occ" placeholder="e.g. Engineer / Manager" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.occupation}">
                     </div>
                 `;
             } else {
                 container.innerHTML = `
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Organization:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Organisasi:' : 'Name of Organization:'}</label>
                         <input type="text" id="reg-o-name" placeholder="Organization Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.orgName}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registration Number:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nombor Pendaftaran:' : 'Registration Number:'}</label>
                         <input type="text" id="reg-o-regno" placeholder="Registration No." class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.regNumber}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat E-mel:' : 'Email Address:'}</label>
                         <input type="email" id="reg-o-email" placeholder="org@email.my" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.email}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pegawai Perhubungan:' : 'Contact person:'}</label>
                         <input type="text" id="reg-o-contact" placeholder="Contact Person Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.contactPerson}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Designation of Contact Person:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Jawatan Pegawai Perhubungan:' : 'Designation of Contact Person:'}</label>
                         <input type="text" id="reg-o-desig" placeholder="e.g. Director / CEO" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.designation}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Email Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'E-mel Pegawai Perhubungan:' : 'Contact person Email Address:'}</label>
                         <input type="email" id="reg-o-pemail" placeholder="person@email.my" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.personEmail}">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Phone Number:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Telefon Pegawai Perhubungan:' : 'Contact person Phone Number:'}</label>
                         <input type="tel" id="reg-o-pphone" placeholder="+6012-3456789" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.personPhone}">
                     </div>
                 `;
@@ -457,7 +538,7 @@
 
         function handleLoginSubmit() {
             currentUserRole = document.getElementById('login-role-select').value;
-            alert("Authenticated successfully! Loading Home Profile...");
+            alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
 
@@ -481,28 +562,29 @@
                 userProfiles.partner.personEmail = document.getElementById('reg-o-pemail').value;
                 userProfiles.partner.personPhone = document.getElementById('reg-o-pphone').value;
             }
-            alert("Account registered & details saved! Loading Home Profile...");
+            alert(currentLang === 'bm' ? "Akaun berjaya didaftarkan! Memuatkan Profil Utama..." : "Account registered & details saved! Loading Home Profile...");
             switchTab('home');
         }
 
         function renderRegisteredChildrenList() {
+            const isBm = currentLang === 'bm';
             return `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">👶 Registered Children List</h3>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">👶 ${isBm ? 'Senarai Kanak-kanak Berdaftar' : 'Registered Children List'}</h3>
                     <div class="space-y-2">
                         <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
                             <div>
-                                <p class="text-xs font-bold text-slate-800">Adam (Boy, 8 Yrs)</p>
+                                <p class="text-xs font-bold text-slate-800">Adam (${isBm ? 'Lelaki, 8 Tahun' : 'Boy, 8 Yrs'})</p>
                                 <p class="text-[10px] text-slate-500">SK Petaling Jaya • Token: #AB-34X-KEMAIH</p>
                             </div>
-                            <button onclick="switchChildView('adam'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition">View Profile →</button>
+                            <button onclick="switchChildView('adam'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition">${isBm ? 'Lihat Profil →' : 'View Profile →'}</button>
                         </div>
                         <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 flex justify-between items-center">
                             <div>
-                                <p class="text-xs font-bold text-slate-800">Maya (Girl, 5 Yrs)</p>
+                                <p class="text-xs font-bold text-slate-800">Maya (${isBm ? 'Perempuan, 5 Tahun' : 'Girl, 5 Yrs'})</p>
                                 <p class="text-[10px] text-slate-500">Taska Permata KEMAS • Token: #MY-99Z-PERMATA</p>
                             </div>
-                            <button onclick="switchChildView('maya'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition">View Profile →</button>
+                            <button onclick="switchChildView('maya'); switchTab('layer3');" class="text-[10px] bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg font-bold hover:bg-indigo-700 transition">${isBm ? 'Lihat Profil →' : 'View Profile →'}</button>
                         </div>
                     </div>
                 </div>
@@ -510,32 +592,33 @@
         }
 
         function renderAddChildSection() {
+            const isBm = currentLang === 'bm';
             return `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">➕ Add New Child / Participant</h3>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">➕ ${isBm ? 'Tambah Kanak-kanak / Peserta Baru' : 'Add New Child / Participant'}</h3>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Child's Full Name</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Penuh Kanak-kanak' : "Child's Full Name"}</label>
                         <input type="text" placeholder="e.g. Nurul Ain / Hakim" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Gender</label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Jantina' : 'Gender'}</label>
                             <select class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
-                                <option>Boy</option>
-                                <option>Girl</option>
+                                <option>${isBm ? 'Lelaki' : 'Boy'}</option>
+                                <option>${isBm ? 'Perempuan' : 'Girl'}</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth</label>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tarikh Lahir' : 'Date of Birth'}</label>
                             <input type="date" max="${todayDateStr}" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">School / Organization Center</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Sekolah / Pusat Organisasi' : 'School / Organization Center'}</label>
                         <input type="text" placeholder="e.g. SK Petaling Jaya" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
                     </div>
-                    <button onclick="alert('Child / Participant registered successfully and added to system tracking!')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold text-xs transition">
-                        + Register / Add Child
+                    <button onclick="alert('${isBm ? 'Kanak-kanak berjaya didaftarkan!' : 'Child / Participant registered successfully and added to system tracking!'}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-bold text-xs transition">
+                        + ${isBm ? 'Daftar / Tambah Kanak-kanak' : 'Register / Add Child'}
                     </button>
                 </div>
             `;
@@ -543,31 +626,32 @@
 
         function renderParentProfilePage() {
             const p = userProfiles.parent;
+            const isBm = currentLang === 'bm';
             return `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Home Profile</span>
-                    <h2 class="text-xl font-bold">Parents Guardian Profile</h2>
-                    <p class="text-xs text-emerald-100">Manage your personal guardian particulars</p>
+                    <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Profil Utama' : 'Home Profile'}</span>
+                    <h2 class="text-xl font-bold">${isBm ? 'Profil Penjaga Ibu Bapa' : 'Parents Guardian Profile'}</h2>
+                    <p class="text-xs text-emerald-100">${isBm ? 'Urus butiran peribadi penjaga anda' : 'Manage your personal guardian particulars'}</p>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">Profile Switch</span>
-                        <button onclick="currentUserRole='partner'; switchTab('home');" class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded-lg">Switch to Organization Profile →</button>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">${isBm ? 'Tukar Profil' : 'Profile Switch'}</span>
+                        <button onclick="currentUserRole='partner'; switchTab('home');" class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-1 rounded-lg">${isBm ? 'Tukar ke Profil Organisasi →' : 'Switch to Organization Profile →'}</button>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama:' : 'Name:'}</label>
                         <input type="text" id="hp-name" value="${p.name}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat E-mel:' : 'Email Address:'}</label>
                         <input type="email" id="hp-email" value="${p.email}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-blue-600">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Phone Number:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nombor Telefon:' : 'Phone Number:'}</label>
                         <input type="tel" id="hp-phone" value="${p.phone}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">State:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Negeri:' : 'State:'}</label>
                         <select id="hp-state" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             <option ${p.state.includes('Kuala Lumpur') ? 'selected' : ''}>W.P. Kuala Lumpur / Selangor</option>
                             <option ${p.state === 'Johor' ? 'selected' : ''}>Johor</option>
@@ -587,19 +671,19 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Home Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat Kediaman:' : 'Home Address:'}</label>
                         <textarea id="hp-address" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold" rows="2">${p.address}</textarea>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tarikh Lahir:' : 'Date of Birth:'}</label>
                         <input type="date" id="hp-dob" max="${todayDateStr}" value="${p.dob}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (optional):</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pekerjaan (pilihan):' : 'Occupation (optional):'}</label>
                         <input type="text" id="hp-occ" value="${p.occupation}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                     </div>
                     <button onclick="updateParentProfile()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
-                        Update
+                        ${isBm ? 'Kemaskini' : 'Update'}
                     </button>
                 </div>
                 ${renderRegisteredChildrenList()}${renderAddChildSection()}
@@ -614,74 +698,75 @@
             userProfiles.parent.address = document.getElementById('hp-address').value;
             userProfiles.parent.dob = document.getElementById('hp-dob').value;
             userProfiles.parent.occupation = document.getElementById('hp-occ').value;
-            alert("Parents Guardian Profile updated successfully!");
+            alert(currentLang === 'bm' ? "Profil Penjaga berjaya dikemaskini!" : "Parents Guardian Profile updated successfully!");
         }
 
         function renderPartnerProfilePage() {
             const o = userProfiles.partner;
+            const isBm = currentLang === 'bm';
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Home Profile</span>
-                    <h2 class="text-xl font-bold">Partner Organization Profile</h2>
-                    <p class="text-xs text-indigo-100">Manage institutional and partner contact particulars</p>
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Profil Utama' : 'Home Profile'}</span>
+                    <h2 class="text-xl font-bold">${isBm ? 'Profil Organisasi Rakan Kongsi' : 'Partner Organization Profile'}</h2>
+                    <p class="text-xs text-indigo-100">${isBm ? 'Urus butiran institusi dan rakan kongsi' : 'Manage institutional and partner contact particulars'}</p>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">Profile Switch</span>
-                        <button onclick="currentUserRole='parent'; switchTab('home');" class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-1 rounded-lg">Switch to Parent Profile →</button>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">${isBm ? 'Tukar Profil' : 'Profile Switch'}</span>
+                        <button onclick="currentUserRole='parent'; switchTab('home');" class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-1 rounded-lg">${isBm ? 'Tukar ke Profil Ibu Bapa →' : 'Switch to Parent Profile →'}</button>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Name of Organization:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Organisasi:' : 'Name of Organization:'}</label>
                         <input type="text" id="ho-name" value="${o.orgName}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Registration Number:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nombor Pendaftaran:' : 'Registration Number:'}</label>
                         <input type="text" id="ho-regno" value="${o.regNumber}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Email Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat E-mel:' : 'Email Address:'}</label>
                         <input type="email" id="ho-email" value="${o.email}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pegawai Perhubungan:' : 'Contact person:'}</label>
                         <input type="text" id="ho-contact" value="${o.contactPerson}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Designation of Contact Person:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Jawatan Pegawai Perhubungan:' : 'Designation of Contact Person:'}</label>
                         <input type="text" id="ho-desig" value="${o.designation}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Email Address:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'E-mel Pegawai Perhubungan:' : 'Contact person Email Address:'}</label>
                         <input type="email" id="ho-pemail" value="${o.personEmail}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Contact person Phone Number:</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Telefon Pegawai Perhubungan:' : 'Contact person Phone Number:'}</label>
                         <input type="tel" id="ho-pphone" value="${o.personPhone}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <button onclick="updatePartnerProfile()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs shadow transition mt-2">
-                        Update
+                        ${isBm ? 'Kemaskini' : 'Update'}
                     </button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 List of Programs Organized & Participants</h3>
+                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Program Dianjurkan & Peserta' : 'List of Programs Organized & Participants'}</h3>
                     <div class="space-y-2.5">
                         <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-slate-100 flex justify-between items-center cursor-pointer transition">
                             <div>
                                 <p class="text-xs font-bold text-slate-800">Vegan Cooking Class Cohort 3/2026</p>
-                                <p class="text-[10px] text-slate-500">Began: 01 Oct 2026 • State: W.P. Kuala Lumpur / Selangor</p>
+                                <p class="text-[10px] text-slate-500">${isBm ? 'Mula:' : 'Began:'} 01 Oct 2026 • ${isBm ? 'Negeri:' : 'State:'} W.P. Kuala Lumpur / Selangor</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-xs font-extrabold text-indigo-600">33 Participants</span>
+                                <span class="text-xs font-extrabold text-indigo-600">33 ${isBm ? 'Peserta' : 'Participants'}</span>
                                 <p class="text-[9px] text-emerald-600 font-bold">Active →</p>
                             </div>
                         </div>
                         <div onclick="openParticipantGroup('Zero Waste Kids Workshop Cohort 1/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-xl border border-slate-100 flex justify-between items-center cursor-pointer transition">
                             <div>
                                 <p class="text-xs font-bold text-slate-800">Zero Waste Kids Workshop Cohort 1/2026</p>
-                                <p class="text-[10px] text-slate-500">Began: 15 Aug 2026 • State: Penang</p>
+                                <p class="text-[10px] text-slate-500">${isBm ? 'Mula:' : 'Began:'} 15 Aug 2026 • ${isBm ? 'Negeri:' : 'State:'} Penang</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-xs font-extrabold text-indigo-600">25 Participants</span>
+                                <span class="text-xs font-extrabold text-indigo-600">25 ${isBm ? 'Peserta' : 'Participants'}</span>
                                 <p class="text-[9px] text-emerald-600 font-bold">Active →</p>
                             </div>
                         </div>
@@ -698,34 +783,35 @@
             userProfiles.partner.designation = document.getElementById('ho-desig').value;
             userProfiles.partner.personEmail = document.getElementById('ho-pemail').value;
             userProfiles.partner.personPhone = document.getElementById('ho-pphone').value;
-            alert("Partner Organization Profile updated successfully!");
+            alert(currentLang === 'bm' ? "Profil Rakan Kongsi berjaya dikemaskini!" : "Partner Organization Profile updated successfully!");
         }
 
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
+            const isBm = currentLang === 'bm';
             
             let pendingHtml = '';
             if (pendingApplications.length > 0) {
                 pendingHtml = pendingApplications.map((app, idx) => `
                     <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-2 text-xs">
                         <div class="flex justify-between items-center">
-                            <span class="font-bold text-amber-900">🔔 New Course Application</span>
-                            <span class="text-[9px] bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full">Pending</span>
+                            <span class="font-bold text-amber-900">🔔 ${isBm ? 'Permohonan Kursus Baru' : 'New Course Application'}</span>
+                            <span class="text-[9px] bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full">${isBm ? 'Menunggu' : 'Pending'}</span>
                         </div>
                         <div class="space-y-0.5 text-slate-700">
-                            <p><strong>Course / Activity:</strong> ${app.courseName}</p>
-                            <p><strong>Child Name:</strong> ${app.childName}</p>
-                            <p><strong>Parent / Guardian:</strong> ${app.parentName}</p>
-                            <p><strong>Contact Info:</strong> <span class="font-mono text-blue-600">${app.contact}</span></p>
+                            <p><strong>${isBm ? 'Kursus / Aktiviti:' : 'Course / Activity:'}</strong> ${app.courseName}</p>
+                            <p><strong>${isBm ? 'Nama Kanak-kanak:' : 'Child Name:'}</strong> ${app.childName}</p>
+                            <p><strong>${isBm ? 'Ibu Bapa / Penjaga:' : 'Parent / Guardian:'}</strong> ${app.parentName}</p>
+                            <p><strong>${isBm ? 'Maklumat Hubungan:' : 'Contact Info:'}</strong> <span class="font-mono text-blue-600">${app.contact}</span></p>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-1">
-                            <button onclick="approveApplication(${idx})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 rounded-lg text-[10px] transition">✓ Approve</button>
-                            <button onclick="sendFormToRecipient(${idx})" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-2 rounded-lg text-[10px] transition">📤 Send Form</button>
+                            <button onclick="approveApplication(${idx})" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 rounded-lg text-[10px] transition">✓ ${isBm ? 'Luluskan' : 'Approve'}</button>
+                            <button onclick="sendFormToRecipient(${idx})" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-2 rounded-lg text-[10px] transition">📤 ${isBm ? 'Hantar Borang' : 'Send Form'}</button>
                         </div>
                     </div>
                 `).join('');
             } else {
-                pendingHtml = `<p class="text-xs text-slate-400 italic text-center py-2">No pending course applications at this time.</p>`;
+                pendingHtml = `<p class="text-xs text-slate-400 italic text-center py-2">${isBm ? 'Tiada permohonan kursus buat masa ini.' : 'No pending course applications at this time.'}</p>`;
             }
 
             let certSectionHtml = '';
@@ -734,45 +820,45 @@
                     <div class="space-y-3 animate-in fade-in duration-200">
                         <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-xl p-4 text-white shadow-md border border-indigo-500/30 space-y-2.5">
                             <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2">
-                                <span class="text-[9px] uppercase tracking-wider font-bold text-indigo-300">ESG Maturity & Certification</span>
-                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">Silver Verified • Level 3</span>
+                                <span class="text-[9px] uppercase tracking-wider font-bold text-indigo-300">${isBm ? 'Kematangan ESG & Pensijilan' : 'ESG Maturity & Certification'}</span>
+                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">${isBm ? 'Disahkan Perak • Tahap 3' : 'Silver Verified • Level 3'}</span>
                             </div>
                             <div class="flex justify-between items-end">
                                 <div>
-                                    <p class="text-[10px] text-slate-300">Overall ChildESG Score</p>
+                                    <p class="text-[10px] text-slate-300">${isBm ? 'Skor Keseluruhan ChildESG' : 'Overall ChildESG Score'}</p>
                                     <h3 class="text-2xl font-black text-emerald-400">82 <span class="text-xs font-normal text-slate-400">/ 100</span></h3>
                                 </div>
                                 <div class="text-right">
                                     <span class="text-[9px] font-mono text-indigo-300 block">Audit ID: CHILDESG-2025-0515-001</span>
-                                    <span class="text-[9px] text-slate-400">Valid until annual audit cycle</span>
+                                    <span class="text-[9px] text-slate-400">${isBm ? 'Sah sehingga kitaran audit tahunan' : 'Valid until annual audit cycle'}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Certification Tier Breakdown & Payment Triggers -->
                         <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Certification Tier Breakdown & Investment</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Pecahan Peringkat Pensijilan & Pelaburan' : 'Certification Tier Breakdown & Investment'}</span>
                             <div class="space-y-2 text-xs">
                                 <div class="p-2.5 bg-white rounded-lg border border-slate-100 flex justify-between items-center">
                                     <div>
-                                        <p class="font-bold text-slate-800">Level 1: Baseline Assessment</p>
-                                        <p class="text-[9px] text-slate-500">4–6 pages report • RM999</p>
+                                        <p class="font-bold text-slate-800">${isBm ? 'Tahap 1: Penilaian Asas' : 'Level 1: Baseline Assessment'}</p>
+                                        <p class="text-[9px] text-slate-500">${isBm ? 'Laporan 4–6 halaman • RM999' : '4–6 pages report • RM999'}</p>
                                     </div>
-                                    <button onclick="triggerTierPayment('Level 1 Baseline Assessment', 999)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">Click here to Pay</button>
+                                    <button onclick="triggerTierPayment('Level 1 Baseline Assessment', 999)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">${isBm ? 'Klik untuk Bayar' : 'Click here to Pay'}</button>
                                 </div>
                                 <div class="p-2.5 bg-white rounded-lg border border-slate-100 flex justify-between items-center">
                                     <div>
-                                        <p class="font-bold text-slate-800">Level 2: Executive Assessment</p>
-                                        <p class="text-[9px] text-slate-500">≈15 pages report • RM2,699</p>
+                                        <p class="font-bold text-slate-800">${isBm ? 'Tahap 2: Penilaian Eksekutif' : 'Level 2: Executive Assessment'}</p>
+                                        <p class="text-[9px] text-slate-500">${isBm ? 'Laporan ≈15 halaman • RM2,699' : '≈15 pages report • RM2,699'}</p>
                                     </div>
-                                    <button onclick="triggerTierPayment('Level 2 Executive Assessment', 2699)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">Click here to Pay</button>
+                                    <button onclick="triggerTierPayment('Level 2 Executive Assessment', 2699)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">${isBm ? 'Klik untuk Bayar' : 'Click here to Pay'}</button>
                                 </div>
                                 <div class="p-2.5 bg-white rounded-lg border border-indigo-100 bg-indigo-50/40 flex justify-between items-center">
                                     <div>
-                                        <p class="font-bold text-indigo-900">Level 3: Comprehensive & Certification</p>
-                                        <p class="text-[9px] text-indigo-600">≈45–60 pages report • RM15,800</p>
+                                        <p class="font-bold text-indigo-900">${isBm ? 'Tahap 3: Komprehensif & Pensijilan' : 'Level 3: Comprehensive & Certification'}</p>
+                                        <p class="text-[9px] text-indigo-600">${isBm ? 'Laporan ≈45–60 halaman • RM15,800' : '≈45–60 pages report • RM15,800'}</p>
                                     </div>
-                                    <button onclick="triggerTierPayment('Level 3 Comprehensive Assessment', 15800)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">Click here to Pay</button>
+                                    <button onclick="triggerTierPayment('Level 3 Comprehensive Assessment', 15800)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">${isBm ? 'Klik untuk Bayar' : 'Click here to Pay'}</button>
                                 </div>
                             </div>
                         </div>
@@ -782,37 +868,37 @@
                 certSectionHtml = `
                     <div class="space-y-3 animate-in fade-in duration-200">
                         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">The 3 Pillars of ESG Scorecard (40+ Indicators)</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Kad Skor 3 Pilar ESG (40+ Penunjuk)' : 'The 3 Pillars of ESG Scorecard (40+ Indicators)'}</span>
                             <div class="space-y-2.5">
                                 <div class="space-y-1">
                                     <div class="flex justify-between font-semibold">
-                                        <span class="text-slate-800">🌱 Environmental (E)</span>
+                                        <span class="text-slate-800">🌱 ${isBm ? 'Persekitaran (E)' : 'Environmental (E)'}</span>
                                         <span class="text-teal-600 font-bold">78/100</span>
                                     </div>
                                     <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                                         <div class="bg-teal-500 h-full" style="width: 78%"></div>
                                     </div>
-                                    <p class="text-[9px] text-slate-500">Covers green learning, climate literacy, energy, emissions & waste recycling.</p>
+                                    <p class="text-[9px] text-slate-500">${isBm ? 'Merangkumi pembelajaran hijau, literasi iklim, tenaga, pelepasan & kitar semula.' : 'Covers green learning, climate literacy, energy, emissions & waste recycling.'}</p>
                                 </div>
                                 <div class="space-y-1">
                                     <div class="flex justify-between font-semibold">
-                                        <span class="text-slate-800">🤝 Social (S)</span>
+                                        <span class="text-slate-800">🤝 ${isBm ? 'Sosial (S)' : 'Social (S)'}</span>
                                         <span class="text-blue-600 font-bold">86/100</span>
                                     </div>
                                     <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                                         <div class="bg-blue-600 h-full" style="width: 86%"></div>
                                     </div>
-                                    <p class="text-[9px] text-slate-500">Covers child safety & safeguarding, mental wellbeing, nutrition & family engagement.</p>
+                                    <p class="text-[9px] text-slate-500">${isBm ? 'Merangkumi keselamatan kanak-kanak, kesejahteraan mental, pemakanan & penglibatan keluarga.' : 'Covers child safety & safeguarding, mental wellbeing, nutrition & family engagement.'}</p>
                                 </div>
                                 <div class="space-y-1">
                                     <div class="flex justify-between font-semibold">
-                                        <span class="text-slate-800">⚖️ Governance (G)</span>
+                                        <span class="text-slate-800">⚖️ ${isBm ? 'Tadbir Urus (G)' : 'Governance (G)'}</span>
                                         <span class="text-indigo-600 font-bold">81/100</span>
                                     </div>
                                     <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
                                         <div class="bg-indigo-600 h-full" style="width: 81%"></div>
                                     </div>
-                                    <p class="text-[9px] text-slate-500">Covers leadership commitment, child protection policies, transparency & data privacy.</p>
+                                    <p class="text-[9px] text-slate-500">${isBm ? 'Merangkumi komitmen kepimpinan, dasar perlindungan kanak-kanak, ketelusan & privasi data.' : 'Covers leadership commitment, child protection policies, transparency & data privacy.'}</p>
                                 </div>
                             </div>
                         </div>
@@ -822,14 +908,14 @@
                 certSectionHtml = `
                     <div class="space-y-3 animate-in fade-in duration-200 text-xs">
                         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Risk Heat Map & Gap Analysis Matrix (5x5 Grid)</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Peta Haba Risiko & Matriks Analisis Jurang (Grid 5x5)' : 'Risk Heat Map & Gap Analysis Matrix (5x5 Grid)'}</span>
                             <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 space-y-1.5">
-                                <p class="font-bold text-amber-900">⚠️ Top Priority Identified Risks</p>
+                                <p class="font-bold text-amber-900">⚠️ ${isBm ? 'Risiko Keutamaan Tertinggi' : 'Top Priority Identified Risks'}</p>
                                 <ul class="list-disc pl-4 space-y-1 text-slate-700">
-                                    <li><strong>Child Mental Wellbeing & Stress:</strong> Moderate Likelihood / High Impact</li>
-                                    <li><strong>Digital Safety & Screen Time:</strong> High Likelihood / Moderate Impact</li>
-                                    <li><strong>Climate Education Practical Effectiveness:</strong> Low Likelihood / High Impact</li>
-                                    <li><strong>Emergency & Health Preparedness:</strong> Low Likelihood / Critical Impact</li>
+                                    <li><strong>${isBm ? 'Kesejahteraan Mental & Tekanan Kanak-kanak:' : 'Child Mental Wellbeing & Stress:'}</strong> ${isBm ? 'Kebarangkalian Sederhana / Impak Tinggi' : 'Moderate Likelihood / High Impact'}</li>
+                                    <li><strong>${isBm ? 'Keselamatan Digital & Masa Skrin:' : 'Digital Safety & Screen Time:'}</strong> ${isBm ? 'Kebarangkalian Tinggi / Impak Sederhana' : 'High Likelihood / Moderate Impact'}</li>
+                                    <li><strong>${isBm ? 'Keberkesanan Praktikal Pendidikan Iklim:' : 'Climate Education Practical Effectiveness:'}</strong> ${isBm ? 'Kebarangkalian Rendah / Impak Tinggi' : 'Low Likelihood / High Impact'}</li>
+                                    <li><strong>${isBm ? 'Kesediaan Kecemasan & Kesihatan:' : 'Emergency & Health Preparedness:'}</strong> ${isBm ? 'Kebarangkalian Rendah / Impak Kritikal' : 'Low Likelihood / Critical Impact'}</li>
                                 </ul>
                             </div>
                         </div>
@@ -839,26 +925,26 @@
                 certSectionHtml = `
                     <div class="space-y-3 animate-in fade-in duration-200 text-xs">
                         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Actionable Roadmap & Evidence Repository</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Pelan Hala Tuju Tindakan & Repositori Bukti' : 'Actionable Roadmap & Evidence Repository'}</span>
                             <div class="space-y-2">
                                 <div class="p-2 bg-white rounded border border-slate-100">
-                                    <p class="font-bold text-slate-800">1. Short-Term Milestone (1–3 Months)</p>
-                                    <p class="text-[10px] text-slate-600">Update child safeguarding policy & enhance staff digital safety protocols.</p>
+                                    <p class="font-bold text-slate-800">1. ${isBm ? 'Pencapaian Jangka Pendek (1–3 Bulan)' : '1. Short-Term Milestone (1–3 Months)'}</p>
+                                    <p class="text-[10px] text-slate-600">${isBm ? 'Kemas kini dasar perlindungan kanak-kanak & tingkatkan protokol keselamatan digital staf.' : 'Update child safeguarding policy & enhance staff digital safety protocols.'}</p>
                                 </div>
                                 <div class="p-2 bg-white rounded border border-slate-100">
-                                    <p class="font-bold text-slate-800">2. Medium-Term Milestone (3–6 Months)</p>
-                                    <p class="text-[10px] text-slate-600">Integrate LaPaQ nutrition metrics into daily school feeding curriculum.</p>
+                                    <p class="font-bold text-slate-800">2. ${isBm ? 'Pencapaian Jangka Sederhana (3–6 Bulan)' : '2. Medium-Term Milestone (3–6 Months)'}</p>
+                                    <p class="text-[10px] text-slate-600">${isBm ? 'Integrasikan metrik pemakanan LaPaQ ke dalam kurikulum pemakanan harian sekolah.' : 'Integrate LaPaQ nutrition metrics into daily school feeding curriculum.'}</p>
                                 </div>
                                 <div class="p-2 bg-white rounded border border-slate-100">
-                                    <p class="font-bold text-slate-800">3. Long-Term Milestone (6–12 Months)</p>
-                                    <p class="text-[10px] text-slate-600">Achieve Gold Tier Certification & complete full independent audit review.</p>
+                                    <p class="font-bold text-slate-800">3. ${isBm ? 'Pencapaian Jangka Panjang (6–12 Bulan)' : '3. Long-Term Milestone (6–12 Months)'}</p>
+                                    <p class="text-[10px] text-slate-600">${isBm ? 'Capai Pensijilan Tahap Emas & lengkapkan semakan audit bebas penuh.' : 'Achieve Gold Tier Certification & complete full independent audit review.'}</p>
                                 </div>
                             </div>
                             <div class="pt-2 border-t border-slate-200 space-y-1.5">
-                                <label class="block text-[10px] font-bold text-slate-700 uppercase">📁 Upload Evidence Point (200+ Audit Files)</label>
+                                <label class="block text-[10px] font-bold text-slate-700 uppercase">📁 ${isBm ? 'Muat Naik Titik Bukti (200+ Fail Audit)' : 'Upload Evidence Point (200+ Audit Files)'}</label>
                                 <div class="flex gap-2">
                                     <input type="file" class="w-full text-[10px] bg-white p-1.5 border border-slate-300 rounded-lg">
-                                    <button onclick="alert('Evidence document uploaded successfully and added to audit trail repository!')" class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px]">Upload</button>
+                                    <button onclick="alert('${isBm ? 'Dokumen bukti berjaya dimuat naik!' : 'Evidence document uploaded successfully and added to audit trail repository!'}')" class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px]">${isBm ? 'Muat Naik' : 'Upload'}</button>
                                 </div>
                             </div>
                         </div>
@@ -868,19 +954,19 @@
                 certSectionHtml = `
                     <div class="space-y-3 animate-in fade-in duration-200 text-xs">
                         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">Strategic Report Export Hub</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Hab Eksport Laporan Strategik' : 'Strategic Report Export Hub'}</span>
                             <div class="grid grid-cols-2 gap-2">
                                 <button onclick="exportAuditReport('Grant Submissions & NGO Funding')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    🎁 Grant & NGO Funding PDF
+                                    🎁 ${isBm ? 'Geran & Pembiayaan NGO' : 'Grant & NGO Funding PDF'}
                                 </button>
                                 <button onclick="exportAuditReport('Investor Due Diligence')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    💼 Investor Due Diligence
+                                    💼 ${isBm ? 'Due Diligence Pelabur' : 'Investor Due Diligence'}
                                 </button>
                                 <button onclick="exportAuditReport('Sustainability-Linked Bank Loans')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    🏦 Sustainable Bank Loans
+                                    🏦 ${isBm ? 'Pinjaman Bank Berkaitan Kelestarian' : 'Sustainable Bank Loans'}
                                 </button>
                                 <button onclick="exportAuditReport('Corporate CSR & GRI/ISSB Reporting')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    📊 Corporate GRI / ISSB
+                                    📊 ${isBm ? 'Pelaporan Korporat GRI / ISSB' : 'Corporate GRI / ISSB'}
                                 </button>
                             </div>
                         </div>
@@ -890,18 +976,18 @@
 
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Portal</span>
-                    <h2 class="text-xl font-bold">Partner Organization Dashboard</h2>
-                    <p class="text-xs text-indigo-100">${userProfiles.partner.orgName} & Community Centers</p>
+                    <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Portal Rakan Kongsi' : 'Partner Portal'}</span>
+                    <h2 class="text-xl font-bold">${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h2>
+                    <p class="text-xs text-indigo-100">${userProfiles.partner.orgName} & ${isBm ? 'Pusat Komuniti' : 'Community Centers'}</p>
                 </div>
 
                 <!-- Certification Module Sub-Nav Tabs -->
                 <div class="bg-white rounded-xl p-2 shadow-sm border border-slate-100 flex justify-between text-[10px] font-bold">
-                    <button onclick="setCertTab('overview')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'overview' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Overview</button>
-                    <button onclick="setCertTab('pillars')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'pillars' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">3 Pillars</button>
-                    <button onclick="setCertTab('risks')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'risks' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Risk Matrix</button>
-                    <button onclick="setCertTab('roadmap')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'roadmap' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Roadmap</button>
-                    <button onclick="setCertTab('reports')" class="px-2.5 py-1.5 rounded-lg transition ${partnerCertTab === 'reports' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">Reports</button>
+                    <button onclick="setCertTab('overview')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'overview' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Gambaran' : 'Overview'}</button>
+                    <button onclick="setCertTab('pillars')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'pillars' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">3 ${isBm ? 'Pillar' : 'Pillars'}</button>
+                    <button onclick="setCertTab('risks')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'risks' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Matriks Risiko' : 'Risk Matrix'}</button>
+                    <button onclick="setCertTab('roadmap')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'roadmap' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Pelan Hala' : 'Roadmap'}</button>
+                    <button onclick="setCertTab('reports')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'reports' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Laporan' : 'Reports'}</button>
                 </div>
 
                 <!-- Dynamic Certification Section Container -->
@@ -909,8 +995,8 @@
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-amber-700 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center justify-between">
-                        <span>📥 Course Application Notifications</span>
-                        <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">${pendingApplications.length} Pending</span>
+                        <span>📥 ${isBm ? 'Pemberitahuan Permohonan Kursus' : 'Course Application Notifications'}</span>
+                        <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">${pendingApplications.length} ${isBm ? 'Menunggu' : 'Pending'}</span>
                     </h3>
                     <div class="space-y-2.5">
                         ${pendingHtml}
@@ -918,14 +1004,14 @@
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 List of Programs Organized & Participants</h3>
+                    <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Program Dianjurkan & Peserta' : 'List of Programs Organized & Participants'}</h3>
                     <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
-                        <div><p class="text-xs font-bold text-slate-800">Vegan Cooking Class Cohort 3/2026</p><p class="text-[10px] text-slate-500">Participants: 33 • Lead: Cikgu Faridah</p></div>
-                        <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
+                        <div><p class="text-xs font-bold text-slate-800">Vegan Cooking Class Cohort 3/2026</p><p class="text-[10px] text-slate-500">${isBm ? 'Peserta:' : 'Participants:'} 33 • ${isBm ? 'Ketua:' : 'Lead:'} Cikgu Faridah</p></div>
+                        <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">${isBm ? 'Lihat Senarai →' : 'View List →'}</span>
                     </div>
                     <div onclick="openParticipantGroup('Zero Waste Kids Workshop Cohort 1/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
-                        <div><p class="text-xs font-bold text-slate-800">Zero Waste Kids Workshop Cohort 1/2026</p><p class="text-[10px] text-slate-500">Participants: 25 • Lead: Ainol Razman</p></div>
-                        <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">View List →</span>
+                        <div><p class="text-xs font-bold text-slate-800">Zero Waste Kids Workshop Cohort 1/2026</p><p class="text-[10px] text-slate-500">${isBm ? 'Peserta:' : 'Participants:'} 25 • ${isBm ? 'Ketua:' : 'Lead:'} Ainol Razman</p></div>
+                        <span class="text-[10px] bg-indigo-600 text-white px-2.5 py-1 rounded-lg font-bold">${isBm ? 'Lihat Senarai →' : 'View List →'}</span>
                     </div>
                 </div>
             `;
@@ -937,11 +1023,11 @@
         }
 
         function triggerTierPayment(tierName, amount) {
-            alert(`Secure Payment Gateway: Proceeding to payment for [${tierName}] amounting to RM ${amount.toLocaleString()}. Redirecting to FPX / Credit Card processor...`);
+            alert(currentLang === 'bm' ? `Gerbang Pembayaran Selamat: Meneruskan pembayaran untuk [${tierName}] sebanyak RM ${amount.toLocaleString()}.` : `Secure Payment Gateway: Proceeding to payment for [${tierName}] amounting to RM ${amount.toLocaleString()}. Redirecting to FPX / Credit Card processor...`);
         }
 
         function exportAuditReport(reportType) {
-            alert(`📥 Report Generated Successfully!\nYour audit-ready PDF for [${reportType}] has been compiled and downloaded for ${userProfiles.partner.orgName}.`);
+            alert(currentLang === 'bm' ? `📥 Laporan Berjaya Dijana!\nPDF sedia audit untuk [${reportType}] telah disusun dan dimuat turun untuk ${userProfiles.partner.orgName}.` : `📥 Report Generated Successfully!\nYour audit-ready PDF for [${reportType}] has been compiled and downloaded for ${userProfiles.partner.orgName}.`);
         }
 
         function approveApplication(index) {
@@ -956,7 +1042,7 @@
                 }
             }
 
-            alert(`✅ Application Approved!\n${app.childName} has been successfully approved for "${app.courseName}".`);
+            alert(currentLang === 'bm' ? `✅ Permohonan Diluluskan!\n${app.childName} telah diluluskan untuk "${app.courseName}".` : `✅ Application Approved!\n${app.childName} has been successfully approved for "${app.courseName}".`);
             pendingApplications.splice(index, 1);
             switchTab('school');
         }
@@ -970,8 +1056,8 @@
             switchTab('home');
 
             showModalOverlay(
-                "Application Received", 
-                `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${emailAddr}), please fill in the form and email back to us.`
+                currentLang === 'bm' ? "Permohonan Diterima" : "Application Received", 
+                currentLang === 'bm' ? `Terima kasih kerana memohon kursus / aktiviti.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${emailAddr}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${emailAddr}), please fill in the form and email back to us.`
             );
         }
 
@@ -980,11 +1066,12 @@
         
         function renderParticipantGroupDetails(groupName) {
             const roster = participantGroups[groupName] || [];
+            const isBm = currentLang === 'bm';
             let html = `
                 <div class="space-y-3">
-                    <button onclick="closeParticipantGroup()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs py-2 px-3 rounded-xl transition">← Back to Dashboard</button>
+                    <button onclick="closeParticipantGroup()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs py-2 px-3 rounded-xl transition">← ${isBm ? 'Kembali ke Pemuka' : 'Back to Dashboard'}</button>
                     <div class="bg-gradient-to-br from-indigo-800 to-purple-900 rounded-2xl p-4 text-white shadow-lg space-y-1">
-                        <span class="bg-indigo-500/40 text-[9px] uppercase font-bold px-2 py-0.5 rounded-full">Participants Group</span>
+                        <span class="bg-indigo-500/40 text-[9px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Kumpulan Peserta' : 'Participants Group'}</span>
                         <h2 class="text-lg font-bold">${groupName}</h2>
                     </div>
                     <div class="space-y-2">
@@ -997,10 +1084,10 @@
                     <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 flex justify-between items-center text-xs">
                         <div>
                             <p class="font-bold text-slate-800">${p.name}</p>
-                            <p class="text-[10px] text-slate-500 font-mono">${p.token} • Attendance: <strong class="${isGoodAttendance ? 'text-emerald-600' : 'text-amber-600'}">${p.attendanceRate}</strong></p>
-                            <p class="text-[11px] text-amber-500 mt-0.5 tracking-tight" title="${p.stars} out of 5 stars awarded">Awarded Stars: <span class="font-bold">${starsDisplay}</span> (${p.stars}/5)</p>
+                            <p class="text-[10px] text-slate-500 font-mono">${p.token} • ${isBm ? 'Kehadiran:' : 'Attendance:'} <strong class="${isGoodAttendance ? 'text-emerald-600' : 'text-amber-600'}">${p.attendanceRate}</strong></p>
+                            <p class="text-[11px] text-amber-500 mt-0.5 tracking-tight">${isBm ? 'Bintang Diberikan:' : 'Awarded Stars:'} <span class="font-bold">${starsDisplay}</span> (${p.stars}/5)</p>
                         </div>
-                        <button onclick="rateCommunityToken('${p.name}')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-2.5 py-1 rounded-lg text-[10px]">⭐ Rate & Award</button>
+                        <button onclick="rateCommunityToken('${p.name}')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-2.5 py-1 rounded-lg text-[10px]">⭐ ${isBm ? 'Nilai & Anugerah' : 'Rate & Award'}</button>
                     </div>
                 `;
             });
@@ -1012,7 +1099,8 @@
         }
 
         function rateCommunityToken(studentName) {
-            const rating = prompt(`Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
+            const isBm = currentLang === 'bm';
+            const rating = prompt(isBm ? `Penilaian Penganjur untuk ${studentName} (1 hingga 5 Bintang):` : `Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
             if (rating) {
                 const parsedRating = parseInt(rating);
                 if (!isNaN(parsedRating) && parsedRating >= 1 && parsedRating <= 5) {
@@ -1028,16 +1116,17 @@
                         childrenData[key].communityTokens += parsedRating * 10;
                         childrenData[key].totalTokens += parsedRating * 10;
                     }
-                    alert(`🤝 Community & Leadership Rating Saved! Awarded ${parsedRating} stars (${parsedRating * 10} tokens) to ${studentName}.`);
+                    alert(isBm ? `🤝 Penilaian Komuniti & Kepimpinan Disimpan! Dianugerahkan ${parsedRating} bintang (${parsedRating * 10} token) kepada ${studentName}.` : `🤝 Community & Leadership Rating Saved! Awarded ${parsedRating} stars (${parsedRating * 10} tokens) to ${studentName}.`);
                     switchTab('school');
                 } else {
-                    alert("❌ Please enter a valid number between 1 and 5.");
+                    alert(isBm ? "❌ Sila masukkan nombor sah antara 1 dan 5." : "❌ Please enter a valid number between 1 and 5.");
                 }
             }
         }
 
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
+            const isBm = currentLang === 'bm';
             let mult = 1;
             if (childTimeSpan === '7') mult = 7;
             if (childTimeSpan === '14') mult = 14;
@@ -1049,14 +1138,14 @@
             return `
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-indigo-400/30 pb-2.5">
-                        <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Children Profile Dashboard</span>
+                        <span class="bg-indigo-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Profil Kanak-kanak' : 'Children Profile Dashboard'}</span>
                         <select onchange="switchChildView(this.value)" class="bg-white text-indigo-900 text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
                             <option value="adam" ${childKey === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
                             <option value="maya" ${childKey === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
                         </select>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold">${child.name}'s Passport & Activity Counters</h2>
+                        <h2 class="text-xl font-bold">${child.name} ${isBm ? 'Pasport & Kaunter Aktiviti' : "'s Passport & Activity Counters"}</h2>
                         <p class="text-xs text-indigo-100">${child.age} • ${child.school} • Token: <span class="font-mono bg-indigo-800 px-1.5 py-0.5 rounded text-indigo-200">${child.token}</span></p>
                     </div>
                 </div>
@@ -1065,61 +1154,61 @@
                     <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
                     <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2.5">
                         <div>
-                            <span class="text-[9px] uppercase font-extrabold text-indigo-400 tracking-wider">Lifelong Digital Identity</span>
+                            <span class="text-[9px] uppercase font-extrabold text-indigo-400 tracking-wider">${isBm ? 'Identiti Digital Sepanjang Hayat' : 'Lifelong Digital Identity'}</span>
                             <h3 class="text-sm font-bold text-white flex items-center">🛡️ ChildESG Passport™ Ledger</h3>
                         </div>
                         <div class="text-right">
                             <span class="text-xl font-black text-emerald-400">${child.impactScore}</span><span class="text-[10px] text-slate-400">/100</span>
-                            <p class="text-[8px] text-indigo-300 uppercase font-bold">Overall Impact</p>
+                            <p class="text-[8px] text-indigo-300 uppercase font-bold">${isBm ? 'Impak Keseluruhan' : 'Overall Impact'}</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="bg-white/5 p-2.5 rounded-xl border border-white/10">
-                            <span class="text-[9px] text-slate-400 uppercase font-bold block">Volunteer & Service</span>
+                            <span class="text-[9px] text-slate-400 uppercase font-bold block">${isBm ? 'Khidmat Sukarela' : 'Volunteer & Service'}</span>
                             <strong class="text-amber-400 text-sm font-black">${(child.volunteerHours * (childTimeSpan !== '1' ? mult/5 : 1)).toFixed(1)} hrs</strong>
                         </div>
                         <div class="bg-white/5 p-2.5 rounded-xl border border-white/10">
-                            <span class="text-[9px] text-slate-400 uppercase font-bold block">ESG Learning Courses</span>
-                            <strong class="text-teal-400 text-sm font-black">${child.esgCoursesCount} Completed</strong>
+                            <span class="text-[9px] text-slate-400 uppercase font-bold block">${isBm ? 'Kursus Pembelajaran ESG' : 'ESG Learning Courses'}</span>
+                            <strong class="text-teal-400 text-sm font-black">${child.esgCoursesCount} ${isBm ? 'Selesai' : 'Completed'}</strong>
                         </div>
                         <div class="bg-white/5 p-2.5 rounded-xl border border-white/10">
-                            <span class="text-[9px] text-slate-400 uppercase font-bold block">SDG Actions Logged</span>
-                            <strong class="text-blue-400 text-sm font-black">${child.sdgActionsCount} Actions</strong>
+                            <span class="text-[9px] text-slate-400 uppercase font-bold block">${isBm ? 'Tindakan SDG' : 'SDG Actions Logged'}</span>
+                            <strong class="text-blue-400 text-sm font-black">${child.sdgActionsCount} ${isBm ? 'Tindakan' : 'Actions'}</strong>
                         </div>
                         <div class="bg-white/5 p-2.5 rounded-xl border border-white/10">
-                            <span class="text-[9px] text-slate-400 uppercase font-bold block">Leadership Badges</span>
-                            <strong class="text-purple-400 text-sm font-black">${child.leadershipBadges} Badges</strong>
+                            <span class="text-[9px] text-slate-400 uppercase font-bold block">${isBm ? 'Lencana Kepimpinan' : 'Leadership Badges'}</span>
+                            <strong class="text-purple-400 text-sm font-black">${child.leadershipBadges} ${isBm ? 'Lencana' : 'Badges'}</strong>
                         </div>
                     </div>
                     <div class="pt-1 text-center">
-                        <span class="text-[9px] text-indigo-300 font-mono">🔒 Verified on Immutable Ledger Hash: 0x89F...34A2</span>
+                        <span class="text-[9px] text-indigo-300 font-mono">🔒 ${isBm ? 'Disahkan pada Hash Lejar: 0x89F...34A2' : 'Verified on Immutable Ledger Hash: 0x89F...34A2'}</span>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📝 Apply for New Course / Activities</h3>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📝 ${isBm ? 'Mohon Kursus / Aktiviti Baru' : 'Apply for New Course / Activities'}</h3>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">List of Organization</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Senarai Organisasi' : 'List of Organization'}</label>
                         <select id="apply-org-select" onchange="updateCourseDropdown(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
                             ${orgOptions}
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">List of Courses / Activities</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Senarai Kursus / Aktiviti' : 'List of Courses / Activities'}</label>
                         <select id="apply-course-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800"></select>
                     </div>
                     <button onclick="submitNewCourseApplication()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs transition shadow">
-                        + Apply & Register Course
+                        + ${isBm ? 'Mohon & Daftar Kursus' : 'Apply & Register Course'}
                     </button>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📋 List course/Activity Applied</h3>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Kursus / Aktiviti Dipohon' : 'List course/Activity Applied'}</h3>
                     <div class="space-y-2">
                         ${child.appliedCourses && child.appliedCourses.length > 0 ? child.appliedCourses.map(ac => {
                             let badge = ac.status === 'Approved'
-                                ? `<span class="text-[9px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">✓ Approved</span>`
-                                : `<span class="text-[9px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">⏳ Pending Approval</span>`;
+                                ? `<span class="text-[9px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">✓ ${isBm ? 'Diluluskan' : 'Approved'}</span>`
+                                : `<span class="text-[9px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">⏳ ${isBm ? 'Menunggu Kelulusan' : 'Pending Approval'}</span>`;
                             return `
                                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center text-xs">
                                     <div>
@@ -1129,49 +1218,50 @@
                                     <div>${badge}</div>
                                 </div>
                             `;
-                        }).join('') : '<p class="text-xs text-slate-400 italic">No course or activity applications submitted yet.</p>'}
+                        }).join('') : `<p class="text-xs text-slate-400 italic">${isBm ? 'Tiada permohonan kursus dihantar lagi.' : 'No course or activity applications submitted yet.'}</p>`}
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 List of Courses Attended</h3>
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 ${isBm ? 'Senarai Kursus Dihadiri' : 'List of Courses Attended'}</h3>
                     <div class="space-y-2">
                         ${child.courses && child.courses.length > 0 ? child.courses.map(c => {
                             let starsStr = '⭐'.repeat(c.stars) + '☆'.repeat(5 - c.stars);
+                            let statusText = c.status === 'Completed' ? (isBm ? 'Selesai' : 'Completed') : (isBm ? 'Aktif' : 'Active');
                             return `
                                 <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
                                     <div class="flex justify-between items-center">
                                         <p class="text-xs font-bold text-slate-800">${c.name}</p>
-                                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${c.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${c.status}</span>
+                                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${c.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${statusText}</span>
                                     </div>
                                     <div class="flex justify-between text-[10px] text-slate-500 font-mono">
-                                        <span>Attendance: <strong class="text-emerald-600">${c.attendance}</strong></span>
+                                        <span>${isBm ? 'Kehadiran:' : 'Attendance:'} <strong class="text-emerald-600">${c.attendance}</strong></span>
                                         <span class="text-amber-500 font-bold">${starsStr} (${c.stars}/5)</span>
                                     </div>
                                 </div>
                             `;
-                        }).join('') : '<p class="text-xs text-slate-400 italic">No courses attended yet.</p>'}
+                        }).join('') : `<p class="text-xs text-slate-400 italic">${isBm ? 'Tiada kursus dihadiri lagi.' : 'No courses attended yet.'}</p>`}
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📅 Counter Calendar Span</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${isBm ? '📅 Jangka Masa Kalendar Kaunter' : '📅 Counter Calendar Span'}</h3>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <button onclick="setChildTimeSpan('1')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '1' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">1 Day</button>
-                        <button onclick="setChildTimeSpan('7')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '7' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">7 Days</button>
-                        <button onclick="setChildTimeSpan('14')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '14' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">14 Days</button>
-                        <button onclick="setChildTimeSpan('30')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '30' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">30 Days</button>
-                        <button onclick="setChildTimeSpan('custom')" class="py-1.5 text-[10px] font-bold rounded-lg col-span-2 ${childTimeSpan === 'custom' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">Defined Dates (From - To)</button>
+                        <button onclick="setChildTimeSpan('1')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '1' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">1 ${isBm ? 'Hari' : 'Day'}</button>
+                        <button onclick="setChildTimeSpan('7')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '7' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">7 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="setChildTimeSpan('14')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '14' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">14 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="setChildTimeSpan('30')" class="py-1.5 text-[10px] font-bold rounded-lg ${childTimeSpan === '30' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">30 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="setChildTimeSpan('custom')" class="py-1.5 text-[10px] font-bold rounded-lg col-span-2 ${childTimeSpan === 'custom' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">${isBm ? 'Tarikh Ditetapkan' : 'Defined Dates (From - To)'}</button>
                     </div>
                     <div id="child-custom-date" class="${childTimeSpan === 'custom' ? 'block' : 'hidden'} pt-2 space-y-2 border-t border-slate-100 mt-2">
-                        <span class="text-[10px] font-bold text-slate-500 uppercase block">Select Custom Date Range</span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase block">${isBm ? 'Pilih Julat Tarikh' : 'Select Custom Date Range'}</span>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
-                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">From Date</label>
+                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">${isBm ? 'Dari Tarikh' : 'From Date'}</label>
                                 <input type="date" id="child-from-date" value="${childCustomFromDate}" max="${todayDateStr}" onchange="updateChildCustomDates()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             </div>
                             <div>
-                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">To Date (Max: Today)</label>
+                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">${isBm ? 'Hingga Tarikh' : 'To Date (Max: Today)'}</label>
                                 <input type="date" id="child-to-date" value="${childCustomToDate}" max="${todayDateStr}" onchange="updateChildCustomDates()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             </div>
                         </div>
@@ -1179,27 +1269,27 @@
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 Impact (Physical Play)</span><span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">Active Hours: <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
-                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Physical Play</button>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Impak (Permainan Fizikal)' : 'Impact (Physical Play)'}</span><span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Jam Aktif:' : 'Active Hours:'} <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
+                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Fizikal)' : 'Scan Partner QR for Physical Play'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 Eco-Habits (Zero Waste)</span><span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">Food Waste Diverted: <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
-                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Zero Waste</button>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko (Sifar Sisa)' : 'Eco-Habits (Zero Waste)'}</span><span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Sisa Makanan Dialih Keluar:' : 'Food Waste Diverted:'} <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
+                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Sifar Sisa)' : 'Scan Partner QR for Zero Waste'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 Nutrition Tokens</span><span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span></div>
-                    <button onclick="switchTab('lapaq')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition">View LaPaQ RNI Analytics →</button>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 ${isBm ? 'Token Pemakanan' : 'Nutrition Tokens'}</span><span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span></div>
+                    <button onclick="switchTab('lapaq')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition">${isBm ? 'Lihat Analisis RNI LaPaQ →' : 'View LaPaQ RNI Analytics →'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 Activity Attendance</span><span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">Attendance Hours: <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
-                    <button onclick="openLiveScannerModal('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Attendance</button>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 ${isBm ? 'Kehadiran Aktiviti' : 'Activity Attendance'}</span><span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Jam Kehadiran:' : 'Attendance Hours:'} <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
+                    <button onclick="openLiveScannerModal('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Kehadiran)' : 'Scan Partner QR for Attendance'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🤝 Community & Leadership</span><span class="text-xs font-extrabold text-purple-600">${child.communityTokens} Tokens</span></div>
-                    <p class="text-[10px] text-slate-500">Rated via Partner Organization Dashboard organizer & peers.</p>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🤝 ${isBm ? 'Komuniti & Kepimpinan' : 'Community & Leadership'}</span><span class="text-xs font-extrabold text-purple-600">${child.communityTokens} Tokens</span></div>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Dinilai melalui pemuka penganjur organisasi & rakan sebaya.' : 'Rated via Partner Organization Dashboard organizer & peers.'}</p>
                 </div>
             `;
         }
@@ -1224,6 +1314,7 @@
         function submitNewCourseApplication() {
             const orgSelect = document.getElementById('apply-org-select');
             const courseSelect = document.getElementById('apply-course-select');
+            const isBm = currentLang === 'bm';
             if (!orgSelect || !courseSelect) return;
             const org = orgSelect.value;
             const courseName = courseSelect.value;
@@ -1232,14 +1323,14 @@
             if (!child.appliedCourses) child.appliedCourses = [];
             
             if (child.appliedCourses.some(ac => ac.name === courseName)) {
-                showModalOverlay("Notice", `${child.name} has already applied for "${courseName}".`);
+                showModalOverlay(isBm ? "Notis" : "Notice", `${child.name} ${isBm ? 'telah pun memohon untuk' : 'has already applied for'} "${courseName}".`);
                 return;
             }
 
             child.appliedCourses.push({
                 name: courseName,
                 org: org,
-                status: "Pending Approval"
+                status: isBm ? "Menunggu Kelulusan" : "Pending Approval"
             });
             
             pendingApplications.push({
@@ -1252,8 +1343,8 @@
             });
             
             showModalOverlay(
-                "Application Received", 
-                `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
+                isBm ? "Permohonan Diterima" : "Application Received", 
+                isBm ? `Terima kasih kerana memohon kursus / aktiviti.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
 
@@ -1288,6 +1379,7 @@
 
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
+            const isBm = currentLang === 'bm';
             let multiplier = 1;
             if (rniTimeSpan === '3') multiplier = 3;
             if (rniTimeSpan === '7') multiplier = 7;
@@ -1296,15 +1388,15 @@
             if (rniTimeSpan === 'custom') multiplier = 12;
             
             const rniMetrics = [
-                { name: "Calories (Kcal)", current: Math.round(1620 * multiplier), target: Math.round(1800 * multiplier), unit: "kcal", color: "bg-emerald-500" },
-                { name: "Carbohydrate", current: Math.round(225 * multiplier), target: Math.round(240 * multiplier), unit: "g", color: "bg-blue-500" },
-                { name: "Protein", current: Math.round(42 * multiplier), target: Math.round(45 * multiplier), unit: "g", color: "bg-indigo-500" },
-                { name: "Fiber", current: Math.round(18 * multiplier), target: Math.round(20 * multiplier), unit: "g", color: "bg-amber-500" },
-                { name: "Calcium", current: Math.round(680 * multiplier), target: Math.round(800 * multiplier), unit: "mg", color: "bg-purple-500" },
-                { name: "Iron", current: Math.round(11 * multiplier), target: Math.round(12 * multiplier), unit: "mg", color: "bg-teal-500" },
-                { name: "Potassium", current: Math.round(2100 * multiplier), target: Math.round(2300 * multiplier), unit: "mg", color: "bg-sky-500" },
-                { name: "Vitamin A", current: Math.round(480 * multiplier), target: Math.round(500 * multiplier), unit: "µg RE", color: "bg-orange-500" },
-                { name: "Vitamin C", current: Math.round(38 * multiplier), target: Math.round(40 * multiplier), unit: "mg", color: "bg-rose-500" }
+                { name: isBm ? "Kalori (Kcal)" : "Calories (Kcal)", current: Math.round(1620 * multiplier), target: Math.round(1800 * multiplier), unit: "kcal", color: "bg-emerald-500" },
+                { name: isBm ? "Karbohidrat" : "Carbohydrate", current: Math.round(225 * multiplier), target: Math.round(240 * multiplier), unit: "g", color: "bg-blue-500" },
+                { name: isBm ? "Protein" : "Protein", current: Math.round(42 * multiplier), target: Math.round(45 * multiplier), unit: "g", color: "bg-indigo-500" },
+                { name: isBm ? "Serat" : "Fiber", current: Math.round(18 * multiplier), target: Math.round(20 * multiplier), unit: "g", color: "bg-amber-500" },
+                { name: isBm ? "Kalsium" : "Calcium", current: Math.round(680 * multiplier), target: Math.round(800 * multiplier), unit: "mg", color: "bg-purple-500" },
+                { name: isBm ? "Zat Besi" : "Iron", current: Math.round(11 * multiplier), target: Math.round(12 * multiplier), unit: "mg", color: "bg-teal-500" },
+                { name: isBm ? "Kalium" : "Potassium", current: Math.round(2100 * multiplier), target: Math.round(2300 * multiplier), unit: "mg", color: "bg-sky-500" },
+                { name: isBm ? "Vitamin A" : "Vitamin A", current: Math.round(480 * multiplier), target: Math.round(500 * multiplier), unit: "µg RE", color: "bg-orange-500" },
+                { name: isBm ? "Vitamin C" : "Vitamin C", current: Math.round(38 * multiplier), target: Math.round(40 * multiplier), unit: "mg", color: "bg-rose-500" }
             ];
 
             let growthSvgContent = '';
@@ -1345,33 +1437,33 @@
                         </select>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold">${child.name}'s LaPaQ RNI Intake</h2>
-                        <p class="text-xs text-slate-300 mt-0.5">Recommended Nutrient Intake (RNI) compliance profile</p>
+                        <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
+                        <p class="text-xs text-slate-300 mt-0.5">${isBm ? 'Profil pematuhan Pengambilan Nutrien Disyorkan (RNI)' : 'Recommended Nutrient Intake (RNI) compliance profile'}</p>
                     </div>
                     <div class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
                         <div>
-                            <p class="text-slate-300 text-[10px] font-bold uppercase">Daily RNI Diet Target</p>
+                            <p class="text-slate-300 text-[10px] font-bold uppercase">${isBm ? 'Sasaran Diet RNI Harian' : 'Daily RNI Diet Target'}</p>
                             <p class="font-bold text-emerald-400 mt-0.5">${child.rniStatus}</p>
                         </div>
                         ${child.rniClaimed 
-                            ? `<span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold">✓ Token Minted</span>` 
-                            : `<button onclick="claimRNIToken()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">🥗 Claim Nutrition Token</button>`
+                            ? `<span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold">✓ ${isBm ? 'Token Dicetak' : 'Token Minted'}</span>` 
+                            : `<button onclick="claimRNIToken()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">🥗 ${isBm ? 'Tuntut Token Pemakanan' : 'Claim Nutrition Token'}</button>`
                         }
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 Annual Health & Growth Check</h3>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 ${isBm ? 'Pemeriksaan Kesihatan & Pertumbuhan Tahunan' : 'Annual Health & Growth Check'}</h3>
                         <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
                     </div>
                     
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase">Growth & BMI Trend (Jan 2025 – Oct 2026)</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase">${isBm ? 'Trend Pertumbuhan & BMI (Jan 2025 – Okt 2026)' : 'Growth & BMI Trend (Jan 2025 – Oct 2026)'}</span>
                             <div class="flex items-center space-x-3 text-[9px] font-bold">
-                                <span class="flex items-center text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block mr-1"></span>Growth</span>
-                                <span class="flex items-center text-red-600"><span class="w-2 h-2 rounded-full bg-red-600 inline-block mr-1"></span>BMI Rate</span>
+                                <span class="flex items-center text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block mr-1"></span>${isBm ? 'Pertumbuhan' : 'Growth'}</span>
+                                <span class="flex items-center text-red-600"><span class="w-2 h-2 rounded-full bg-red-600 inline-block mr-1"></span>BMI</span>
                             </div>
                         </div>
                         <div class="pt-2">
@@ -1381,61 +1473,59 @@
                             <span>Jan '25</span>
                             <span>Jul '25</span>
                             <span>Jan '26</span>
-                            <span>Oct '26</span>
+                            <span>Okt '26</span>
                         </div>
                         <p class="text-[10px] text-slate-500 italic text-center pt-1">
-                            ${selectedChild === 'adam' ? 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.' : 'Maya started slightly below -1 SD in Jan 2025, reaching a healthy target growth rate by January 2026 and maintaining it through October 2026.'}
+                            ${isBm ? 'Adam mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.' : 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.'}
                         </p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 pt-1">
-                        <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Height (cm)</label><input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
-                        <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Weight (kg)</label><input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
+                        <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tinggi (cm)' : 'Height (cm)'}</label><input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
+                        <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Berat (kg)' : 'Weight (kg)'}</label><input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
                     </div>
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
-                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Calculated BMI:</span><span id="res-bmi" class="font-bold text-slate-800">${child.bmi}</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Stunting Status:</span><span id="res-stunting" class="font-bold text-emerald-600">${child.stuntingStatus}</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Wasting / Obesity:</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">BMI:</span><span id="res-bmi" class="font-bold text-slate-800">${child.bmi}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Status Bantut:' : 'Stunting Status:'}</span><span id="res-stunting" class="font-bold text-emerald-600">${child.stuntingStatus}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${isBm ? 'Jangka Masa Kalendar' : 'Energy & Calendar Time Span'}</h3>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
-                        <button onclick="selectRniTimeSpan('1')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '1' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">1 Day</button>
-                        <button onclick="selectRniTimeSpan('3')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '3' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">3 Days</button>
-                        <button onclick="selectRniTimeSpan('7')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '7' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">7 Days</button>
-                        <button onclick="selectRniTimeSpan('14')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '14' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">14 Days</button>
-                        <button onclick="selectRniTimeSpan('30')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '30' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">30 Days</button>
-                        <button onclick="selectRniTimeSpan('custom')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === 'custom' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">Custom Date</button>
+                        <button onclick="selectRniTimeSpan('1')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '1' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">1 ${isBm ? 'Hari' : 'Day'}</button>
+                        <button onclick="selectRniTimeSpan('3')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '3' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">3 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="selectRniTimeSpan('7')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '7' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">7 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="selectRniTimeSpan('14')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '14' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">14 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="selectRniTimeSpan('30')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '30' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">30 ${isBm ? 'Hari' : 'Days'}</button>
+                        <button onclick="selectRniTimeSpan('custom')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === 'custom' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">${isBm ? 'Tarikh Khas' : 'Custom Date'}</button>
                     </div>
 
                     <!-- Custom Date Popup / Picker Container -->
                     <div id="rni-custom-date-container" class="${rniTimeSpan === 'custom' ? 'block' : 'hidden'} pt-3 space-y-3 border-t border-slate-100 mt-2">
                         <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-200 space-y-2">
                             <span class="text-[10px] font-bold text-blue-800 uppercase flex items-center justify-between">
-                                <span>📅 Select Custom Date Range</span>
-                                <span class="text-[9px] text-blue-600 font-normal">Popup Calendar</span>
+                                <span>📅 ${isBm ? 'Pilih Julat Tarikh' : 'Select Custom Date Range'}</span>
                             </span>
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
-                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">From Date</label>
+                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">${isBm ? 'Dari Tarikh' : 'From Date'}</label>
                                     <input type="date" id="rni-from-date" value="${customRniFromDate}" max="${todayDateStr}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">To Date (Max: Today)</label>
+                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">${isBm ? 'Hingga Tarikh' : 'To Date (Max: Today)'}</label>
                                     <input type="date" id="rni-to-date" value="${customRniToDate}" max="${todayDateStr}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
                                 </div>
                             </div>
-                            <p class="text-[9px] text-slate-500 italic text-center">Analytics automatically recalculate based on selected dates.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">9 RNI Intake Bars Compliance</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Span: ${rniTimeSpan === 'custom' ? customRniFromDate + ' to ' + customRniToDate : rniTimeSpan + ' Day(s)'}</span>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${isBm ? 'Tempoh:' : 'Span:'} ${rniTimeSpan === 'custom' ? customRniFromDate + ' to ' + customRniToDate : rniTimeSpan + (isBm ? ' Hari' : ' Day(s)')}</span>
                     </div>
                     <div class="space-y-3">
                         ${rniMetrics.map(m => {
@@ -1484,19 +1574,21 @@
 
         function claimRNIToken() {
             const child = childrenData[selectedChild];
+            const isBm = currentLang === 'bm';
             child.rniClaimed = true;
             child.nutritionTokens += 10;
             child.totalTokens += 10;
-            alert(`🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
+            alert(isBm ? `🎉 Sasaran Diet RNI Harian Tercapai! 10 Token Pemakanan dicetak ke dompet ${child.name}.` : `🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
             switchTab('lapaq');
         }
 
         function renderTokensPage() {
             const child = childrenData[selectedChild];
+            const isBm = currentLang === 'bm';
             return `
                 <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Impact Wallet Dashboard</span>
+                        <span class="bg-amber-400/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Dompet Impak' : 'Impact Wallet Dashboard'}</span>
                         <select onchange="changeTokenChild(this.value)" class="bg-amber-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg outline-none cursor-pointer">
                             <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>Adam (8 Yrs)</option>
                             <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>Maya (5 Yrs)</option>
@@ -1504,32 +1596,32 @@
                     </div>
                     <div class="flex justify-between items-end">
                         <div>
-                            <h2 class="text-xl font-bold">${child.name}'s Token Balance</h2>
-                            <p class="text-xs text-amber-100 mt-0.5">Verified via Partner QR, LaPaQ Intelligence & Organizer Rating</p>
+                            <h2 class="text-xl font-bold">${child.name}${isBm ? 'Baki Token' : "'s Token Balance"}</h2>
+                            <p class="text-xs text-amber-100 mt-0.5">${isBm ? 'Disahkan melalui QR Rakan Kongsi & Analisis LaPaQ' : 'Verified via Partner QR, LaPaQ Intelligence & Organizer Rating'}</p>
                         </div>
                         <div class="text-right">
                             <span class="text-2xl font-extrabold text-white">${child.totalTokens}</span>
-                            <p class="text-[9px] text-amber-200 uppercase font-bold">Total Tokens</p>
+                            <p class="text-[9px] text-amber-200 uppercase font-bold">${isBm ? 'Jumlah Token' : 'Total Tokens'}</p>
                         </div>
                     </div>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">🎁 Token Reward Exchange System</h3>
-                        <span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded-full">Redeemable</span>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">🎁 ${isBm ? 'Sistem Pertukaran Ganjaran Token' : 'Token Reward Exchange System'}</h3>
+                        <span class="text-[10px] bg-amber-50 text-amber-700 font-bold px-2 py-0.5 rounded-full">${isBm ? 'Boleh Ditukar' : 'Redeemable'}</span>
                     </div>
                     <div class="space-y-2">
                         <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div><p class="text-xs font-bold text-slate-800">💻 Apple MacBook Air (M2)</p><p class="text-[10px] text-indigo-600 font-semibold">Cost: 100,000 Tokens</p></div>
-                            <button onclick="redeemReward('Apple MacBook Air', 100000)" class="text-[10px] bg-slate-800 text-white px-3 py-1.5 rounded-lg font-bold">Exchange</button>
+                            <div><p class="text-xs font-bold text-slate-800">💻 Apple MacBook Air (M2)</p><p class="text-[10px] text-indigo-600 font-semibold">${isBm ? 'Kos: 100,000 Token' : 'Cost: 100,000 Tokens'}</p></div>
+                            <button onclick="redeemReward('Apple MacBook Air', 100000)" class="text-[10px] bg-slate-800 text-white px-3 py-1.5 rounded-lg font-bold">${isBm ? 'Tukar' : 'Exchange'}</button>
                         </div>
                         <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div><p class="text-xs font-bold text-slate-800">🥛 Pint of Milk at Jaya Grocer</p><p class="text-[10px] text-emerald-600 font-semibold">Cost: 50 Tokens</p></div>
-                            <button onclick="redeemReward('Pint of Milk at Jaya Grocer', 50)" class="text-[10px] bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold">Exchange</button>
+                            <div><p class="text-xs font-bold text-slate-800">🥛 ${isBm ? 'Susu di Jaya Grocer' : 'Pint of Milk at Jaya Grocer'}</p><p class="text-[10px] text-emerald-600 font-semibold">${isBm ? 'Kos: 50 Token' : 'Cost: 50 Tokens'}</p></div>
+                            <button onclick="redeemReward('Pint of Milk at Jaya Grocer', 50)" class="text-[10px] bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-bold">${isBm ? 'Tukar' : 'Exchange'}</button>
                         </div>
                         <div class="p-3 bg-slate-50 rounded-lg flex justify-between items-center border border-slate-100">
-                            <div><p class="text-xs font-bold text-slate-800">🏷️ 5% Rebate Voucher at Shopee</p><p class="text-[10px] text-orange-600 font-semibold">Cost: 10 Tokens</p></div>
-                            <button onclick="redeemReward('5% Rebate Voucher at Shopee', 10)" class="text-[10px] bg-orange-600 text-white px-3 py-1.5 rounded-lg font-bold">Exchange</button>
+                            <div><p class="text-xs font-bold text-slate-800">🏷️ ${isBm ? 'Vaucer Diskaun 5% Shopee' : '5% Rebate Voucher at Shopee'}</p><p class="text-[10px] text-orange-600 font-semibold">${isBm ? 'Kos: 10 Token' : 'Cost: 10 Tokens'}</p></div>
+                            <button onclick="redeemReward('5% Rebate Voucher at Shopee', 10)" class="text-[10px] bg-orange-600 text-white px-3 py-1.5 rounded-lg font-bold">${isBm ? 'Tukar' : 'Exchange'}</button>
                         </div>
                     </div>
                 </div>
@@ -1538,12 +1630,13 @@
 
         function redeemReward(rewardName, tokenCost) {
             const child = childrenData[selectedChild];
+            const isBm = currentLang === 'bm';
             if (child.totalTokens >= tokenCost) {
                 child.totalTokens -= tokenCost;
-                alert(`🎉 Successfully Redeemed: [${rewardName}]!\n${tokenCost} tokens deducted from${child.name}'s wallet balance.`);
+                alert(isBm ? `🎉 Berjaya Ditukar: [${rewardName}]!\n${tokenCost} token ditolak daripada dompet${child.name}.` : `🎉 Successfully Redeemed: [${rewardName}]!\n${tokenCost} tokens deducted from${child.name}'s wallet balance.`);
                 switchTab('tokens');
             } else {
-                alert(`❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
+                alert(isBm ? `❌ Token Tidak Mencukupi!\n${child.name} mempunyai ${child.totalTokens} token, tetapi memerlukan${tokenCost} token.` : `❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
             }
         }
 
@@ -1571,28 +1664,20 @@
         };
 
         function switchTab(tabKey) {
+            activeTabKey = tabKey;
             if (currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
-                alert("🔒 Access Restricted: Organization Partner accounts can only view Partner Profile Home, Partner Dashboard, and QR Scanner.");
+                alert(currentLang === 'bm' ? "🔒 Akses Terhad: Akaun Rakan Kongsi hanya boleh melihat Profil, Pemuka Rakan Kongsi, dan Pengimbas QR." : "🔒 Access Restricted: Organization Partner accounts can only view Partner Profile Home, Partner Dashboard, and QR Scanner.");
                 return;
             }
             if (currentUserRole === 'parent' && tabKey === 'school') {
-                alert("🔒 Access Restricted: Parent accounts do not have access to the Partner Organization Dashboard.");
+                alert(currentLang === 'bm' ? "🔒 Akses Terhad: Akaun Ibu Bapa tidak mempunyai akses ke Pemuka Rakan Kongsi." : "🔒 Access Restricted: Parent accounts do not have access to the Partner Organization Dashboard.");
                 return;
             }
             if (html5QrCode && tabKey !== 'scanner') { try { html5QrCode.stop(); } catch(e){} }
             
-            const titles = {
-                layer1: "Registration Gateway",
-                home: currentUserRole === 'partner' ? "Partner Organization Profile" : "Parents Guardian Profile",
-                layer3: "Children Profile",
-                lapaq: "LaPaQ RNI Analytics",
-                school: "Partner Dashboard",
-                scanner: "QR Code Scanner",
-                tokens: "Impact Tokens Wallet"
-            };
-            document.getElementById('app-title').innerText = titles[tabKey] || "ChildESG™ Mobile";
+            document.getElementById('app-title').innerText = i18n[currentLang].titles[tabKey] || "ChildESG™ Mobile";
             const partnerLabel = document.getElementById('nav-label-partner');
-            if (partnerLabel) partnerLabel.innerText = currentUserRole === 'partner' ? "Dashboard" : "Partner";
+            if (partnerLabel) partnerLabel.innerText = currentUserRole === 'partner' ? i18n[currentLang].dashboard : (currentLang === 'bm' ? 'Rakan' : 'Partner');
             
             const content = document.getElementById('app-content');
             if (tabKey === 'layer1') {
