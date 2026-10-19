@@ -56,7 +56,7 @@
                 </div>
                 <div class="space-y-1.5">
                     <h3 id="modal-title" class="text-base font-bold text-slate-900">Application Received</h3>
-                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Thank you for applying for the course / activity.<br><br>A registration form has been send to the your Email (ainol.razman@example.com), please fill in the form and email back to us.</p>
+                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Thank you for applying for the course / activity.<br><br>A registration form will be sent to your Email (ainol.razman@example.com), please fill in the form and email back to us.</p>
                 </div>
                 <button onclick="closeModalOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
                     OK
@@ -743,10 +743,10 @@
             currentUserRole = 'parent';
             switchTab('home');
 
-            // Trigger the exact requested pop-up note
+            // Trigger the exact requested pop-up note with "will be sent"
             showModalOverlay(
                 "Application Received", 
-                `Thank you for applying for the course / activity.\n\nA registration form has been send to the your Email (${emailAddr}), please fill in the form and email back to us.`
+                `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${emailAddr}), please fill in the form and email back to us.`
             );
         }
 
@@ -1015,7 +1015,7 @@
             
             showModalOverlay(
                 "Application Received", 
-                `Thank you for applying for the course / activity.\n\nA registration form has been send to the your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
+                `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
 
