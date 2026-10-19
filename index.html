@@ -48,15 +48,15 @@
             </div>
         </main>
 
-        <!-- Custom Application Received Modal Overlay -->
+        <!-- Custom Application Received / Send Form Modal Overlay -->
         <div id="custom-modal-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
                 <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
                     ✓
                 </div>
                 <div class="space-y-1">
-                    <h3 class="text-base font-bold text-slate-900">Application Received!</h3>
-                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Your course/activity application has been successfully submitted and forwarded to the partner organization for approval.</p>
+                    <h3 id="modal-title" class="text-base font-bold text-slate-900">Application Received!</h3>
+                    <p id="modal-message" class="text-xs text-slate-600 leading-relaxed">Your course/activity application has been successfully submitted and forwarded to the partner organization.</p>
                 </div>
                 <button onclick="closeModalOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">
                     OK
@@ -180,14 +180,16 @@
                 childName: "Adam bin Ainol",
                 courseName: "AI Nutrition & Health Junior Bootcamp",
                 parentName: "Ainol Razman Ghazali",
-                contact: "+6012-3456789 / ainol.razman@example.com"
+                contact: "+6012-3456789 / ainol.razman@example.com",
+                parentEmail: "ainol.razman@example.com"
             },
             {
                 childKey: "maya",
                 childName: "Maya binti Ainol",
                 courseName: "Child Growth Tracking Workshop",
                 parentName: "Ainol Razman Ghazali",
-                contact: "+6012-3456789 / ainol.razman@example.com"
+                contact: "+6012-3456789 / ainol.razman@example.com",
+                parentEmail: "ainol.razman@example.com"
             }
         ];
 
@@ -718,10 +720,9 @@
             const app = pendingApplications[index];
             if (!app) return;
             
-            // Update child's appliedCourses status from Pending Approval to Approved
             const childObj = childrenData[app.childKey];
             if (childObj && childObj.appliedCourses) {
-                const targetApp = childObj.appliedCourses.find(ac => app.courseName.includes(ac.name) || ac.name.includes(app.courseName));
+                const targetApp = childObj.appliedCourses.find(ac => app.courseName.includes(ac.name) || ac.name.includes(ac.name));
                 if (targetApp) {
                     targetApp.status = "Approved";
                 }
@@ -735,7 +736,13 @@
         function sendFormToRecipient(index) {
             const app = pendingApplications[index];
             if (!app) return;
-            alert(`📤 Registration & Consent Form Sent Successfully!\nDispatched via SMS / Email to parent ${app.parentName} at (${app.contact}).`);
+            
+            // Trigger the parent-facing pop-up note with exact requested text mentioning the email address
+            const emailAddr = app.parentEmail || userProfiles.parent.email;
+            showModalOverlay(
+                "Form Dispatched", 
+                `We have received your application and have sent the application form via your email (${emailAddr}).`
+            );
         }
 
         function openParticipantGroup(groupName) { currentPartnerView = 'group_detail'; activeParticipantGroup = groupName; switchTab('school'); }
@@ -980,7 +987,7 @@
             if (!child.appliedCourses) child.appliedCourses = [];
             
             if (child.appliedCourses.some(ac => ac.name === courseName)) {
-                showModalOverlay(`Notice: ${child.name} has already applied for "${courseName}".`);
+                showModalOverlay("Notice", `${child.name} has already applied for "${courseName}".`);
                 return;
             }
 
@@ -997,16 +1004,22 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`
+                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
+                parentEmail: userProfiles.parent.email
             });
             
-            showModalOverlay(`Application Received!\n\nApplication for ${child.name} to join "${courseName}" under ${org} has been submitted successfully and is pending partner organization approval.`);
+            showModalOverlay(
+                "Application Received!", 
+                `Your course/activity application for ${child.name} to join "${courseName}" has been successfully submitted and forwarded to the partner organization (${org}).`
+            );
         }
 
-        function showModalOverlay(message) {
+        function showModalOverlay(title, message) {
+            const titleEl = document.getElementById('modal-title');
             const msgEl = document.getElementById('modal-message');
             const overlay = document.getElementById('custom-modal-overlay');
-            if (msgEl && overlay) {
+            if (titleEl && msgEl && overlay) {
+                titleEl.innerText = title;
                 msgEl.innerText = message;
                 overlay.classList.remove('hidden');
             }
