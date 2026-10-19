@@ -108,6 +108,8 @@
         let activeParticipantGroup = '';
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
+        let customRniFromDate = '2026-10-01';
+        let customRniToDate = '2026-10-19';
         
         const organizationCoursesMap = {
             "Kemaih Sdn Bhd": [
@@ -1070,7 +1072,7 @@
             if (rniTimeSpan === '7') multiplier = 7;
             if (rniTimeSpan === '14') multiplier = 14;
             if (rniTimeSpan === '30') multiplier = 30;
-            if (rniTimeSpan === 'custom') multiplier = 10;
+            if (rniTimeSpan === 'custom') multiplier = 12;
             
             const rniMetrics = [
                 { name: "Calories (Kcal)", current: Math.round(1620 * multiplier), target: Math.round(1800 * multiplier), unit: "kcal", color: "bg-emerald-500" },
@@ -1186,12 +1188,33 @@
                         <button onclick="selectRniTimeSpan('30')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === '30' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">30 Days</button>
                         <button onclick="selectRniTimeSpan('custom')" class="py-1.5 text-[10px] font-bold rounded-lg ${rniTimeSpan === 'custom' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}">Custom Date</button>
                     </div>
+
+                    <!-- Custom Date Popup / Picker Container -->
+                    <div id="rni-custom-date-container" class="${rniTimeSpan === 'custom' ? 'block' : 'hidden'} pt-3 space-y-3 border-t border-slate-100 mt-2">
+                        <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-200 space-y-2">
+                            <span class="text-[10px] font-bold text-blue-800 uppercase flex items-center justify-between">
+                                <span>📅 Select Custom Date Range</span>
+                                <span class="text-[9px] text-blue-600 font-normal">Popup Calendar</span>
+                            </span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">From Date</label>
+                                    <input type="date" id="rni-from-date" value="${customRniFromDate}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">To Date</label>
+                                    <input type="date" id="rni-to-date" value="${customRniToDate}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
+                                </div>
+                            </div>
+                            <p class="text-[9px] text-slate-500 italic text-center">Analytics automatically recalculate based on selected dates.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">9 RNI Intake Bars Compliance</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Span: ${rniTimeSpan === 'custom' ? 'Custom Range' : rniTimeSpan + ' Day(s)'}</span>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Span: ${rniTimeSpan === 'custom' ? customRniFromDate + ' to ' + customRniToDate : rniTimeSpan + ' Day(s)'}</span>
                     </div>
                     <div class="space-y-3">
                         ${rniMetrics.map(m => {
@@ -1213,7 +1236,19 @@
             `;
         }
 
-        function selectRniTimeSpan(span) { rniTimeSpan = span; switchTab('lapaq'); }
+        function selectRniTimeSpan(span) { 
+            rniTimeSpan = span; 
+            switchTab('lapaq'); 
+        }
+
+        function updateCustomRniDates() {
+            const fromInput = document.getElementById('rni-from-date');
+            const toInput = document.getElementById('rni-to-date');
+            if (fromInput && toInput) {
+                customRniFromDate = fromInput.value;
+                customRniToDate = toInput.value;
+            }
+        }
         
         function recalculateGrowthMetrics() {
             const h = parseFloat(document.getElementById('input-height').value) || 100;
