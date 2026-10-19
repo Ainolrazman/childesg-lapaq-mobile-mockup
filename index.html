@@ -19,9 +19,9 @@
     <!-- Responsive Container: Full screen on mobile, Centered Phone Frame on Desktop -->
     <div class="w-full h-[100dvh] sm:max-w-[400px] sm:h-[844px] bg-slate-50 sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-8 sm:border-slate-800">
         
-        <!-- Top Status Bar Mock (Static & Locked) -->
+        <!-- Top Status Bar Mock (Dynamic Local Time) -->
         <div class="bg-slate-900 text-white px-6 py-2.5 flex justify-between items-center text-xs font-semibold shrink-0 z-20">
-            <span>10:34</span>
+            <span id="status-bar-time">--:--</span>
             <div class="w-20 h-4 bg-slate-800 rounded-full mx-auto absolute left-1/2 transform -translate-x-1/2 hidden sm:block"></div>
             <div class="flex space-x-1.5 items-center">
                 <span>5G</span>
@@ -109,12 +109,32 @@
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
         
-        // System Today's Date Constant (2026-10-19)
-        const todayDateStr = '2026-10-19';
+        // Helper to get today's date in YYYY-MM-DD format dynamically
+        function getTodayDateString() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        const todayDateStr = getTodayDateString();
         let customRniFromDate = '2026-10-01';
         let customRniToDate = todayDateStr;
         let childCustomFromDate = '2026-10-01';
         let childCustomToDate = todayDateStr;
+
+        // Status Bar Real-Time Clock
+        function updateStatusBarTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            const timeString = `${hours}:${minutes}`;
+            const timeEl = document.getElementById('status-bar-time');
+            if (timeEl) timeEl.innerText = timeString;
+        }
+        setInterval(updateStatusBarTime, 1000);
         
         const organizationCoursesMap = {
             "Kemaih Sdn Bhd": [
@@ -1450,7 +1470,10 @@
             document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +25 Tokens Minted to ${child.name}!`;
         }
 
-        window.addEventListener('DOMContentLoaded', () => { switchTab('layer1'); });
+        window.addEventListener('DOMContentLoaded', () => { 
+            updateStatusBarTime(); 
+            switchTab('layer1'); 
+        });
     </script>
 </body>
 </html>
