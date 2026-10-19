@@ -278,16 +278,7 @@
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function getMaxCalendarDateString() {
-            const d = new Date();
-            d.setFullYear(d.getFullYear() + 1);
-            const year = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return `${year}-${month}-${day}`; }  function getMaxCalendarDateString() { const d = new Date(); d.setFullYear(d.getFullYear() + 1); const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`;
         }
 
         const todayDateStr = getTodayDateString();
@@ -568,13 +559,45 @@
                     <p class="text-xs text-slate-300">${isBm ? 'Log masuk atau daftar sebagai Ibu Bapa atau Rakan Kongsi' : 'Sign in or register as Parent or Organization Partner'}</p>
                 </div>
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
+                    
+                    <!-- 1. Select Register / User Role at the Top -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran / Log Masuk' : 'Select Account Role'}</label>
+                        <select id="gateway-role-select" onchange="onGatewayRoleChange(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800">
+                            <option value="parent" ${currentUserRole === 'parent' ? 'selected' : ''}>${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
+                            <option value="partner" ${currentUserRole === 'partner' ? 'selected' : ''}>${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. Register / Login Action Tabs & Form -->
                     <div class="flex bg-slate-100 p-1 rounded-xl">
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
                         <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
                     </div>
+                    
+                    <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
+                        <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
+                            <span class="text-[10px] font-bold text-blue-700 uppercase">${isBm ? 'Persetujuan PDPA Termasuk' : 'PDPA Consent Included'}</span>
+                            <p class="text-[10px] text-blue-600 mt-0.5">${isBm ? 'Pendaftaran mencipta akaun anda dan merekodkan persetujuan PDPA.' : 'Registration creates your account and registers PDPA hashing consent.'}</p>
+                        </div>
+                        <div id="register-fields-container" class="space-y-2.5 pt-1"></div>
+                        <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">${isBm ? '✓ Daftar & Pergi ke Profil Utama' : '✓ Register & Go to Home Profile'}</button>
+                    </div>
 
-                    <!-- Social Auth Options -->
-                    <div class="space-y-2 pt-1">
+                    <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
+                            <input type="text" id="login-input-user" placeholder="guardian123 or partner@organization.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Kata Laluan' : 'Password'}</label>
+                            <input type="password" id="login-input-pass" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                        </div>
+                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
+                    </div>
+
+                    <!-- 3. Or Continue with Google / Facebook -->
+                    <div class="space-y-2 pt-2 border-t border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase block text-center">${isBm ? 'Atau teruskan dengan' : 'Or continue with'}</span>
                         <div class="grid grid-cols-2 gap-2">
                             <button onclick="handleSocialAuth('Google')" class="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 py-2 px-3 rounded-xl font-bold text-xs shadow-xs flex items-center justify-center space-x-2 transition">
@@ -586,54 +609,20 @@
                                 <span>Facebook</span>
                             </button>
                         </div>
-                        <div class="relative flex py-1 items-center">
-                            <div class="flex-grow border-t border-slate-200"></div>
-                            <span class="flex-shrink mx-2 text-[9px] text-slate-400 uppercase font-bold">or use form</span>
-                            <div class="flex-grow border-t border-slate-200"></div>
-                        </div>
-                    </div>
-                    
-                    <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran' : 'Select Register Role'}</label>
-                            <select id="register-role-select" onchange="toggleRegisterFields(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
-                                <option value="parent">${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
-                                <option value="partner">${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
-                            </select>
-                        </div>
-                        <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
-                            <span class="text-[10px] font-bold text-blue-700 uppercase">${isBm ? 'Persetujuan PDPA Termasuk' : 'PDPA Consent Included'}</span>
-                            <p class="text-[10px] text-blue-600 mt-0.5">${isBm ? 'Pendaftaran mencipta akaun anda dan merekodkan persetujuan PDPA.' : 'Registration creates your account and registers PDPA hashing consent.'}</p>
-                        </div>
-                        <div id="register-fields-container" class="space-y-2.5 pt-1"></div>
-                        <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">${isBm ? '✓ Daftar & Pergi ke Profil Utama' : '✓ Register & Go to Home Profile'}</button>
-                    </div>
-
-                    <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Log Masuk' : 'Select Login Role'}</label>
-                            <select id="login-role-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
-                                <option value="parent">${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
-                                <option value="partner">${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
-                            <input type="text" placeholder="guardian123 or partner@organization.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Kata Laluan' : 'Password'}</label>
-                            <input type="password" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
-                        </div>
-                        <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
                     </div>
                 </div>
             `;
         }
 
+        function onGatewayRoleChange(role) {
+            currentUserRole = role;
+            if (currentAuthTab === 'register') {
+                toggleRegisterFields(role);
+            }
+        }
+
         function handleSocialAuth(provider) {
-            alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider}! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider}! Loading Home Profile...`);
-            currentUserRole = 'parent';
+            alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? 'Akaun Organisasi' : 'Akaun Ibu Bapa'})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? 'Organization Account' : 'Parent Account'})! Loading Home Profile...`);
             switchTab('home');
         }
 
@@ -713,20 +702,23 @@
             switchTab('layer1'); 
             if (mode === 'register') {
                 setTimeout(() => {
-                    const sel = document.getElementById('register-role-select');
-                    if (sel) toggleRegisterFields(sel.value);
+                    const roleSelect = document.getElementById('gateway-role-select');
+                    const role = roleSelect ? roleSelect.value : currentUserRole;
+                    toggleRegisterFields(role);
                 }, 50);
             }
         }
 
         function handleLoginSubmit() {
-            currentUserRole = document.getElementById('login-role-select').value;
+            const roleSelect = document.getElementById('gateway-role-select');
+            if (roleSelect) currentUserRole = roleSelect.value;
             alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
 
         function handleRegisterSubmit() {
-            const roleSel = document.getElementById('register-role-select').value;
+            const roleSelect = document.getElementById('gateway-role-select');
+            const roleSel = roleSelect ? roleSelect.value : currentUserRole;
             currentUserRole = roleSel;
             if (roleSel === 'parent') {
                 userProfiles.parent.name = document.getElementById('reg-p-name').value;
@@ -1816,7 +1808,11 @@
             const content = document.getElementById('app-content');
             if (tabKey === 'layer1') {
                 content.innerHTML = renderRegistrationPage();
-                setTimeout(() => toggleRegisterFields('parent'), 50);
+                setTimeout(() => {
+                    const roleSelect = document.getElementById('gateway-role-select');
+                    const role = roleSelect ? roleSelect.value : currentUserRole;
+                    toggleRegisterFields(role);
+                }, 50);
             }
             else if (tabKey === 'home') content.innerHTML = currentUserRole === 'partner' ? renderPartnerProfilePage() : renderParentProfilePage();
             else if (tabKey === 'programs') content.innerHTML = renderProgramsPage();
