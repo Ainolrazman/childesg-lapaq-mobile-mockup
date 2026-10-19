@@ -108,8 +108,13 @@
         let activeParticipantGroup = '';
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
+        
+        // System Today's Date Constant (2026-10-19)
+        const todayDateStr = '2026-10-19';
         let customRniFromDate = '2026-10-01';
-        let customRniToDate = '2026-10-19';
+        let customRniToDate = todayDateStr;
+        let childCustomFromDate = '2026-10-01';
+        let childCustomToDate = todayDateStr;
         
         const organizationCoursesMap = {
             "Kemaih Sdn Bhd": [
@@ -377,7 +382,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth:</label>
-                        <input type="date" id="reg-p-dob" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.dob}">
+                        <input type="date" id="reg-p-dob" max="${todayDateStr}" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.dob}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (optional):</label>
@@ -501,7 +506,7 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth</label>
-                            <input type="date" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                            <input type="date" max="${todayDateStr}" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
                     </div>
                     <div>
@@ -566,7 +571,7 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Date of Birth:</label>
-                        <input type="date" id="hp-dob" value="${p.dob}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                        <input type="date" id="hp-dob" max="${todayDateStr}" value="${p.dob}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Occupation (optional):</label>
@@ -957,11 +962,11 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">From Date</label>
-                                <input type="date" value="2026-10-01" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                                <input type="date" id="child-from-date" value="${childCustomFromDate}" max="${todayDateStr}" onchange="updateChildCustomDates()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             </div>
                             <div>
-                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">To Date</label>
-                                <input type="date" value="2026-10-19" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                                <label class="block text-[9px] text-slate-400 font-bold uppercase mb-0.5">To Date (Max: Today)</label>
+                                <input type="date" id="child-to-date" value="${childCustomToDate}" max="${todayDateStr}" onchange="updateChildCustomDates()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                             </div>
                         </div>
                     </div>
@@ -998,6 +1003,16 @@
             if (!courseSelect) return;
             const courses = organizationCoursesMap[selectedOrg] || [];
             courseSelect.innerHTML = courses.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function updateChildCustomDates() {
+            const fromInput = document.getElementById('child-from-date');
+            const toInput = document.getElementById('child-to-date');
+            if (fromInput && toInput) {
+                if (toInput.value > todayDateStr) toInput.value = todayDateStr;
+                childCustomFromDate = fromInput.value;
+                childCustomToDate = toInput.value;
+            }
         }
 
         function submitNewCourseApplication() {
@@ -1199,11 +1214,11 @@
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">From Date</label>
-                                    <input type="date" id="rni-from-date" value="${customRniFromDate}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
+                                    <input type="date" id="rni-from-date" value="${customRniFromDate}" max="${todayDateStr}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">To Date</label>
-                                    <input type="date" id="rni-to-date" value="${customRniToDate}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
+                                    <label class="block text-[9px] text-slate-500 font-bold uppercase mb-0.5">To Date (Max: Today)</label>
+                                    <input type="date" id="rni-to-date" value="${customRniToDate}" max="${todayDateStr}" onchange="updateCustomRniDates()" class="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg font-bold text-slate-800">
                                 </div>
                             </div>
                             <p class="text-[9px] text-slate-500 italic text-center">Analytics automatically recalculate based on selected dates.</p>
@@ -1245,6 +1260,7 @@
             const fromInput = document.getElementById('rni-from-date');
             const toInput = document.getElementById('rni-to-date');
             if (fromInput && toInput) {
+                if (toInput.value > todayDateStr) toInput.value = todayDateStr;
                 customRniFromDate = fromInput.value;
                 customRniToDate = toInput.value;
             }
