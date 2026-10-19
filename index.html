@@ -88,6 +88,50 @@
         let activeParticipantGroup = '';
         let childTimeSpan = '1';
         let rniTimeSpan = '1';
+        
+        // Master organization & courses mapping (10 organizations, 2 courses each = 20 courses total)
+        const organizationCoursesMap = {
+            "Kemaih Sdn Bhd": [
+                "AI Nutrition & Health Junior Bootcamp",
+                "Child Growth Tracking Workshop"
+            ],
+            "KEMAS (Jabatan Kemajuan Masyarakat)": [
+                "Taska Permata Early Literacy Program",
+                "Children Creative Art & Craft Day"
+            ],
+            "Universiti Kebangsaan Malaysia (UKM)": [
+                "Junior Science Explorer Camp",
+                "Young Nutritionist Discovery Workshop"
+            ],
+            "Malaysian Nature Society (MNS)": [
+                "Junior Eco-Warrior Forest Walk",
+                "Butterfly & Insect Habitat Conservation Course"
+            ],
+            "Kuala Lumpur Junior Rugby Club": [
+                "Basic Rugby Skills & Teamwork Clinic",
+                "Youth Touch Rugby Summer Training"
+            ],
+            "WWF-Malaysia": [
+                "Save Our Malayan Tigers Youth Workshop",
+                "Clean Rivers & Marine Life Protection Camp"
+            ],
+            "MRANTI (Malaysia Research Accelerator for Technology & Innovation)": [
+                "Kids Coding & Robotics Beginner Workshop",
+                "Future Innovators 3D Printing Class"
+            ],
+            "Yayasan Pahang": [
+                "East Coast Youth Leadership Camp",
+                "Heritage Storytelling & Cultural Arts Course"
+            ],
+            "Jaya Grocer Community Kitchen": [
+                "Junior Healthy Cooking & Baking Masterclass",
+                "Zero Waste Grocery Shopping Adventure"
+            ],
+            "Decathlon Malaysia Sports Academy": [
+                "Kids Fun Athletics & Agility Training",
+                "Junior Cycling Safety & Balance Clinic"
+            ]
+        };
 
         // Master profile data object storing state for both roles
         const userProfiles = {
@@ -110,7 +154,6 @@
                 personPhone: "+6012-3456789"
             }
         };
-
         const malaysiaStatesOptions = `
             <option>W.P. Kuala Lumpur / Selangor</option>
             <option>Johor</option>
@@ -128,7 +171,6 @@
             <option>W.P. Labuan</option>
             <option>W.P. Putrajaya</option>
         `;
-
         const childrenData = {
             adam: {
                 name: "Adam",
@@ -184,7 +226,6 @@
                 ]
             }
         };
-
         const participantGroups = {
             "Vegan Cooking Class Cohort 3/2026": [
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", stars: 5, status: "Normal" },
@@ -197,7 +238,6 @@
                 { name: "Aishah Binti Omar", token: "#AO-33Z-KL03", attendanceRate: "92%", stars: 5, status: "Normal" }
             ]
         };
-
         function renderRegistrationPage() {
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
@@ -223,15 +263,12 @@
                             <span class="text-[10px] font-bold text-blue-700 uppercase">PDPA Consent Included</span>
                             <p class="text-[10px] text-blue-600 mt-0.5">Registration creates your account and registers PDPA hashing consent.</p>
                         </div>
-
                         <!-- Dynamic Register Form Fields based on role selection -->
                         <div id="register-fields-container" class="space-y-2.5 pt-1">
                             <!-- Rendered dynamically -->
                         </div>
-
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">✓ Register & Go to Home Profile</button>
                     </div>
-
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Select Login Role</label>
@@ -253,7 +290,6 @@
                 </div>
             `;
         }
-
         function toggleRegisterFields(role) {
             const container = document.getElementById('register-fields-container');
             if (!container) return;
@@ -323,7 +359,6 @@
                 `;
             }
         }
-
         function setAuthMode(mode) { 
             currentAuthTab = mode; 
             switchTab('layer1'); 
@@ -334,13 +369,11 @@
                 }, 50);
             }
         }
-
         function handleLoginSubmit() {
             currentUserRole = document.getElementById('login-role-select').value;
             alert("Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
-
         function handleRegisterSubmit() {
             const roleSel = document.getElementById('register-role-select').value;
             currentUserRole = roleSel;
@@ -364,7 +397,6 @@
             alert("Account registered & details saved! Loading Home Profile...");
             switchTab('home');
         }
-
         // REGISTERED CHILDREN LIST COMPONENT (For Parent Profile Only)
         function renderRegisteredChildrenList() {
             return `
@@ -389,7 +421,6 @@
                 </div>
             `;
         }
-
         // ADD CHILD COMPONENT (For Parent Profile Only)
         function renderAddChildSection() {
             return `
@@ -422,7 +453,6 @@
                 </div>
             `;
         }
-
         // 1. PARENT GUARDIAN PAGE -> PARENTS GUARDIAN PROFILE
         function renderParentProfilePage() {
             const p = userProfiles.parent;
@@ -488,7 +518,6 @@
                 ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
-
         function updateParentProfile() {
             userProfiles.parent.name = document.getElementById('hp-name').value;
             userProfiles.parent.email = document.getElementById('hp-email').value;
@@ -499,7 +528,6 @@
             userProfiles.parent.occupation = document.getElementById('hp-occ').value;
             alert("Parents Guardian Profile updated successfully!");
         }
-
         // 2. ORGANIZATION PAGE -> PARTNER ORGANIZATION PROFILE (WITH ORGANIZED PROGRAMS & PARTICIPANTS)
         function renderPartnerProfilePage() {
             const o = userProfiles.partner;
@@ -546,7 +574,6 @@
                         Update
                     </button>
                 </div>
-
                 <!-- LIST OF PROGRAMS ORGANIZED & PARTICIPANTS -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 List of Programs Organized & Participants</h3>
@@ -575,7 +602,6 @@
                 </div>
             `;
         }
-
         function updatePartnerProfile() {
             userProfiles.partner.orgName = document.getElementById('ho-name').value;
             userProfiles.partner.regNumber = document.getElementById('ho-regno').value;
@@ -586,7 +612,6 @@
             userProfiles.partner.personPhone = document.getElementById('ho-pphone').value;
             alert("Partner Organization Profile updated successfully!");
         }
-
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
             return `
@@ -609,10 +634,8 @@
                 ${renderAddProgramSection()}
             `;
         }
-
         function openParticipantGroup(groupName) { currentPartnerView = 'group_detail'; activeParticipantGroup = groupName; switchTab('school'); }
         function closeParticipantGroup() { currentPartnerView = 'dashboard'; activeParticipantGroup = ''; switchTab('school'); }
-
         function renderParticipantGroupDetails(groupName) {
             const roster = participantGroups[groupName] || [];
             let html = `
@@ -639,7 +662,6 @@
                     </div>
                 `;
             });
-
             html += `
                     </div>
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3 mt-4">
@@ -676,7 +698,6 @@
             `;
             return html;
         }
-
         function rateCommunityToken(studentName) {
             const rating = prompt(`Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
             if (rating) {
@@ -701,7 +722,6 @@
                 }
             }
         }
-
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             let mult = 1;
@@ -709,6 +729,9 @@
             if (childTimeSpan === '14') mult = 14;
             if (childTimeSpan === '30') mult = 30;
             if (childTimeSpan === 'custom') mult = 12;
+            
+            // Generate Organization options for dropdown
+            const orgOptions = Object.keys(organizationCoursesMap).map(org => `<option value="${org}">${org}</option>`).join('');
 
             return `
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
@@ -723,6 +746,26 @@
                         <h2 class="text-xl font-bold">${child.name}'s Passport & Activity Counters</h2>
                         <p class="text-xs text-indigo-100">${child.age} •${child.school}</p>
                     </div>
+                </div>
+
+                <!-- APPLY FOR NEW COURSE / ACTIVITIES SECTION -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📝 Apply for New Course / Activities</h3>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">List of Organization</label>
+                        <select id="apply-org-select" onchange="updateCourseDropdown(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
+                            ${orgOptions}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">List of Courses / Activities</label>
+                        <select id="apply-course-select" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
+                            <!-- Populated dynamically via JS -->
+                        </select>
+                    </div>
+                    <button onclick="submitNewCourseApplication()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs transition shadow">
+                        + Apply & Register Course
+                    </button>
                 </div>
 
                 <!-- LIST OF COURSES ATTENDED -->
@@ -746,7 +789,6 @@
                         }).join('') : '<p class="text-xs text-slate-400 italic">No courses attended yet.</p>'}
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">📅 Counter Calendar Span</h3>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
@@ -770,35 +812,63 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 Impact (Physical Play)</span><span class="text-xs font-extrabold text-amber-600">${Math.round(child.impactTokens * mult)} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Active Hours: <strong class="text-slate-800">${(child.activeHours * mult).toFixed(1)} hrs</strong></p>
                     <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Physical Play</button>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 Eco-Habits (Zero Waste)</span><span class="text-xs font-extrabold text-teal-600">${Math.round(child.ecoTokens * mult)} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Food Waste Diverted: <strong class="text-emerald-600">${(child.foodWasteKg * mult).toFixed(1)} kg</strong></p>
                     <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Zero Waste</button>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 Nutrition Tokens</span><span class="text-xs font-extrabold text-emerald-600">${Math.round(child.nutritionTokens * mult)} Tokens</span></div>
                     <button onclick="switchTab('lapaq')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs transition">View LaPaQ RNI Analytics →</button>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">📚 Activity Attendance</span><span class="text-xs font-extrabold text-blue-600">${Math.round(child.activityTokens * mult)} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Attendance Hours: <strong class="text-slate-800">${(child.activityHours * mult).toFixed(1)} hrs</strong></p>
                     <button onclick="openLiveScannerModal('Activity Attendance')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 Scan Partner QR for Attendance</button>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🤝 Community & Leadership</span><span class="text-xs font-extrabold text-purple-600">${child.communityTokens} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">Rated via Partner Organization Dashboard organizer & peers.</p>
                 </div>
             `;
+        }
+
+        function updateCourseDropdown(selectedOrg) {
+            const courseSelect = document.getElementById('apply-course-select');
+            if (!courseSelect) return;
+            const courses = organizationCoursesMap[selectedOrg] || [];
+            courseSelect.innerHTML = courses.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function submitNewCourseApplication() {
+            const orgSelect = document.getElementById('apply-org-select');
+            const courseSelect = document.getElementById('apply-course-select');
+            if (!orgSelect || !courseSelect) return;
+            const org = orgSelect.value;
+            const courseName = courseSelect.value;
+            
+            const child = childrenData[selectedChild];
+            if (!child.courses) child.courses = [];
+            
+            if (child.courses.some(c => c.name.includes(courseName))) {
+                alert(`⚠️ ${child.name} is already enrolled in "${courseName}".`);
+                return;
+            }
+            
+            child.courses.push({
+                name: `${courseName} (${org})`,
+                attendance: "0%",
+                stars: 5,
+                status: "Active"
+            });
+            
+            alert(`🎉 Success! ${child.name} has successfully applied for "${courseName}" organized by ${org}. Added to List of Courses Attended.`);
+            switchTab('layer3');
         }
 
         function setChildTimeSpan(span) { childTimeSpan = span; switchTab('layer3'); }
@@ -810,7 +880,6 @@
                 document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
             }, 300);
         }
-
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             let multiplier = 1;
@@ -819,7 +888,6 @@
             if (rniTimeSpan === '14') multiplier = 14;
             if (rniTimeSpan === '30') multiplier = 30;
             if (rniTimeSpan === 'custom') multiplier = 10;
-
             const rniMetrics = [
                 { name: "Calories (Kcal)", current: Math.round(1620 * multiplier), target: Math.round(1800 * multiplier), unit: "kcal", color: "bg-emerald-500" },
                 { name: "Carbohydrate", current: Math.round(225 * multiplier), target: Math.round(240 * multiplier), unit: "g", color: "bg-blue-500" },
@@ -831,7 +899,6 @@
                 { name: "Vitamin A", current: Math.round(480 * multiplier), target: Math.round(500 * multiplier), unit: "µg RE", color: "bg-orange-500" },
                 { name: "Vitamin C", current: Math.round(38 * multiplier), target: Math.round(40 * multiplier), unit: "mg", color: "bg-rose-500" }
             ];
-
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
@@ -856,7 +923,6 @@
                         }
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 Annual Health & Growth Check</h3>
@@ -872,7 +938,6 @@
                         <div class="flex justify-between"><span class="text-slate-500 font-semibold">Wasting / Obesity:</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Energy & Calendar Time Span</h3>
                     <div class="grid grid-cols-3 gap-1.5 text-center">
@@ -898,7 +963,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">9 RNI Intake Bars Compliance</h3>
@@ -923,9 +987,7 @@
                 </div>
             `;
         }
-
         function selectRniTimeSpan(span) { rniTimeSpan = span; switchTab('lapaq'); }
-
         function recalculateGrowthMetrics() {
             const h = parseFloat(document.getElementById('input-height').value) || 100;
             const w = parseFloat(document.getElementById('input-weight').value) || 15;
@@ -935,7 +997,6 @@
             childrenData[selectedChild].weight = w;
             childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
         }
-
         function claimRNIToken() {
             const child = childrenData[selectedChild];
             child.rniClaimed = true;
@@ -944,7 +1005,6 @@
             alert(`🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
             switchTab('lapaq');
         }
-
         function renderTokensPage() {
             const child = childrenData[selectedChild];
             return `
@@ -989,7 +1049,6 @@
                 </div>
             `;
         }
-
         function redeemReward(rewardName, tokenCost) {
             const child = childrenData[selectedChild];
             if (child.totalTokens >= tokenCost) {
@@ -1000,11 +1059,9 @@
                 alert(`❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
             }
         }
-
         function changeLaPaQChild(childKey) { selectedChild = childKey; switchTab('lapaq'); }
         function changeTokenChild(childKey) { selectedChild = childKey; switchTab('tokens'); }
         function switchChildView(childKey) { selectedChild = childKey; switchTab('layer3'); }
-
         const contentData = { layer1: ``, home: ``, layer3: ``, tokens: ``, lapaq: ``, school: ``, 
             scanner: `
                 <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
@@ -1022,7 +1079,6 @@
                 </div>
             `
         };
-
         function switchTab(tabKey) {
             if (currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
                 alert("🔒 Access Restricted: Organization Partner accounts can only view Partner Profile Home, Partner Dashboard, and QR Scanner.");
@@ -1032,9 +1088,7 @@
                 alert("🔒 Access Restricted: Parent accounts do not have access to the Partner Organization Dashboard.");
                 return;
             }
-
             if (html5QrCode && tabKey !== 'scanner') { try { html5QrCode.stop(); } catch(e){} }
-
             const titles = {
                 layer1: "Registration Gateway",
                 home: currentUserRole === 'partner' ? "Partner Organization Profile" : "Parents Guardian Profile",
@@ -1054,12 +1108,17 @@
                 setTimeout(() => toggleRegisterFields('parent'), 50);
             }
             else if (tabKey === 'home') content.innerHTML = currentUserRole === 'partner' ? renderPartnerProfilePage() : renderParentProfilePage();
-            else if (tabKey === 'layer3') content.innerHTML = renderChildProfile(selectedChild);
+            else if (tabKey === 'layer3') {
+                content.innerHTML = renderChildProfile(selectedChild);
+                setTimeout(() => {
+                    const orgSel = document.getElementById('apply-org-select');
+                    if (orgSel) updateCourseDropdown(orgSel.value);
+                }, 50);
+            }
             else if (tabKey === 'lapaq') content.innerHTML = renderLaPaQPage();
             else if (tabKey === 'school') content.innerHTML = renderPartnerDashboard();
             else if (tabKey === 'tokens') content.innerHTML = renderTokensPage();
             else content.innerHTML = contentData[tabKey];
-
             ['layer1', 'home', 'layer3', 'lapaq', 'school', 'scanner', 'tokens'].forEach(k => {
                 const btn = document.getElementById(`nav-${k}`);
                 if (btn) {
@@ -1071,7 +1130,6 @@
                 }
             });
         }
-
         function startScanner() {
             if (typeof Html5Qrcode !== 'undefined') {
                 if (html5QrCode) {
@@ -1098,14 +1156,12 @@
                 document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
             }
         }
-
         function simulateSuccessfulScan() {
             const child = childrenData[selectedChild];
             child.totalTokens += 20;
             child.impactTokens += 20;
             document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +20 Tokens Minted to ${child.name}!`;
         }
-
         window.addEventListener('DOMContentLoaded', () => { switchTab('layer1'); });
     </script>
 </body>
