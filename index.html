@@ -349,7 +349,7 @@
         const featuredProgramsList = [
             {
                 org: "Kemaih Sdn Bhd",
-                rating: "⭐⭐⭐⭐⭐",
+                rating: 5,
                 title: "AI Nutrition & Health Junior Bootcamp",
                 category: "Nutrition and Health",
                 desc: "An immersive program teaching children and teens the fundamentals of balanced nutrition, caloric tracking, and artificial intelligence in food science.",
@@ -361,7 +361,7 @@
             },
             {
                 org: "KEMAS (Jabatan Kemajuan Masyarakat)",
-                rating: "⭐⭐⭐⭐⭐",
+                rating: 5,
                 title: "Taska Permata Early Literacy Program",
                 category: "Community & Leadership",
                 desc: "Interactive reading, phonics, and cognitive development sessions tailored for early childhood growth across community centers.",
@@ -373,7 +373,7 @@
             },
             {
                 org: "Universiti Kebangsaan Malaysia (UKM)",
-                rating: "⭐⭐⭐⭐⭐",
+                rating: 5,
                 title: "Young Nutritionist Discovery Workshop",
                 category: "Nutrition and Health",
                 desc: "Led by expert nutritionists, kids learn food grouping, RNI metrics, and healthy cooking habits through hands-on experiments.",
@@ -385,7 +385,7 @@
             },
             {
                 org: "Malaysian Nature Society (MNS)",
-                rating: "⭐⭐⭐⭐⭐",
+                rating: 5,
                 title: "Junior Eco-Warrior Forest Walk",
                 category: "Environment",
                 desc: "Outdoor guided exploration focusing on local flora and fauna biodiversity conservation and tree planting.",
@@ -397,7 +397,7 @@
             },
             {
                 org: "Kuala Lumpur Junior Rugby Club",
-                rating: "⭐⭐⭐⭐",
+                rating: 4,
                 title: "Basic Rugby Skills & Teamwork Clinic",
                 category: "Physical & Sports",
                 desc: "Non-contact touch rugby drills designed to foster teamwork, agility, stamina, and cardiovascular health.",
@@ -409,7 +409,7 @@
             },
             {
                 org: "Jaya Grocer Community Kitchen",
-                rating: "⭐⭐⭐⭐⭐",
+                rating: 5,
                 title: "Junior Healthy Cooking & Baking Masterclass",
                 category: "Nutrition and Health",
                 desc: "Hands-on culinary class teaching children how to prepare wholesome meals with zero food waste ingredients.",
@@ -558,6 +558,21 @@
                 { name: "Aishah Binti Omar", token: "#AO-33Z-KL03", attendanceRate: "92%", stars: 5, status: "Normal" }
             ]
         };
+        
+        // Helper function to render crisp solid SVG stars
+        function renderSolidStars(rating = 5) {
+            let svgHtml = '<span class="inline-flex items-center space-x-0.5 text-amber-500 ml-1.5" title="' + rating + ' Star Rating">';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    svgHtml += `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+                } else {
+                    svgHtml += `<svg class="w-3.5 h-3.5 fill-slate-300" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+                }
+            }
+            svgHtml += '</span>';
+            return svgHtml;
+        }
+
         function renderRegistrationPage() {
             const isBm = currentLang === 'bm';
             return `
@@ -858,9 +873,9 @@
                         <div>
                             <span class="text-[9px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full uppercase">${prog.category}</span>
                             <h3 class="text-xs font-bold text-slate-900 mt-1">${prog.title}</h3>
-                            <p class="text-[10px] text-indigo-600 font-semibold flex items-center space-x-1.5 mt-0.5">
+                            <p class="text-[10px] text-indigo-600 font-semibold flex items-center flex-wrap gap-1 mt-0.5">
                                 <span>🏢 ${prog.org}</span>
-                                <span class="text-amber-500 tracking-tighter" title="Partner Star Rating">${prog.rating || '⭐⭐⭐⭐⭐'}</span>
+                                ${renderSolidStars(prog.rating || 5)}
                             </p>
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
@@ -949,7 +964,7 @@
             }
             featuredProgramsList.unshift({
                 org: userProfiles.partner.orgName,
-                rating: "⭐⭐⭐⭐⭐",
+                rating: 5,
                 title: progName,
                 category: finalCategory,
                 desc: progDesc,
@@ -1226,8 +1241,14 @@
                                 <p class="text-[11px] text-slate-300 font-semibold mt-0.5">Silver Verified Institution</p>
                             </div>
                             <div class="text-right">
-                                <div class="text-xl tracking-tight text-yellow-400 drop-shadow">⭐⭐⭐⭐⭐</div>
-                                <span class="text-[9px] text-slate-400 font-bold uppercase">80 - 100 Score Rating</span>
+                                <div class="inline-flex items-center space-x-0.5 text-amber-400 drop-shadow">
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                </div>
+                                <span class="text-[9px] text-slate-400 font-bold uppercase block mt-0.5">80 - 100 Score Rating</span>
                             </div>
                         </div>
                         <div class="pt-2 border-t border-slate-700 grid grid-cols-5 gap-1 text-center text-[9px] font-semibold text-slate-300">
