@@ -737,10 +737,15 @@
             const app = pendingApplications[index];
             if (!app) return;
             
-            // Trigger the parent-facing pop-up note with exact requested text mentioning the email address
             const emailAddr = app.parentEmail || userProfiles.parent.email;
+            
+            // Switch to Parent profile view first so the user sees the pop-up note delivered to the Parents Guardian Profile layer
+            currentUserRole = 'parent';
+            switchTab('home');
+
+            // Trigger the exact requested pop-up note
             showModalOverlay(
-                "Form Dispatched", 
+                "Application & Form Notice", 
                 `We have received your application and have sent the application form via your email (${emailAddr}).`
             );
         }
@@ -1029,7 +1034,7 @@
             const overlay = document.getElementById('custom-modal-overlay');
             if (overlay) {
                 overlay.classList.add('hidden');
-                switchTab('layer3');
+                switchTab('home');
             }
         }
 
