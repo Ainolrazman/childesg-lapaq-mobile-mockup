@@ -1067,45 +1067,42 @@
                 { name: "Vitamin C", current: Math.round(38 * multiplier), target: Math.round(40 * multiplier), unit: "mg", color: "bg-rose-500" }
             ];
 
-            // Growth & BMI Chart datasets starting from Jan 2025 to Jan 2026
+            // Growth & BMI Chart datasets from Jan 2025 to Current Date (October 2026)
             let growthSvgContent = '';
             if (selectedChild === 'adam') {
-                // Adam: Healthy growth (Blue) & Healthy BMI (Red) flat/steady line
+                // Adam: Healthy growth (Blue) & Healthy BMI (Red) stable across Jan 2025 - Oct 2026
                 growthSvgContent = `
                     <svg viewBox="0 0 300 120" class="w-full h-32 overflow-visible">
-                        <!-- Grid lines -->
                         <line x1="0" y1="20" x2="300" y2="20" stroke="#f1f5f9" stroke-width="1" />
                         <line x1="0" y1="60" x2="300" y2="60" stroke="#f1f5f9" stroke-width="1" />
                         <line x1="0" y1="100" x2="300" y2="100" stroke="#e2e8f0" stroke-width="1" />
                         
-                        <!-- Growth Line (Blue) - Healthy steady rise -->
-                        <polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="15,85 45,80 75,75 105,70 135,65 165,60 195,55 225,50 255,45 285,40" />
-                        <!-- BMI Line (Red) - Healthy steady level -->
-                        <polyline fill="none" stroke="#dc2626" stroke-width="2.5" points="15,50 45,48 75,52 105,49 135,51 165,48 195,50 225,49 255,51 285,50" />
+                        <!-- Growth Line (Blue) -->
+                        <polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="15,65 45,63 75,60 105,58 135,55 165,52 195,50 225,48 255,45 285,42" />
+                        <!-- BMI Line (Red) -->
+                        <polyline fill="none" stroke="#dc2626" stroke-width="2.5" points="15,50 45,49 75,51 105,50 135,52 165,50 195,51 225,49 255,50 285,50" />
                         
-                        <!-- Data Points Adam -->
-                        <circle cx="15" cy="85" r="3" fill="#2563eb"/><circle cx="285" cy="40" r="3" fill="#2563eb"/>
+                        <circle cx="15" cy="65" r="3" fill="#2563eb"/><circle cx="285" cy="42" r="3" fill="#2563eb"/>
                         <circle cx="15" cy="50" r="3" fill="#dc2626"/><circle cx="285" cy="50" r="3" fill="#dc2626"/>
                     </svg>
                 `;
             } else {
-                // Maya: Starts slightly below -1 (lower on chart, e.g., y=90), rising steadily to reach healthy growth rate by Jan 2026 (y=45)
+                // Maya: Starts slightly below -1 SD in Jan 2025, progressively rising to reach healthy growth rate by Jan 2026 and maintaining through Oct 2026
                 growthSvgContent = `
                     <svg viewBox="0 0 300 120" class="w-full h-32 overflow-visible">
-                        <!-- Grid lines -->
                         <line x1="0" y1="20" x2="300" y2="20" stroke="#f1f5f9" stroke-width="1" />
                         <line x1="0" y1="60" x2="300" y2="60" stroke="#f1f5f9" stroke-width="1" />
                         <line x1="0" y1="100" x2="300" y2="100" stroke="#e2e8f0" stroke-width="1" />
-                        <line x1="0" y1="80" x2="300" y2="80" stroke="#cbd5e1" stroke-dasharray="3,3" stroke-width="1" />
+                        <!-- -1 SD Reference Threshold Line -->
+                        <line x1="0" y1="78" x2="300" y2="78" stroke="#cbd5e1" stroke-dasharray="3,3" stroke-width="1" />
                         
-                        <!-- Growth Line (Blue) - Starts low (-1 SD threshold dashed line reference) and rises to healthy target by Jan 2026 -->
-                        <polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="15,95 45,92 75,88 105,82 135,76 165,68 195,60 225,54 255,48 285,42" />
-                        <!-- BMI Line (Red) - Starts below and catches up to normal range by Jan 2026 -->
-                        <polyline fill="none" stroke="#dc2626" stroke-width="2.5" points="15,90 45,86 75,82 105,75 135,68 165,62 195,58 225,54 255,51 285,48" />
+                        <!-- Growth Line (Blue) - Starts below -1 SD (y=92) in Jan 2025, climbs upward to reach healthy range by Jan 2026 (y=50) and stable to Oct 2026 -->
+                        <polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="15,92 45,88 75,84 105,78 135,70 165,60 195,52 225,50 255,48 285,46" />
+                        <!-- BMI Line (Red) - Starts slightly low and catches up into normal healthy target range -->
+                        <polyline fill="none" stroke="#dc2626" stroke-width="2.5" points="15,88 45,84 75,79 105,72 135,65 165,58 195,52 225,50 255,49 285,48" />
                         
-                        <!-- Data Points Maya -->
-                        <circle cx="15" cy="95" r="3" fill="#2563eb"/><circle cx="285" cy="42" r="3" fill="#2563eb"/>
-                        <circle cx="15" cy="90" r="3" fill="#dc2626"/><circle cx="285" cy="48" r="3" fill="#dc2626"/>
+                        <circle cx="15" cy="92" r="3" fill="#2563eb"/><circle cx="285" cy="46" r="3" fill="#2563eb"/>
+                        <circle cx="15" cy="88" r="3" fill="#dc2626"/><circle cx="285" cy="48" r="3" fill="#dc2626"/>
                     </svg>
                 `;
             }
@@ -1140,10 +1137,10 @@
                         <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
                     </div>
                     
-                    <!-- CHILD GROWTH & BMI TREND GRAPH (Jan 2025 to Jan 2026) -->
+                    <!-- CHILD GROWTH & BMI TREND GRAPH (Jan 2025 to Current Date Oct 2026) -->
                     <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase">Growth & BMI Trend (Jan 2025 – Jan 2026)</span>
+                            <span class="text-[10px] font-bold text-slate-700 uppercase">Growth & BMI Trend (Jan 2025 – Oct 2026)</span>
                             <div class="flex items-center space-x-3 text-[9px] font-bold">
                                 <span class="flex items-center text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block mr-1"></span>Growth</span>
                                 <span class="flex items-center text-red-600"><span class="w-2 h-2 rounded-full bg-red-600 inline-block mr-1"></span>BMI Rate</span>
@@ -1156,9 +1153,10 @@
                             <span>Jan '25</span>
                             <span>Jul '25</span>
                             <span>Jan '26</span>
+                            <span>Oct '26</span>
                         </div>
                         <p class="text-[10px] text-slate-500 italic text-center pt-1">
-                            ${selectedChild === 'adam' ? 'Adam maintains a consistent healthy growth and stable BMI rate.' : 'Maya started slightly below -1 SD in early 2025, reaching a healthy growth rate by January 2026.'}
+                            ${selectedChild === 'adam' ? 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.' : 'Maya started slightly below -1 SD in Jan 2025, reaching a healthy target growth rate by January 2026 and maintaining it through October 2026.'}
                         </p>
                     </div>
 
