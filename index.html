@@ -281,10 +281,11 @@
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            return `${year}-${month}-${day}`; }  function getMaxCalendarDateString() { const d = new Date(); d.setFullYear(d.getFullYear() + 1); const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`;
         }
 
         const todayDateStr = getTodayDateString();
+        const maxDateStr = getMaxCalendarDateString();
         let customRniFromDate = '2026-10-01';
         let customRniToDate = todayDateStr;
         let childCustomFromDate = '2026-10-01';
@@ -348,29 +349,35 @@
             {
                 org: "Kemaih Sdn Bhd",
                 title: "AI Nutrition & Health Junior Bootcamp",
-                category: "Nutrition & Technology",
+                category: "Nutrition and Health",
                 desc: "An immersive program teaching children and teens the fundamentals of balanced nutrition, caloric tracking, and artificial intelligence in food science.",
                 slots: "30 Available",
                 reward: "150 Impact Tokens",
-                badge: "🌱 ESG Certified"
+                badge: "🌱 ESG Certified",
+                startDate: "2026-10-19",
+                endDate: "2026-11-19"
             },
             {
                 org: "KEMAS (Jabatan Kemajuan Masyarakat)",
                 title: "Taska Permata Early Literacy Program",
-                category: "Early Childhood",
+                category: "Community & Leadership",
                 desc: "Interactive reading, phonics, and cognitive development sessions tailored for early childhood growth across community centers.",
                 slots: "15 Available",
                 reward: "100 Impact Tokens",
-                badge: "📚 Community"
+                badge: "📚 Community",
+                startDate: "2026-10-20",
+                endDate: "2026-12-20"
             },
             {
                 org: "Universiti Kebangsaan Malaysia (UKM)",
                 title: "Young Nutritionist Discovery Workshop",
-                category: "Science & Health",
+                category: "Nutrition and Health",
                 desc: "Led by expert nutritionists, kids learn food grouping, RNI metrics, and healthy cooking habits through hands-on experiments.",
                 slots: "20 Available",
                 reward: "120 Impact Tokens",
-                badge: "🔬 Academic Partner"
+                badge: "🔬 Academic Partner",
+                startDate: "2026-10-25",
+                endDate: "2026-11-25"
             },
             {
                 org: "Malaysian Nature Society (MNS)",
@@ -379,7 +386,9 @@
                 desc: "Outdoor guided exploration focusing on local flora and fauna biodiversity conservation and tree planting.",
                 slots: "25 Available",
                 reward: "200 Impact Tokens",
-                badge: "🌿 Environmental"
+                badge: "🌿 Environmental",
+                startDate: "2026-11-01",
+                endDate: "2026-11-02"
             },
             {
                 org: "Kuala Lumpur Junior Rugby Club",
@@ -388,16 +397,20 @@
                 desc: "Non-contact touch rugby drills designed to foster teamwork, agility, stamina, and cardiovascular health.",
                 slots: "40 Available",
                 reward: "150 Impact Tokens",
-                badge: "⚡ Physical Health"
+                badge: "⚡ Physical Health",
+                startDate: "2026-11-10",
+                endDate: "2026-12-10"
             },
             {
                 org: "Jaya Grocer Community Kitchen",
                 title: "Junior Healthy Cooking & Baking Masterclass",
-                category: "Nutrition & Zero Waste",
+                category: "Nutrition and Health",
                 desc: "Hands-on culinary class teaching children how to prepare wholesome meals with zero food waste ingredients.",
                 slots: "12 Available",
                 reward: "180 Impact Tokens",
-                badge: "🥗 Zero Waste"
+                badge: "🥗 Zero Waste",
+                startDate: "2026-11-15",
+                endDate: "2026-11-16"
             }
         ];
 
@@ -768,6 +781,56 @@
 
         function renderProgramsPage() {
             const isBm = currentLang === 'bm';
+            
+            // Partner organization add program panel (Only visible when logged in as partner)
+            let addProgramPanelHtml = '';
+            if (currentUserRole === 'partner') {
+                addProgramPanelHtml = `
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-indigo-200 space-y-3">
+                        <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center">
+                            <span>➕ ${isBm ? 'Tambah Program / Aktiviti Baru' : 'Add New Program / Activity'} (${userProfiles.partner.orgName})</span>
+                        </h3>
+                        <div class="space-y-2.5 text-xs">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">1. ${isBm ? 'Pilih Kategori Program' : 'Choose Category'}</label>
+                                <select id="market-prog-category" onchange="toggleMarketCustomCategoryInput(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-800">
+                                    <option value="Environment">Environment</option>
+                                    <option value="Physical & Sports">Physical & Sports</option>
+                                    <option value="Nutrition and Health">Nutrition and Health</option>
+                                    <option value="Community & Leadership">Community & Leadership</option>
+                                    <option value="Leadership">Leadership</option>
+                                    <option value="Others - Please add">Others - Please add</option>
+                                </select>
+                            </div>
+                            <div id="market-custom-category-wrapper" class="hidden">
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nyatakan Kategori Lain' : 'Specify Other Category'}</label>
+                                <input type="text" id="market-prog-custom-cat" placeholder="Enter custom category" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">2. ${isBm ? 'Nama Program / Aktiviti' : 'Name of Program / Activity'}</label>
+                                <input type="text" id="market-prog-name" placeholder="e.g. Junior Green Science Workshop" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">3. ${isBm ? 'Jangka Masa Kalendar (Hingga 12 Bulan)' : 'Calendar Date Range (Within 12 Months)'}</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <span class="text-[9px] text-slate-400 font-bold uppercase block mb-0.5">From (Today)</span>
+                                        <input type="date" id="market-prog-start" value="${todayDateStr}" min="${todayDateStr}" max="${maxDateStr}" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                                    </div>
+                                    <div>
+                                        <span class="text-[9px] text-slate-400 font-bold uppercase block mb-0.5">To (Max 12 Mo)</span>
+                                        <input type="date" id="market-prog-end" value="${todayDateStr}" min="${todayDateStr}" max="${maxDateStr}" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="handleMarketplaceAddProgram()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow mt-1">
+                                + ${isBm ? 'Terbit Program ke Pasaran' : 'Publish Program to Marketplace'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
             const programCards = featuredProgramsList.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
@@ -779,9 +842,12 @@
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
                     <p class="text-[11px] text-slate-600 leading-relaxed">${prog.desc}</p>
+                    <div class="text-[10px] text-slate-400 font-mono">
+                        📅 ${prog.startDate} to ${prog.endDate}
+                    </div>
                     <div class="flex justify-between items-center pt-2 border-t border-slate-100 text-[10px]">
                         <span class="text-slate-500">👥 <strong>${prog.slots}</strong> • 🪙 <strong class="text-amber-600">${prog.reward}</strong></span>
-                        <button onclick="openProgramChildSelector('${prog.title}', '${prog.org}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg transition shadow-xs">
+                        <button onclick="openProgramChildSelector('${prog.title.replace(/'/g, "\\'")}', '${prog.org.replace(/'/g, "\\'")}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg transition shadow-xs">
                             ${isBm ? 'Mohon Sekarang →' : 'Apply Now →'}
                         </button>
                     </div>
@@ -794,10 +860,69 @@
                     <h2 class="text-xl font-bold">${isBm ? 'Program & Aktiviti Rakan Kongsi' : 'Partner Programs & Activities'}</h2>
                     <p class="text-xs text-blue-100">${isBm ? 'Teroka dan mohon program ESG, bengkel, dan aktiviti kanak-kanak yang diiklankan oleh rakan institusi.' : 'Browse and apply for advertised ESG programs, workshops, and children activities from institutional partners.'}</p>
                 </div>
+                ${addProgramPanelHtml}
                 <div class="space-y-3">
                     ${programCards}
                 </div>
             `;
+        }
+
+        function toggleMarketCustomCategoryInput(val) {
+            const wrapper = document.getElementById('market-custom-category-wrapper');
+            if (!wrapper) return;
+            if (val === 'Others - Please add') {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+            }
+        }
+
+        function handleMarketplaceAddProgram() {
+            const isBm = currentLang === 'bm';
+            const catSelect = document.getElementById('market-prog-category').value;
+            let finalCategory = catSelect;
+            if (catSelect === 'Others - Please add') {
+                const customInput = document.getElementById('market-prog-custom-cat').value.trim();
+                if (!customInput) {
+                    alert(isBm ? "Sila masukkan nama kategori lain." : "Please specify the custom category.");
+                    return;
+                }
+                finalCategory = customInput;
+            }
+
+            const progName = document.getElementById('market-prog-name').value.trim();
+            const startDate = document.getElementById('market-prog-start').value;
+            const endDate = document.getElementById('market-prog-end').value;
+
+            if (!progName) {
+                alert(isBm ? "Sila masukkan nama program atau aktiviti." : "Please enter the name of the program or activity.");
+                return;
+            }
+
+            if (endDate < startDate) {
+                alert(isBm ? "Tarikh tamat tidak boleh sebelum tarikh mula." : "End date cannot be earlier than start date.");
+                return;
+            }
+
+            featuredProgramsList.unshift({
+                org: userProfiles.partner.orgName,
+                title: progName,
+                category: finalCategory,
+                desc: isBm ? "Program baru yang dianjurkan oleh institusi rakan kongsi." : "New community and ESG activity organized by institutional partner.",
+                slots: "30 Available",
+                reward: "150 Impact Tokens",
+                badge: "🌱 New Partner Event",
+                startDate: startDate,
+                endDate: endDate
+            });
+
+            if (!organizationCoursesMap[userProfiles.partner.orgName]) {
+                organizationCoursesMap[userProfiles.partner.orgName] = [];
+            }
+            organizationCoursesMap[userProfiles.partner.orgName].push(progName);
+
+            alert(isBm ? `✅ Berjaya Diterbitkan!\nProgram "${progName}" telah ditambah ke pasaran program rakan kongsi.` : `✅ Published Successfully!\nProgram "${progName}" has been successfully added to the partner programs marketplace.`);
+            switchTab('programs');
         }
 
         function openProgramChildSelector(courseName, orgName) {
@@ -1039,184 +1164,12 @@
                 pendingHtml = `<p class="text-xs text-slate-400 italic text-center py-2">${isBm ? 'Tiada permohonan kursus buat masa ini.' : 'No pending course applications at this time.'}</p>`;
             }
 
-            let certSectionHtml = '';
-            if (partnerCertTab === 'overview') {
-                certSectionHtml = `
-                    <div class="space-y-3 animate-in fade-in duration-200">
-                        <div class="bg-gradient-to-r from-slate-900 to-indigo-950 rounded-xl p-4 text-white shadow-md border border-indigo-500/30 space-y-2.5">
-                            <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2">
-                                <span class="text-[9px] uppercase tracking-wider font-bold text-indigo-300">${isBm ? 'Kematangan ESG & Pensijilan' : 'ESG Maturity & Certification'}</span>
-                                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">${isBm ? 'Disahkan Perak • Tahap 3' : 'Silver Verified • Level 3'}</span>
-                            </div>
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="text-[10px] text-slate-300">${isBm ? 'Skor Keseluruhan ChildESG' : 'Overall ChildESG Score'}</p>
-                                    <h3 class="text-2xl font-black text-emerald-400">82 <span class="text-xs font-normal text-slate-400">/ 100</span></h3>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-[9px] font-mono text-indigo-300 block">Audit ID: CHILDESG-2025-0515-001</span>
-                                    <span class="text-[9px] text-slate-400">${isBm ? 'Sah sehingga kitaran audit tahunan' : 'Valid until annual audit cycle'}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Certification Tier Breakdown & Payment Triggers -->
-                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Pecahan Peringkat Pensijilan & Pelaburan' : 'Certification Tier Breakdown & Investment'}</span>
-                            <div class="space-y-2 text-xs">
-                                <div class="p-2.5 bg-white rounded-lg border border-slate-100 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-slate-800">${isBm ? 'Tahap 1: Penilaian Asas' : 'Level 1: Baseline Assessment'}</p>
-                                        <p class="text-[9px] text-slate-500">${isBm ? 'Laporan 4–6 halaman • RM999' : '4–6 pages report • RM999'}</p>
-                                    </div>
-                                    <button onclick="triggerTierPayment('Level 1 Baseline Assessment', 999)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">${isBm ? 'Klik untuk Bayar' : 'Click here to Pay'}</button>
-                                </div>
-                                <div class="p-2.5 bg-white rounded-lg border border-slate-100 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-slate-800">${isBm ? 'Tahap 2: Penilaian Eksekutif' : 'Level 2: Executive Assessment'}</p>
-                                        <p class="text-[9px] text-slate-500">${isBm ? 'Laporan ≈15 halaman • RM2,699' : '≈15 pages report • RM2,699'}</p>
-                                    </div>
-                                    <button onclick="triggerTierPayment('Level 2 Executive Assessment', 2699)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">${isBm ? 'Klik untuk Bayar' : 'Click here to Pay'}</button>
-                                </div>
-                                <div class="p-2.5 bg-white rounded-lg border border-indigo-100 bg-indigo-50/40 flex justify-between items-center">
-                                    <div>
-                                        <p class="font-bold text-indigo-900">${isBm ? 'Tahap 3: Komprehensif & Pensijilan' : 'Level 3: Comprehensive & Certification'}</p>
-                                        <p class="text-[9px] text-indigo-600">${isBm ? 'Laporan ≈45–60 halaman • RM15,800' : '≈45–60 pages report • RM15,800'}</p>
-                                    </div>
-                                    <button onclick="triggerTierPayment('Level 3 Comprehensive Assessment', 15800)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition shadow-xs">${isBm ? 'Klik untuk Bayar' : 'Click here to Pay'}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (partnerCertTab === 'pillars') {
-                certSectionHtml = `
-                    <div class="space-y-3 animate-in fade-in duration-200">
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Kad Skor 3 Pilar ESG (40+ Penunjuk)' : 'The 3 Pillars of ESG Scorecard (40+ Indicators)'}</span>
-                            <div class="space-y-2.5">
-                                <div class="space-y-1">
-                                    <div class="flex justify-between font-semibold">
-                                        <span class="text-slate-800">🌱 ${isBm ? 'Persekitaran (E)' : 'Environmental (E)'}</span>
-                                        <span class="text-teal-600 font-bold">78/100</span>
-                                    </div>
-                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-teal-500 h-full" style="width: 78%"></div>
-                                    </div>
-                                    <p class="text-[9px] text-slate-500">${isBm ? 'Merangkumi pembelajaran hijau, literasi iklim, tenaga, pelepasan & kitar semula.' : 'Covers green learning, climate literacy, energy, emissions & waste recycling.'}</p>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between font-semibold">
-                                        <span class="text-slate-800">🤝 ${isBm ? 'Sosial (S)' : 'Social (S)'}</span>
-                                        <span class="text-blue-600 font-bold">86/100</span>
-                                    </div>
-                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-blue-600 h-full" style="width: 86%"></div>
-                                    </div>
-                                    <p class="text-[9px] text-slate-500">${isBm ? 'Merangkumi keselamatan kanak-kanak, kesejahteraan mental, pemakanan & penglibatan keluarga.' : 'Covers child safety & safeguarding, mental wellbeing, nutrition & family engagement.'}</p>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between font-semibold">
-                                        <span class="text-slate-800">⚖️ ${isBm ? 'Tadbir Urus (G)' : 'Governance (G)'}</span>
-                                        <span class="text-indigo-600 font-bold">81/100</span>
-                                    </div>
-                                    <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-indigo-600 h-full" style="width: 81%"></div>
-                                    </div>
-                                    <p class="text-[9px] text-slate-500">${isBm ? 'Merangkumi komitmen kepimpinan, dasar perlindungan kanak-kanak, ketelusan & privasi data.' : 'Covers leadership commitment, child protection policies, transparency & data privacy.'}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (partnerCertTab === 'risks') {
-                certSectionHtml = `
-                    <div class="space-y-3 animate-in fade-in duration-200 text-xs">
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Peta Haba Risiko & Matriks Analisis Jurang (Grid 5x5)' : 'Risk Heat Map & Gap Analysis Matrix (5x5 Grid)'}</span>
-                            <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 space-y-1.5">
-                                <p class="font-bold text-amber-900">⚠️ ${isBm ? 'Risiko Keutamaan Tertinggi' : 'Top Priority Identified Risks'}</p>
-                                <ul class="list-disc pl-4 space-y-1 text-slate-700">
-                                    <li><strong>${isBm ? 'Kesejahteraan Mental & Tekanan Kanak-kanak:' : 'Child Mental Wellbeing & Stress:'}</strong> ${isBm ? 'Kebarangkalian Sederhana / Impak Tinggi' : 'Moderate Likelihood / High Impact'}</li>
-                                    <li><strong>${isBm ? 'Keselamatan Digital & Masa Skrin:' : 'Digital Safety & Screen Time:'}</strong> ${isBm ? 'Kebارangkalian Tinggi / Impak Sederhana' : 'High Likelihood / Moderate Impact'}</li>
-                                    <li><strong>${isBm ? 'Keberkesanan Praktikal Pendidikan Iklim:' : 'Climate Education Practical Effectiveness:'}</strong> ${isBm ? 'Kebarangkalian Rendah / Impak Tinggi' : 'Low Likelihood / High Impact'}</li>
-                                    <li><strong>${isBm ? 'Kesediaan Kecemasan & Kesihatan:' : 'Emergency & Health Preparedness:'}</strong> ${isBm ? 'Kebarangkalian Rendah / Impak Kritikal' : 'Low Likelihood / Critical Impact'}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (partnerCertTab === 'roadmap') {
-                certSectionHtml = `
-                    <div class="space-y-3 animate-in fade-in duration-200 text-xs">
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Pelan Hala Tuju Tindakan & Repositori Bukti' : 'Actionable Roadmap & Evidence Repository'}</span>
-                            <div class="space-y-2">
-                                <div class="p-2 bg-white rounded border border-slate-100">
-                                    <p class="font-bold text-slate-800">1. ${isBm ? 'Pencapaian Jangka Pendek (1–3 Bulan)' : '1. Short-Term Milestone (1–3 Months)'}</p>
-                                    <p class="text-[10px] text-slate-600">${isBm ? 'Kemas kini dasar perlindungan kanak-kanak & tingkatkan protokol keselamatan digital staf.' : 'Update child safeguarding policy & enhance staff digital safety protocols.'}</p>
-                                </div>
-                                <div class="p-2 bg-white rounded border border-slate-100">
-                                    <p class="font-bold text-slate-800">2. ${isBm ? 'Pencapaian Jangka Sederhana (3–6 Bulan)' : '2. Medium-Term Milestone (3–6 Months)'}</p>
-                                    <p class="text-[10px] text-slate-600">${isBm ? 'Integrasikan metrik pemakanan LaPaQ ke dalam kurikulum pemakanan harian sekolah.' : 'Integrate LaPaQ nutrition metrics into daily school feeding curriculum.'}</p>
-                                </div>
-                                <div class="p-2 bg-white rounded border border-slate-100">
-                                    <p class="font-bold text-slate-800">3. ${isBm ? 'Pencapaian Jangka Panjang (6–12 Bulan)' : '3. Long-Term Milestone (6–12 Months)'}</p>
-                                    <p class="text-[10px] text-slate-600">${isBm ? 'Capai Pensijilan Tahap Emas & lengkapkan semakan audit bebas penuh.' : 'Achieve Gold Tier Certification & complete full independent audit review.'}</p>
-                                </div>
-                            </div>
-                            <div class="pt-2 border-t border-slate-200 space-y-1.5">
-                                <label class="block text-[10px] font-bold text-slate-700 uppercase">📁 ${isBm ? 'Muat Naik Titik Bukti (200+ Fail Audit)' : 'Upload Evidence Point (200+ Audit Files)'}</label>
-                                <div class="flex gap-2">
-                                    <input type="file" class="w-full text-[10px] bg-white p-1.5 border border-slate-300 rounded-lg">
-                                    <button onclick="alert('${isBm ? 'Dokumen bukti berjaya dimuat naik!' : 'Evidence document uploaded successfully and added to audit trail repository!'}')" class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px]">${isBm ? 'Muat Naik' : 'Upload'}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (partnerCertTab === 'reports') {
-                certSectionHtml = `
-                    <div class="space-y-3 animate-in fade-in duration-200 text-xs">
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5">
-                            <span class="text-[10px] font-bold text-slate-700 uppercase block">${isBm ? 'Hab Eksport Laporan Strategik' : 'Strategic Report Export Hub'}</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button onclick="exportAuditReport('Grant Submissions & NGO Funding')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    🎁 ${isBm ? 'Geran & Pembiayaan NGO' : 'Grant & NGO Funding PDF'}
-                                </button>
-                                <button onclick="exportAuditReport('Investor Due Diligence')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    💼 ${isBm ? 'Due Diligence Pelabur' : 'Investor Due Diligence'}
-                                </button>
-                                <button onclick="exportAuditReport('Sustainability-Linked Bank Loans')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    🏦 ${isBm ? 'Pinjaman Bank Berkaitan Kelestarian' : 'Sustainable Bank Loans'}
-                                </button>
-                                <button onclick="exportAuditReport('Corporate CSR & GRI/ISSB Reporting')" class="p-2.5 bg-white hover:bg-indigo-50 border border-slate-200 rounded-xl text-left font-bold text-slate-800 transition">
-                                    📊 ${isBm ? 'Pelaporan Korporat GRI / ISSB' : 'Corporate GRI / ISSB'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Portal Rakan Kongsi' : 'Partner Portal'}</span>
                     <h2 class="text-xl font-bold">${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h2>
                     <p class="text-xs text-indigo-100">${userProfiles.partner.orgName} & ${isBm ? 'Pusat Komuniti' : 'Community Centers'}</p>
                 </div>
-
-                <!-- Certification Module Sub-Nav Tabs -->
-                <div class="bg-white rounded-xl p-2 shadow-sm border border-slate-100 flex justify-between text-[10px] font-bold">
-                    <button onclick="setCertTab('overview')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'overview' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Gambaran' : 'Overview'}</button>
-                    <button onclick="setCertTab('pillars')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'pillars' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">3 ${isBm ? 'Pillar' : 'Pillars'}</button>
-                    <button onclick="setCertTab('risks')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'risks' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Matriks Risiko' : 'Risk Matrix'}</button>
-                    <button onclick="setCertTab('roadmap')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'roadmap' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Pelan Hala' : 'Roadmap'}</button>
-                    <button onclick="setCertTab('reports')" class="px-2 py-1.5 rounded-lg transition ${partnerCertTab === 'reports' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}">${isBm ? 'Laporan' : 'Reports'}</button>
-                </div>
-
-                <!-- Dynamic Certification Section Container -->
-                ${certSectionHtml}
 
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-amber-700 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center justify-between">
@@ -1240,19 +1193,6 @@
                     </div>
                 </div>
             `;
-        }
-
-        function setCertTab(tab) {
-            partnerCertTab = tab;
-            switchTab('school');
-        }
-
-        function triggerTierPayment(tierName, amount) {
-            alert(currentLang === 'bm' ? `Gerbang Pembayaran Selamat: Meneruskan pembayaran untuk [${tierName}] sebanyak RM ${amount.toLocaleString()}.` : `Secure Payment Gateway: Proceeding to payment for [${tierName}] amounting to RM ${amount.toLocaleString()}. Redirecting to FPX / Credit Card processor...`);
-        }
-
-        function exportAuditReport(reportType) {
-            alert(currentLang === 'bm' ? `📥 Laporan Berjaya Dijana!\nPDF sedia audit untuk [${reportType}] telah disusun dan dimuat turun untuk ${userProfiles.partner.orgName}.` : `📥 Report Generated Successfully!\nYour audit-ready PDF for [${reportType}] has been compiled and downloaded for ${userProfiles.partner.orgName}.`);
         }
 
         function approveApplication(index) {
@@ -1564,7 +1504,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
@@ -1663,7 +1603,7 @@
                         </select>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold">${child.name} ${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
+                        <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
                         <p class="text-xs text-slate-300 mt-0.5">${isBm ? 'Profil pematuhan Pengambilan Nutrien Disyorkan (RNI)' : 'Recommended Nutrient Intake (RNI) compliance profile'}</p>
                     </div>
                     <div class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
