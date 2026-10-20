@@ -112,7 +112,7 @@
             </div>
         </main>
 
-        <!-- Color-Coded Alert Notifications Modal Overlay -->
+        <!-- Dynamic Dynamic Color-Coded Alert Notifications Modal Overlay -->
         <div id="notifications-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[340px] text-left space-y-4 animate-in fade-in zoom-in duration-200">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -122,43 +122,10 @@
                     </div>
                     <button onclick="closeNotificationsModal()" class="p-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">✕</button>
                 </div>
-                <div class="space-y-3 max-h-[340px] overflow-y-auto text-xs pr-1">
-                    <!-- Notification 1: Program Approval (Blue) -->
-                    <div class="p-3 bg-blue-50 rounded-xl border border-blue-200 shadow-2xs space-y-1.5 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
-                        <div class="flex justify-between items-center pl-1">
-                            <span class="font-extrabold text-blue-900 flex items-center space-x-1.5">
-                                <span>🎓</span> <span>Program Application Approved</span>
-                            </span>
-                            <span class="text-[9px] text-blue-600 font-mono font-bold bg-blue-100 px-1.5 py-0.5 rounded">10m ago</span>
-                        </div>
-                        <p class="text-[11px] text-blue-800 pl-1 leading-relaxed">Adam's registration for "AI Nutrition & Health Junior Bootcamp" has been officially approved by Kemaih Sdn Bhd.</p>
-                    </div>
+                
+                <!-- Dynamic list container filled by openNotificationsModal() -->
+                <div id="notifications-list-container" class="space-y-3 max-h-[340px] overflow-y-auto text-xs pr-1"></div>
 
-                    <!-- Notification 2: LaPaQ RNI Milestone (Emerald) -->
-                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 shadow-2xs space-y-1.5 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-600"></div>
-                        <div class="flex justify-between items-center pl-1">
-                            <span class="font-extrabold text-emerald-900 flex items-center space-x-1.5">
-                                <span>🥗</span> <span>LaPaQ RNI Milestone Met</span>
-                            </span>
-                            <span class="text-[9px] text-emerald-600 font-mono font-bold bg-emerald-100 px-1.5 py-0.5 rounded">2h ago</span>
-                        </div>
-                        <p class="text-[11px] text-emerald-800 pl-1 leading-relaxed">Maya reached 95% balanced RNI target today! 10 Nutrition Tokens are ready to be claimed in her wallet.</p>
-                    </div>
-
-                    <!-- Notification 3: ESG Audit Report (Purple) -->
-                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 shadow-2xs space-y-1.5 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-purple-600"></div>
-                        <div class="flex justify-between items-center pl-1">
-                            <span class="font-extrabold text-purple-900 flex items-center space-x-1.5">
-                                <span>🛡️</span> <span>ESG Audit Report Updated</span>
-                            </span>
-                            <span class="text-[9px] text-purple-600 font-mono font-bold bg-purple-100 px-1.5 py-0.5 rounded">1d ago</span>
-                        </div>
-                        <p class="text-[11px] text-purple-800 pl-1 leading-relaxed">Silver Verified Institution status (82/100) successfully updated and hashed in the partner audit registry.</p>
-                    </div>
-                </div>
                 <button onclick="markAllNotificationsRead()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
                     Mark All as Read ✓
                 </button>
@@ -270,6 +237,61 @@
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
 
+        const notificationsData = {
+            parent: [
+                {
+                    type: "approval",
+                    icon: "🎓",
+                    title: "Program Application Approved",
+                    time: "10m ago",
+                    color: "blue",
+                    message: "Adam's registration for 'AI Nutrition & Health Junior Bootcamp' has been officially approved by Kemaih Sdn Bhd."
+                },
+                {
+                    type: "milestone",
+                    icon: "🥗",
+                    title: "LaPaQ RNI Milestone Met",
+                    time: "2h ago",
+                    color: "emerald",
+                    message: "Maya reached 95% balanced RNI target today! 10 Nutrition Tokens are ready to be claimed in her wallet."
+                },
+                {
+                    type: "token",
+                    icon: "🪙",
+                    title: "Tokens Earned",
+                    time: "1d ago",
+                    color: "amber",
+                    message: "Adam earned 25 Impact Tokens for completing the Junior Eco-Warrior Station QR Scan."
+                }
+            ],
+            partner: [
+                {
+                    type: "incoming_app",
+                    icon: "📥",
+                    title: "New Application Received",
+                    time: "5m ago",
+                    color: "amber",
+                    message: "Ainol Razman submitted an application for Adam bin Ainol in 'AI Nutrition & Health Junior Bootcamp'."
+                },
+                {
+                    type: "esg_audit",
+                    icon: "🛡️",
+                    title: "ESG Audit Report Updated",
+                    time: "1d ago",
+                    color: "purple",
+                    message: "Silver Verified Institution status (82/100) successfully updated and hashed in the partner audit registry."
+                },
+                {
+                    type: "roster_milestone",
+                    icon: "📊",
+                    title: "Program Roster Update",
+                    time: "2d ago",
+                    color: "blue",
+                    message: "33 participants registered and active in 'Vegan Cooking Class Cohort 3/2026'."
+                }
+            ]
+        };
+
         const i18n = {
             en: {
                 logout: "🚪",
@@ -365,7 +387,34 @@
 
         function openNotificationsModal() {
             const modal = document.getElementById('notifications-modal');
-            if (modal) modal.classList.remove('hidden');
+            const container = document.getElementById('notifications-list-container');
+            if (!modal || !container) return;
+
+            const list = notificationsData[currentUserRole] || notificationsData.parent;
+
+            container.innerHTML = list.map(item => {
+                const colorClasses = {
+                    blue: { bg: 'bg-blue-50', border: 'border-blue-200', bar: 'bg-blue-600', textTitle: 'text-blue-900', textBody: 'text-blue-800', tagBg: 'bg-blue-100', tagText: 'text-blue-600' },
+                    emerald: { bg: 'bg-emerald-50', border: 'border-emerald-200', bar: 'bg-emerald-600', textTitle: 'text-emerald-900', textBody: 'text-emerald-800', tagBg: 'bg-emerald-100', tagText: 'text-emerald-600' },
+                    amber: { bg: 'bg-amber-50', border: 'border-amber-200', bar: 'bg-amber-600', textTitle: 'text-amber-900', textBody: 'text-amber-800', tagBg: 'bg-amber-100', tagText: 'text-amber-600' },
+                    purple: { bg: 'bg-purple-50', border: 'border-purple-200', bar: 'bg-purple-600', textTitle: 'text-purple-900', textBody: 'text-purple-800', tagBg: 'bg-purple-100', tagText: 'text-purple-600' }
+                }[item.color] || { bg: 'bg-blue-50', border: 'border-blue-200', bar: 'bg-blue-600', textTitle: 'text-blue-900', textBody: 'text-blue-800', tagBg: 'bg-blue-100', tagText: 'text-blue-600' };
+
+                return `
+                    <div class="p-3 ${colorClasses.bg} rounded-xl border ${colorClasses.border} shadow-2xs space-y-1.5 relative overflow-hidden text-left">
+                        <div class="absolute top-0 left-0 w-1 h-full ${colorClasses.bar}"></div>
+                        <div class="flex justify-between items-center pl-1">
+                            <span class="font-extrabold ${colorClasses.textTitle} flex items-center space-x-1.5">
+                                <span>${item.icon}</span> <span>${item.title}</span>
+                            </span>
+                            <span class="text-[9px] ${colorClasses.tagText} font-mono font-bold ${colorClasses.tagBg} px-1.5 py-0.5 rounded">${item.time}</span>
+                        </div>
+                        <p class="text-[11px] ${colorClasses.textBody} pl-1 leading-relaxed">${item.message}</p>
+                    </div>
+                `;
+            }).join('');
+
+            modal.classList.remove('hidden');
         }
 
         function closeNotificationsModal() {
@@ -2109,10 +2158,10 @@
             const isBm = currentLang === 'bm';
             if (child.totalTokens >= tokenCost) {
                 child.totalTokens -= tokenCost;
-                alert(isBm ? `🎉 Berjaya Ditukar: [${rewardName}]!\n${tokenCost} token ditolak daripada dompet${child.name}.` : `🎉 Successfully Redeemed: [${rewardName}]!\n${tokenCost} tokens deducted from${child.name}'s wallet balance.`);
+                alert(isBm ? `🎉 Berjaya Ditukar: [${rewardName}]!\n${tokenCost} token ditolak daripada dompet ${child.name}.` : `🎉 Successfully Redeemed: [${rewardName}]!\n${tokenCost} tokens deducted from ${child.name}'s wallet balance.`);
                 switchTab('tokens');
             } else {
-                alert(isBm ? `❌ Token Tidak Mencukupi!\n${child.name} mempunyai ${child.totalTokens} token, tetapi memerlukan${tokenCost} token.` : `❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
+                alert(isBm ? `❌ Token Tidak Mencukupi!\n${child.name} mempunyai ${child.totalTokens} token, tetapi memerlukan ${tokenCost} token.` : `❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires ${tokenCost} tokens for this reward.`);
             }
         }
 
