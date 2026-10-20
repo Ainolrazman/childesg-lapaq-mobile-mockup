@@ -458,7 +458,7 @@
 
         const userProfiles = {
             parent: {
-                name: "Ainol Razman Ghazali",
+                name: "Ainol Razman Bin Mohd Ghazaly",
                 email: "ainol.razman@example.com",
                 phone: "+6012-3456789",
                 state: "W.P. Kuala Lumpur / Selangor",
@@ -470,7 +470,7 @@
                 orgName: "Kemaih Sdn Bhd",
                 regNumber: "202001012345 (1389200-X)",
                 email: "admin@kemaih.my",
-                contactPerson: "Ainol Razman",
+                contactPerson: "Ainol Razman Bin Mohd Ghazaly",
                 designation: "Chief Executive Officer (CEO)",
                 personEmail: "ainol@kemaih.my",
                 personPhone: "+6012-3456789"
@@ -482,7 +482,7 @@
                 childKey: "adam",
                 childName: "Adam bin Ainol",
                 courseName: "AI Nutrition & Health Junior Bootcamp",
-                parentName: "Ainol Razman Ghazali",
+                parentName: "Ainol Razman Bin Mohd Ghazaly",
                 contact: "+6012-3456789 / ainol.razman@example.com",
                 parentEmail: "ainol.razman@example.com"
             },
@@ -490,7 +490,7 @@
                 childKey: "maya",
                 childName: "Maya binti Ainol",
                 courseName: "Child Growth Tracking Workshop",
-                parentName: "Ainol Razman Ghazali",
+                parentName: "Ainol Razman Bin Mohd Ghazaly",
                 contact: "+6012-3456789 / ainol.razman@example.com",
                 parentEmail: "ainol.razman@example.com"
             }
@@ -601,24 +601,30 @@
 
         function renderRegistrationPage() {
             const isBm = currentLang === 'bm';
+            const activeHeaderName = currentUserRole === 'parent' ? userProfiles.parent.name : userProfiles.partner.orgName;
+            
             return `
-                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">ChildESG™ Gateway</span>
-                    <h2 class="text-xl font-bold">${isBm ? 'Pendaftaran & Pengesahan' : 'Registration & Authentication'}</h2>
+                    <h2 class="text-lg font-bold truncate">${activeHeaderName}</h2>
                     <p class="text-xs text-slate-300">${isBm ? 'Log masuk atau daftar sebagai Ibu Bapa atau Rakan Kongsi' : 'Sign in or register as Parent or Organization Partner'}</p>
                 </div>
+                
+                <!-- Quick Version Select Tabs -->
+                <div class="grid grid-cols-2 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
+                    <button onclick="selectPresetRole('parent')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center space-y-0.5 ${currentUserRole === 'parent' ? 'bg-emerald-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
+                        <span>👤 1. Parent Login</span>
+                        <span class="text-[9px] opacity-90 truncate w-full text-center">(${userProfiles.parent.name})</span>
+                    </button>
+                    <button onclick="selectPresetRole('partner')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center space-y-0.5 ${currentUserRole === 'partner' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
+                        <span>🏢 2. Partner Org Login</span>
+                        <span class="text-[9px] opacity-90 truncate w-full text-center">(${userProfiles.partner.orgName})</span>
+                    </button>
+                </div>
+
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
                     
-                    <!-- 1. Select Register / User Role at the Top -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran / Log Masuk' : 'Select Account Role'}</label>
-                        <select id="gateway-role-select" onchange="onGatewayRoleChange(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800">
-                            <option value="parent" ${currentUserRole === 'parent' ? 'selected' : ''}>${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
-                            <option value="partner" ${currentUserRole === 'partner' ? 'selected' : ''}>${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
-                        </select>
-                    </div>
-
-                    <!-- 2. Register / Login Action Tabs & Form -->
+                    <!-- Register / Login Action Tabs & Form -->
                     <div class="flex bg-slate-100 p-1 rounded-xl">
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
                         <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
@@ -636,11 +642,11 @@
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
-                            <input type="text" id="login-input-user" placeholder="guardian123 or partner@organization.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                            <input type="text" id="login-input-user" value="${currentUserRole === 'parent' ? userProfiles.parent.email : userProfiles.partner.email}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Kata Laluan' : 'Password'}</label>
-                            <input type="password" id="login-input-pass" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                            <input type="password" id="login-input-pass" value="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
                         <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
                     </div>
@@ -663,15 +669,13 @@
             `;
         }
 
-        function onGatewayRoleChange(role) {
+        function selectPresetRole(role) {
             currentUserRole = role;
-            if (currentAuthTab === 'register') {
-                toggleRegisterFields(role);
-            }
+            switchTab('layer1');
         }
 
         function handleSocialAuth(provider) {
-            alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? 'Akaun Organisasi' : 'Akaun Ibu Bapa'})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? 'Organization Account' : 'Parent Account'})! Loading Home Profile...`);
+            alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name})! Loading Home Profile...`);
             switchTab('home');
         }
 
@@ -683,7 +687,7 @@
                 container.innerHTML = `
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Penuh:' : 'Name:'}</label>
-                        <input type="text" id="reg-p-name" placeholder="Full Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.name}">
+                        <input type="text" id="reg-p-name" placeholder="Full Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold" value="${userProfiles.parent.name}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat E-mel:' : 'Email Address:'}</label>
@@ -716,7 +720,7 @@
                 container.innerHTML = `
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Organisasi:' : 'Name of Organization:'}</label>
-                        <input type="text" id="reg-o-name" placeholder="Organization Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.orgName}">
+                        <input type="text" id="reg-o-name" placeholder="Organization Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold" value="${userProfiles.partner.orgName}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nombor Pendaftaran:' : 'Registration Number:'}</label>
@@ -751,25 +755,18 @@
             switchTab('layer1'); 
             if (mode === 'register') {
                 setTimeout(() => {
-                    const roleSelect = document.getElementById('gateway-role-select');
-                    const role = roleSelect ? roleSelect.value : currentUserRole;
-                    toggleRegisterFields(role);
+                    toggleRegisterFields(currentUserRole);
                 }, 50);
             }
         }
 
         function handleLoginSubmit() {
-            const roleSelect = document.getElementById('gateway-role-select');
-            if (roleSelect) currentUserRole = roleSelect.value;
-            alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
+            alert(currentLang === 'bm' ? `Log masuk berjaya sebagai ${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name}! Memuatkan Profil Utama...` : `Authenticated successfully as ${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name}! Loading Home Profile...`);
             switchTab('home');
         }
 
         function handleRegisterSubmit() {
-            const roleSelect = document.getElementById('gateway-role-select');
-            const roleSel = roleSelect ? roleSelect.value : currentUserRole;
-            currentUserRole = roleSel;
-            if (roleSel === 'parent') {
+            if (currentUserRole === 'parent') {
                 userProfiles.parent.name = document.getElementById('reg-p-name').value;
                 userProfiles.parent.email = document.getElementById('reg-p-email').value;
                 userProfiles.parent.phone = document.getElementById('reg-p-phone').value;
@@ -1084,7 +1081,7 @@
             return `
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Profil Utama' : 'Home Profile'}</span>
-                    <h2 class="text-xl font-bold">${isBm ? 'Profil Penjaga Ibu Bapa' : 'Parents Guardian Profile'}</h2>
+                    <h2 class="text-xl font-bold">${p.name}</h2>
                     <p class="text-xs text-emerald-100">${isBm ? 'Urus butiran peribadi penjaga anda' : 'Manage your personal guardian particulars'}</p>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
@@ -1161,7 +1158,7 @@
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Profil Utama' : 'Home Profile'}</span>
-                    <h2 class="text-xl font-bold">${isBm ? 'Profil Organisasi Rakan Kongsi' : 'Partner Organization Profile'}</h2>
+                    <h2 class="text-xl font-bold">${o.orgName}</h2>
                     <p class="text-xs text-indigo-100">${isBm ? 'Urus butiran institusi dan rakan kongsi' : 'Manage institutional and partner contact particulars'}</p>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
@@ -1249,7 +1246,6 @@
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
             const isBm = currentLang === 'bm';
             
-            // Sub-Navigation 2 Layers Buttons Header
             const subNavButtonsHtml = `
                 <div class="grid grid-cols-2 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
                     <button onclick="switchPartnerDashboardLayer('esg')" class="py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${partnerDashboardLayer === 'esg' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
@@ -1267,7 +1263,6 @@
 
             if (partnerDashboardLayer === 'esg') {
                 layerContentHtml = `
-                    <!-- Partner Overall Score & Star Rating Box -->
                     <div class="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-4 text-white shadow-lg space-y-3 relative overflow-hidden">
                         <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
                         <div class="flex justify-between items-center border-b border-white/20 pb-2">
@@ -1293,7 +1288,6 @@
                         </div>
                     </div>
 
-                    <!-- 1. ESG Maturity & Certification Status Card (Dashboard Overview) -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-indigo-200 space-y-3">
                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                             <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center">
@@ -1337,7 +1331,6 @@
                         </div>
                     </div>
 
-                    <!-- 2. The 3 Pillars of ESG Scorecard (40+ Indicators Breakdown) -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">📊 ${isBm ? 'Kad Skor 3 Pilar ESG (40+ Indikator)' : 'The 3 Pillars of ESG Scorecard (40+ Indicators)'}</h3>
                         <div class="space-y-2.5 text-xs">
@@ -1365,7 +1358,6 @@
                         </div>
                     </div>
 
-                    <!-- 3. Risk Heat Map & Gap Analysis Matrix -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">⚠️ ${isBm ? 'Peta Haba Risiko & Analisis Jurang' : 'Risk Heat Map & Gap Analysis Matrix'}</h3>
                         <p class="text-[11px] text-slate-600">5x5 grid matrix categorizing organizational risks by likelihood vs impact. Top identified focus areas:</p>
@@ -1378,18 +1370,17 @@
                                 <span class="text-[9px] font-bold text-amber-800 uppercase block">High Priority</span>
                                 <p class="font-bold text-amber-900 mt-0.5">Digital Safety & Screen Time Controls</p>
                             </div>
-                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                                 <span class="text-[9px] font-bold text-slate-500 uppercase block">Medium Priority</span>
                                 <p class="font-bold text-slate-800 mt-0.5">Climate Education Effectiveness</p>
                             </div>
-                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                            <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                                 <span class="text-[9px] font-bold text-slate-500 uppercase block">Medium Priority</span>
                                 <p class="font-bold text-slate-800 mt-0.5">Emergency Preparedness Protocols</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 4. Actionable Improvement Roadmap & Evidence Point Upload -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">🗺️ ${isBm ? 'Pelan Hala Tuju Penambahbaikan & Muat Naik Bukti' : 'Actionable Improvement Roadmap & Evidence Upload'}</h3>
                         <p class="text-[11px] text-slate-600">Milestones to transition from Silver to Gold certification, plus the evidence point audit trail repository (collecting 200+ evidence points):</p>
@@ -1411,7 +1402,6 @@
                         </div>
                     </div>
 
-                    <!-- 5. Strategic Report Export & Use-Cases Hub -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📥 ${isBm ? 'Hab Eksport Laporan Strategik' : 'Strategic Report Export & Use-Cases Hub'}</h3>
                         <p class="text-[11px] text-slate-600">One-click audit-ready PDF report generators optimized for multi-stakeholder financing and reporting:</p>
@@ -1484,8 +1474,8 @@
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Portal Rakan Kongsi' : 'Partner Portal'}</span>
-                    <h2 class="text-xl font-bold">${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h2>
-                    <p class="text-xs text-indigo-100">${userProfiles.partner.orgName} & ${isBm ? 'Pusat Komuniti' : 'Community Centers'}</p>
+                    <h2 class="text-xl font-bold">${userProfiles.partner.orgName}</h2>
+                    <p class="text-xs text-indigo-100">${isBm ? 'Pemuka Organisasi Rakan Kongsi & Pusat Komuniti' : 'Partner Organization Dashboard & Community Centers'}</p>
                 </div>
                 ${subNavButtonsHtml}
                 ${layerContentHtml}
@@ -1779,7 +1769,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
@@ -2031,11 +2021,6 @@
         function changeTokenChild(childKey) { selectedChild = childKey; switchTab('tokens'); }
         function switchChildView(childKey) { selectedChild = childKey; switchTab('layer3'); }
 
-        // ------------------------------------------------------------------
-        // SDG IMPACT PASSPORT MODULE (prototype / demo data only)
-        // For production, persist these records through an authenticated API.
-        // A QR scan or attendance alone is not independent proof of an outcome.
-        // ------------------------------------------------------------------
         const sdgCatalog = [
             { id: 2, icon: '🥗', name: 'Zero Hunger', bm: 'Sifar Kelaparan', color: 'amber', desc: 'Nutrition education, food access and healthier meals.' },
             { id: 3, icon: '💚', name: 'Good Health & Well-being', bm: 'Kesihatan Baik dan Kesejahteraan', color: 'emerald', desc: 'Healthy habits, physical activity and well-being.' },
@@ -2173,9 +2158,7 @@
             if (tabKey === 'layer1') {
                 content.innerHTML = renderRegistrationPage();
                 setTimeout(() => {
-                    const roleSelect = document.getElementById('gateway-role-select');
-                    const role = roleSelect ? roleSelect.value : currentUserRole;
-                    toggleRegisterFields(role);
+                    toggleRegisterFields(currentUserRole);
                 }, 50);
             }
             else if (tabKey === 'home') content.innerHTML = currentUserRole === 'partner' ? renderPartnerProfilePage() : renderParentProfilePage();
