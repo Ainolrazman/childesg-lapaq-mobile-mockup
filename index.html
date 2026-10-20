@@ -61,7 +61,7 @@
             </div>
         </header>
 
-        <!-- Slide-out Navigation Drawer Menu -->
+        <!-- Slide-out Navigation Drawer Menu (Cleaned up: Children & Partner Dashboards moved to bottom nav button) -->
         <div id="nav-drawer-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="toggleMenuDrawer()">
             <div id="nav-drawer-content" class="absolute top-0 left-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-5 space-y-4 transform -translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -77,10 +77,6 @@
                         <span>🏷️</span>
                         <span id="menu-item-programs">Partner Programs & Activities</span>
                     </button>
-                    <button onclick="switchTab('layer3'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
-                        <span>👶</span>
-                        <span id="menu-item-children">Children Profile & Passport</span>
-                    </button>
                     <button onclick="switchTab('lapaq'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
                         <span>🥗</span>
                         <span id="menu-item-lapaq">LaPaQ RNI Intelligence</span>
@@ -88,10 +84,6 @@
                     <button onclick="switchTab('sdg'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 flex items-center space-x-3 transition">
                         <span>🌍</span>
                         <span id="menu-item-sdg">SDG Impact Passport</span>
-                    </button>
-                    <button onclick="switchTab('school'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
-                        <span>🏢</span>
-                        <span id="menu-item-partner">Partner Organization Dashboard</span>
                     </button>
                     <button onclick="switchTab('scanner'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
                         <span>📷</span>
@@ -186,15 +178,15 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar with Centered Dashboard Menu Image Logo Between Register and Home -->
+        <!-- Bottom Navigation Bar with Dynamic Role-Based Dashboard Button -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 flex justify-around items-center shrink-0 z-40">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-3 text-emerald-600 transition-all">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                 <span id="nav-label-register" class="text-[9px] font-bold">Register</span>
             </button>
             
-            <!-- Centered Dashboard Menu Image Logo Button -->
-            <button onclick="toggleMenuDrawer()" class="flex flex-col items-center group py-0.5 px-2 transition-all" title="ChildESG & LaPaQ Dashboard Menu">
+            <!-- Central Role-Based Dashboard Button (Opens Children Profile for Parent, Partner Dashboard for Partner) -->
+            <button onclick="openRoleDashboard()" class="flex flex-col items-center group py-0.5 px-2 transition-all" title="Open Role Dashboard">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 flex items-center justify-center text-white font-black text-sm shadow-md group-hover:scale-105 transition-transform">
                     🌍
                 </div>
@@ -229,10 +221,8 @@
                 menuTitle: "More Menu Choices",
                 menu: {
                     programs: "Partner Programs & Activities",
-                    children: "Children Profile & Passport",
                     lapaq: "LaPaQ RNI Intelligence",
                     sdg: "SDG Impact Passport",
-                    partner: "Partner Organization Dashboard",
                     scanner: "QR Code Scanner",
                     tokens: "Impact Tokens Wallet"
                 },
@@ -255,10 +245,8 @@
                 menuTitle: "Pilihan Menu Lanjutan",
                 menu: {
                     programs: "Program & Aktiviti Rakan Kongsi",
-                    children: "Profil Kanak-kanak & Pasport",
                     lapaq: "Analisis RNI LaPaQ",
                     sdg: "Pasport Impak SDG",
-                    partner: "Pemuka Organisasi Rakan Kongsi",
                     scanner: "Pengimbas Kod QR",
                     tokens: "Dompet Token Impak"
                 },
@@ -295,10 +283,8 @@
             document.getElementById('nav-label-home').innerText = i18n[currentLang].home;
             document.getElementById('drawer-menu-title').innerText = i18n[currentLang].menuTitle;
             document.getElementById('menu-item-programs').innerText = i18n[currentLang].menu.programs;
-            document.getElementById('menu-item-children').innerText = i18n[currentLang].menu.children;
             document.getElementById('menu-item-lapaq').innerText = i18n[currentLang].menu.lapaq;
             document.getElementById('menu-item-sdg').innerText = i18n[currentLang].menu.sdg;
-            document.getElementById('menu-item-partner').innerText = i18n[currentLang].menu.partner;
             document.getElementById('menu-item-scanner').innerText = i18n[currentLang].menu.scanner;
             document.getElementById('menu-item-tokens').innerText = i18n[currentLang].menu.tokens;
 
@@ -319,6 +305,14 @@
                 setTimeout(() => {
                     overlay.classList.add('hidden');
                 }, 300);
+            }
+        }
+
+        function openRoleDashboard() {
+            if (currentUserRole === 'partner') {
+                switchTab('school');
+            } else {
+                switchTab('layer3');
             }
         }
         
