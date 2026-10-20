@@ -30,7 +30,8 @@
                 </div>
             </div>
         </div>
-        <!-- App Header with Hamburger Menu & Flags Toggle -->
+
+        <!-- App Header with Hamburger Menu, Flags Toggle, and Notification Bell Icon -->
         <header class="bg-white border-b border-slate-200 px-3 py-2.5 flex justify-between items-center shrink-0 z-30 shadow-xs">
             <div class="flex items-center space-x-2">
                 <!-- Hamburger Menu Button -->
@@ -54,11 +55,17 @@
                         <span>BM</span>
                     </button>
                 </div>
+                <!-- Notification Bell Icon Button -->
+                <button onclick="openNotificationsModal()" class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition relative flex items-center justify-center" title="Notifications">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    <span id="notification-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-xs">3</span>
+                </button>
                 <button onclick="switchTab('layer1')" id="nav-logout-btn" class="px-2 py-1.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 font-bold text-[10px] hover:bg-slate-200 transition">
                     🚪
                 </button>
             </div>
         </header>
+
         <!-- Slide-out Navigation Drawer Menu -->
         <div id="nav-drawer-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="toggleMenuDrawer()">
             <div id="nav-drawer-content" class="absolute top-0 left-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-5 space-y-4 transform -translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
@@ -97,12 +104,53 @@
                 </div>
             </div>
         </div>
+
         <!-- Main Scrollable Screen Content Area -->
         <main id="app-content" class="flex-1 overflow-y-auto p-4 pb-24 hide-scrollbar space-y-4 relative">
             <div class="p-4 bg-white rounded-xl shadow-sm text-center">
                 <p class="text-xs text-slate-500 font-bold">Loading ChildESG™ Platform...</p>
             </div>
         </main>
+
+        <!-- Notifications Modal Overlay -->
+        <div id="notifications-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[340px] text-left space-y-4 animate-in fade-in zoom-in duration-200">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg">🔔</span>
+                        <h3 class="text-sm font-bold text-slate-900">Notifications & Alerts</h3>
+                    </div>
+                    <button onclick="closeNotificationsModal()" class="p-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">✕</button>
+                </div>
+                <div class="space-y-2.5 max-h-[320px] overflow-y-auto text-xs pr-1">
+                    <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <strong class="text-blue-900">🎓 Program Application Approved</strong>
+                            <span class="text-[9px] text-blue-600 font-mono">10m ago</span>
+                        </div>
+                        <p class="text-[11px] text-blue-800">Adam's registration for "AI Nutrition & Health Junior Bootcamp" has been approved by Kemaih Sdn Bhd.</p>
+                    </div>
+                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <strong class="text-emerald-900">🥗 LaPaQ RNI Milestone Met</strong>
+                            <span class="text-[9px] text-emerald-600 font-mono">2h ago</span>
+                        </div>
+                        <p class="text-[11px] text-emerald-800">Maya reached 95% balanced RNI target today! 10 Nutrition Tokens are ready to be claimed.</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <strong class="text-purple-900">🛡️ ESG Audit Report Updated</strong>
+                            <span class="text-[9px] text-purple-600 font-mono">1d ago</span>
+                        </div>
+                        <p class="text-[11px] text-purple-800">Silver Verified Institution status (82/100) successfully updated in the partner audit registry.</p>
+                    </div>
+                </div>
+                <button onclick="markAllNotificationsRead()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-xl text-xs transition shadow">
+                    Mark All as Read ✓
+                </button>
+            </div>
+        </div>
+
         <!-- Program Application Child Selector Modal -->
         <div id="program-child-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -126,6 +174,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Payment Gateway Modal Overlay -->
         <div id="payment-gateway-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -155,6 +204,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Custom Application Received Modal Overlay -->
         <div id="custom-modal-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 shadow-2xl w-full max-w-[300px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -170,6 +220,7 @@
                 </button>
             </div>
         </div>
+
         <!-- Bottom Navigation Bar with Dynamic Role-Based Dashboard Button -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 flex justify-around items-center shrink-0 z-40">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-3 text-emerald-600 transition-all">
@@ -190,6 +241,7 @@
             </button>
         </nav>
     </div>
+
     <!-- App JavaScript Logic -->
     <script>
         let html5QrCode = null;
@@ -202,6 +254,7 @@
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
+
         const i18n = {
             en: {
                 logout: "🚪",
@@ -252,6 +305,7 @@
                 }
             }
         };
+
         function setLanguage(lang) {
             currentLang = lang;
             const btnEn = document.getElementById('lang-btn-en');
@@ -276,6 +330,7 @@
             document.getElementById('menu-item-tokens').innerText = i18n[currentLang].menu.tokens;
             switchTab(activeTabKey);
         }
+
         function toggleMenuDrawer() {
             const overlay = document.getElementById('nav-drawer-overlay');
             const content = document.getElementById('nav-drawer-content');
@@ -292,6 +347,24 @@
                 }, 300);
             }
         }
+
+        function openNotificationsModal() {
+            const modal = document.getElementById('notifications-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeNotificationsModal() {
+            const modal = document.getElementById('notifications-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function markAllNotificationsRead() {
+            closeNotificationsModal();
+            const badge = document.getElementById('notification-badge');
+            if (badge) badge.style.display = 'none';
+            alert(currentLang === 'bm' ? "Semua pemberitahuan telah ditandakan sebagai dibaca." : "All notifications marked as read.");
+        }
+
         function openRoleDashboard() {
             if (currentUserRole === 'partner') {
                 switchTab('school');
@@ -307,6 +380,7 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`; 
         }  
+
         function getMaxCalendarDateString() { 
             const d = new Date(); 
             d.setFullYear(d.getFullYear() + 1); 
@@ -315,8 +389,10 @@
             const day = String(d.getDate()).padStart(2, '0'); 
             return `${year}-${month}-${day}`;
         }
+
         const todayDateStr = getTodayDateString();
         const maxDateStr = getMaxCalendarDateString();
+
         function updateStatusBarTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -370,6 +446,7 @@
                 "Junior Cycling Safety & Balance Clinic"
             ]
         };
+
         const featuredProgramsList = [
             {
                 org: "Kemaih Sdn Bhd",
@@ -456,6 +533,7 @@
                 endDate: "2026-11-16"
             }
         ];
+
         const userProfiles = {
             parent: {
                 name: "Ainol Razman Bin Mohd Ghazaly",
@@ -476,6 +554,7 @@
                 personPhone: "+6012-3456789"
             }
         };
+
         let pendingApplications = [
             {
                 childKey: "adam",
@@ -494,6 +573,7 @@
                 parentEmail: "ainol.razman@example.com"
             }
         ];
+
         const malaysiaStatesOptions = `
             <option>W.P. Kuala Lumpur / Selangor</option>
             <option>Johor</option>
@@ -511,6 +591,7 @@
             <option>W.P. Labuan</option>
             <option>W.P. Putrajaya</option>
         `;
+
         const childrenData = {
             adam: {
                 name: "Adam",
@@ -582,6 +663,7 @@
                 ]
             }
         };
+
         const participantGroups = {
             "Vegan Cooking Class Cohort 3/2026": [
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", stars: 5, status: "Normal" },
@@ -594,6 +676,7 @@
                 { name: "Aishah Binti Omar", token: "#AO-33Z-KL03", attendanceRate: "92%", stars: 5, status: "Normal" }
             ]
         };
+
         function renderRegistrationPage() {
             const isBm = currentLang === 'bm';
             return `
@@ -603,7 +686,6 @@
                     <p class="text-xs text-slate-300">${isBm ? 'Log masuk atau daftar sebagai Ibu Bapa atau Rakan Kongsi' : 'Sign in or register as Parent or Organization Partner'}</p>
                 </div>
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
-                    
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran / Log Masuk' : 'Select Account Role'}</label>
                         <select id="gateway-role-select" onchange="onGatewayRoleChange(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800">
@@ -615,7 +697,6 @@
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
                         <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
                     </div>
-                    
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
                             <span class="text-[10px] font-bold text-blue-700 uppercase">${isBm ? 'Persetujuan PDPA Termasuk' : 'PDPA Consent Included'}</span>
@@ -651,16 +732,19 @@
                 </div>
             `;
         }
+
         function onGatewayRoleChange(role) {
             currentUserRole = role;
             if (currentAuthTab === 'register') {
                 toggleRegisterFields(role);
             }
         }
+
         function handleSocialAuth(provider) {
             alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? 'Akaun Organisasi' : 'Akaun Ibu Bapa'})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? 'Organization Account' : 'Parent Account'})! Loading Home Profile...`);
             switchTab('home');
         }
+
         function toggleRegisterFields(role) {
             const container = document.getElementById('register-fields-container');
             const isBm = currentLang === 'bm';
@@ -731,6 +815,7 @@
                 `;
             }
         }
+
         function setAuthMode(mode) { 
             currentAuthTab = mode; 
             switchTab('layer1'); 
@@ -742,12 +827,14 @@
                 }, 50);
             }
         }
+
         function handleLoginSubmit() {
             const roleSelect = document.getElementById('gateway-role-select');
             if (roleSelect) currentUserRole = roleSelect.value;
             alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
+
         function handleRegisterSubmit() {
             const roleSelect = document.getElementById('gateway-role-select');
             const roleSel = roleSelect ? roleSelect.value : currentUserRole;
@@ -772,6 +859,7 @@
             alert(currentLang === 'bm' ? "Akaun berjaya didaftarkan! Memuatkan Profil Utama..." : "Account registered & details saved! Loading Home Profile...");
             switchTab('home');
         }
+
         function renderRegisteredChildrenList() {
             const isBm = currentLang === 'bm';
             return `
@@ -796,6 +884,7 @@
                 </div>
             `;
         }
+
         function renderAddChildSection() {
             const isBm = currentLang === 'bm';
             return `
@@ -828,7 +917,7 @@
                 </div>
             `;
         }
-        // Helper function to render gorgeous SVG Stars for ratings
+
         function renderStarRatingSvg(rating, scoreText) {
             let starsHtml = '';
             for (let i = 1; i <= 5; i++) {
@@ -842,7 +931,7 @@
                 </div>
             `;
         }
-        // Helper function to render SDG badges
+
         function renderSdgBadges(sdgIds) {
             const sdgInfoMap = {
                 2: { code: "SDG 2", title: "Zero Hunger", color: "bg-amber-100 text-amber-800 border-amber-300" },
@@ -859,6 +948,7 @@
                 return `<span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-extrabold border ${s.color}" title="${s.title}">🌍 ${s.code}</span>`;
             }).join('');
         }
+
         function renderProgramsPage() {
             const isBm = currentLang === 'bm';
             
@@ -916,6 +1006,7 @@
                     </div>
                 `;
             }
+
             const programCards = featuredProgramsList.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
@@ -926,7 +1017,6 @@
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
-                    <!-- STAR RATING & SDG BADGES ROW -->
                     <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                         <div>
                             <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Organization Rating:</span>
@@ -951,6 +1041,7 @@
                     </div>
                 </div>
             `).join('');
+
             return `
                 <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Marketplace</span>
@@ -963,6 +1054,7 @@
                 </div>
             `;
         }
+
         function toggleMarketCustomCategoryInput(val) {
             const wrapper = document.getElementById('market-custom-category-wrapper');
             if (!wrapper) return;
@@ -972,6 +1064,7 @@
                 wrapper.classList.add('hidden');
             }
         }
+
         function checkProgramDescriptionWordCount() {
             const descInput = document.getElementById('market-prog-desc');
             const indicator = document.getElementById('word-count-indicator');
@@ -988,6 +1081,7 @@
                 indicator.className = "text-[9px] font-bold text-slate-400";
             }
         }
+
         function handleMarketplaceAddProgram() {
             const isBm = currentLang === 'bm';
             const catSelect = document.getElementById('market-prog-category').value;
@@ -1042,6 +1136,7 @@
             alert(isBm ? `✅ Berjaya Diterbitkan!\nProgram "${progName}" telah ditambah ke pasaran program rakan kongsi.` : `✅ Published Successfully!\nProgram "${progName}" has been successfully added to the partner programs marketplace.`);
             switchTab('programs');
         }
+
         function openProgramChildSelector(courseName, orgName) {
             pendingMarketplaceProgram = { courseName, orgName };
             const isBm = currentLang === 'bm';
@@ -1049,10 +1144,12 @@
             document.getElementById('prog-modal-subtitle').innerText = `"${courseName}" (${orgName})`;
             document.getElementById('program-child-modal').classList.remove('hidden');
         }
+
         function closeProgramChildModal() {
             document.getElementById('program-child-modal').classList.add('hidden');
             pendingMarketplaceProgram = null;
         }
+
         function confirmProgramApplication() {
             if (!pendingMarketplaceProgram) return;
             const chosenChildKey = document.getElementById('modal-child-select').value;
@@ -1084,6 +1181,7 @@
                 isBm ? `Terima kasih kerana memohon "${courseName}" untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for "${courseName}" on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
+
         function showModalOverlay(title, message) {
             const titleEl = document.getElementById('modal-title');
             const msgEl = document.getElementById('modal-message');
@@ -1094,6 +1192,7 @@
                 overlay.classList.remove('hidden');
             }
         }
+
         function closeModalOverlay() {
             const overlay = document.getElementById('custom-modal-overlay');
             if (overlay) {
@@ -1109,6 +1208,7 @@
                 document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
             }, 300);
         }
+
         function renderParentProfilePage() {
             const p = userProfiles.parent;
             const isBm = currentLang === 'bm';
@@ -1118,30 +1218,6 @@
                     <h2 class="text-xl font-bold">${p.name}</h2>
                     <p class="text-xs text-emerald-100">${isBm ? 'Urus butiran peribadi penjaga anda' : 'Manage your personal guardian particulars'}</p>
                 </div>
-
-                <!-- ADDED: Recipient Targeted Messaging & Status Module for Parent -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5">
-                            <span>📫</span>
-                            <span>Targeted Recipient Messages & Status</span>
-                        </h3>
-                        <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">Role-Specific View</span>
-                    </div>
-                    <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-200 space-y-1.5 text-xs">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-emerald-900 flex items-center space-x-1">
-                                <span>👤</span>
-                                <span>Parent / Guardian Target Notice</span>
-                            </span>
-                            <span class="text-[9px] text-slate-400 font-mono">Delivered</span>
-                        </div>
-                        <p class="text-[11px] text-slate-700 leading-relaxed">
-                            Your child program registration status and RNI nutritional milestone updates have been routed directly to your personal portal dashboard and email inbox.
-                        </p>
-                    </div>
-                </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] font-bold text-slate-400 uppercase">${isBm ? 'Tukar Profil' : 'Profile Switch'}</span>
@@ -1198,6 +1274,7 @@
                 ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
+
         function updateParentProfile() {
             userProfiles.parent.name = document.getElementById('hp-name').value;
             userProfiles.parent.email = document.getElementById('hp-email').value;
@@ -1208,6 +1285,7 @@
             userProfiles.parent.occupation = document.getElementById('hp-occ').value;
             alert(currentLang === 'bm' ? "Profil Penjaga berjaya dikemaskini!" : "Parents Guardian Profile updated successfully!");
         }
+
         function renderPartnerProfilePage() {
             const o = userProfiles.partner;
             const isBm = currentLang === 'bm';
@@ -1217,30 +1295,6 @@
                     <h2 class="text-xl font-bold">${o.orgName}</h2>
                     <p class="text-xs text-indigo-100">${isBm ? 'Urus butiran institusi dan rakan kongsi' : 'Manage institutional and partner contact particulars'}</p>
                 </div>
-
-                <!-- ADDED: Recipient Targeted Messaging & Status Module for Organization Partner -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5">
-                            <span>📫</span>
-                            <span>Targeted Recipient Messages & Status</span>
-                        </h3>
-                        <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">Role-Specific View</span>
-                    </div>
-                    <div class="p-3 bg-indigo-50/50 rounded-xl border border-indigo-200 space-y-1.5 text-xs">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-indigo-900 flex items-center space-x-1">
-                                <span>🏢</span>
-                                <span>Organization Partner Target Notice</span>
-                            </span>
-                            <span class="text-[9px] text-slate-400 font-mono">Delivered</span>
-                        </div>
-                        <p class="text-[11px] text-slate-700 leading-relaxed">
-                            Pending course application rosters, participant attendance tracking sheets, and ESG verification metrics have been routed directly to your institutional partner dashboard.
-                        </p>
-                    </div>
-                </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] font-bold text-slate-400 uppercase">${isBm ? 'Tukar Profil' : 'Profile Switch'}</span>
@@ -1305,6 +1359,7 @@
                 </div>
             `;
         }
+
         function updatePartnerProfile() {
             userProfiles.partner.orgName = document.getElementById('ho-name').value;
             userProfiles.partner.regNumber = document.getElementById('ho-regno').value;
@@ -1315,10 +1370,12 @@
             userProfiles.partner.personPhone = document.getElementById('ho-pphone').value;
             alert(currentLang === 'bm' ? "Profil Rakan Kongsi berjaya dikemaskini!" : "Partner Organization Profile updated successfully!");
         }
+
         function switchPartnerDashboardLayer(layer) {
             partnerDashboardLayer = layer;
             switchTab('school');
         }
+
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
             const isBm = currentLang === 'bm';
@@ -1546,6 +1603,7 @@
                 ${layerContentHtml}
             `;
         }
+
         function openPaymentGateway(tierTitle, amountDue) {
             document.getElementById('pay-modal-title').innerText = "Secure Payment Gateway";
             document.getElementById('pay-modal-subtitle').innerText = tierTitle;
@@ -1553,13 +1611,16 @@
             document.getElementById('pay-amount-due').innerText = amountDue;
             document.getElementById('payment-gateway-modal').classList.remove('hidden');
         }
+
         function closePaymentModal() {
             document.getElementById('payment-gateway-modal').classList.add('hidden');
         }
+
         function confirmPaymentSuccess() {
             closePaymentModal();
             alert("✅ Payment Successful via FPX Online Banking!\nYour certification tier has been successfully updated and your audit trail has been submitted for review.");
         }
+
         function approveApplication(index) {
             const app = pendingApplications[index];
             if (!app) return;
@@ -1575,6 +1636,7 @@
             pendingApplications.splice(index, 1);
             switchTab('school');
         }
+
         function sendFormToRecipient(index) {
             const app = pendingApplications[index];
             if (!app) return;
@@ -1587,6 +1649,7 @@
                 currentLang === 'bm' ? `Terima kasih kerana memohon kursus / aktiviti.\n\nBorang pendaftaran akan dihantar ke E-mel (${emailAddr}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${emailAddr}), please fill in the form and email back to us.`
             );
         }
+
         function openParticipantGroup(groupName) { currentPartnerView = 'group_detail'; activeParticipantGroup = groupName; switchTab('school'); }
         function closeParticipantGroup() { currentPartnerView = 'dashboard'; activeParticipantGroup = ''; switchTab('school'); }
         
@@ -1623,6 +1686,7 @@
             `;
             return html;
         }
+
         function rateCommunityToken(studentName) {
             const isBm = currentLang === 'bm';
             const rating = prompt(isBm ? `Penilaian Penganjur untuk ${studentName} (1 hingga 5 Bintang):` : `Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
@@ -1648,6 +1712,7 @@
                 }
             }
         }
+
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             const isBm = currentLang === 'bm';
@@ -1667,30 +1732,6 @@
                         <p class="text-xs text-indigo-100">${child.age} • ${child.school} • Token: <span class="font-mono bg-indigo-800 px-1.5 py-0.5 rounded text-indigo-200">${child.token}</span></p>
                     </div>
                 </div>
-
-                <!-- ADDED: Recipient-Targeted Module in Child Profile -->
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1.5">
-                            <span>📫</span>
-                            <span>Targeted Recipient Messages & Status</span>
-                        </h3>
-                        <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">Role-Specific View</span>
-                    </div>
-                    <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-200 space-y-1.5 text-xs">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-emerald-900 flex items-center space-x-1">
-                                <span>👤</span>
-                                <span>Parent / Guardian Target Notice</span>
-                            </span>
-                            <span class="text-[9px] text-slate-400 font-mono">Delivered</span>
-                        </div>
-                        <p class="text-[11px] text-slate-700 leading-relaxed">
-                            Your child program registration status and RNI nutritional milestone updates have been routed directly to your personal portal dashboard and email inbox.
-                        </p>
-                    </div>
-                </div>
-
                 <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-4 text-white shadow-xl border border-indigo-500/30 space-y-3 relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
                     <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2.5">
@@ -1807,12 +1848,14 @@
                 </div>
             `;
         }
+
         function updateCourseDropdown(selectedOrg) {
             const courseSelect = document.getElementById('apply-course-select');
             if (!courseSelect) return;
             const courses = organizationCoursesMap[selectedOrg] || [];
             courseSelect.innerHTML = courses.map(c => `<option value="${c}">${c}</option>`).join('');
         }
+
         function submitNewCourseApplication() {
             const orgSelect = document.getElementById('apply-org-select');
             const courseSelect = document.getElementById('apply-course-select');
@@ -1848,31 +1891,7 @@
                 isBm ? `Terima kasih kerana memohon kursus / aktiviti untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
-        function showModalOverlay(title, message) {
-            const titleEl = document.getElementById('modal-title');
-            const msgEl = document.getElementById('modal-message');
-            const overlay = document.getElementById('custom-modal-overlay');
-            if (titleEl && msgEl && overlay) {
-                titleEl.innerText = title;
-                msgEl.innerText = message;
-                overlay.classList.remove('hidden');
-            }
-        }
-        function closeModalOverlay() {
-            const overlay = document.getElementById('custom-modal-overlay');
-            if (overlay) {
-                overlay.classList.add('hidden');
-                switchTab('home');
-            }
-        }
-        
-        function openLiveScannerModal(category) {
-            switchTab('scanner');
-            setTimeout(() => {
-                startScanner();
-                document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
-            }, 300);
-        }
+
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -2000,6 +2019,7 @@
                 </div>
             `;
         }
+
         function recalculateGrowthMetrics() {
             const h = parseFloat(document.getElementById('input-height').value) || 100;
             const w = parseFloat(document.getElementById('input-weight').value) || 15;
@@ -2009,6 +2029,7 @@
             childrenData[selectedChild].weight = w;
             childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
         }
+
         function claimRNIToken() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -2018,6 +2039,7 @@
             alert(isBm ? `🎉 Sasaran Diet RNI Harian Tercapai! 10 Token Pemakanan dicetak ke dompet ${child.name}.` : `🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
             switchTab('lapaq');
         }
+
         function renderTokensPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -2063,6 +2085,7 @@
                 </div>
             `;
         }
+
         function redeemReward(rewardName, tokenCost) {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -2074,9 +2097,11 @@
                 alert(isBm ? `❌ Token Tidak Mencukupi!\n${child.name} mempunyai ${child.totalTokens} token, tetapi memerlukan${tokenCost} token.` : `❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
             }
         }
+
         function changeLaPaQChild(childKey) { selectedChild = childKey; switchTab('lapaq'); }
         function changeTokenChild(childKey) { selectedChild = childKey; switchTab('tokens'); }
         function switchChildView(childKey) { selectedChild = childKey; switchTab('layer3'); }
+
         const sdgCatalog = [
             { id: 2, icon: '🥗', name: 'Zero Hunger', bm: 'Sifar Kelaparan', color: 'amber', desc: 'Nutrition education, food access and healthier meals.' },
             { id: 3, icon: '💚', name: 'Good Health & Well-being', bm: 'Kesihatan Baik dan Kesejahteraan', color: 'emerald', desc: 'Healthy habits, physical activity and well-being.' },
@@ -2085,6 +2110,7 @@
             { id: 13, icon: '🌱', name: 'Climate Action', bm: 'Tindakan Iklim', color: 'green', desc: 'Climate awareness and measurable environmental action.' },
             { id: 17, icon: '🤝', name: 'Partnerships for the Goals', bm: 'Kerjasama demi Matlamat', color: 'blue', desc: 'Schools, families, businesses and community partners working together.' }
         ];
+
         let sdgSelectedFilter = 'all';
         let sdgSelectedChild = 'all';
         let sdgEvidenceRecords = [
@@ -2093,14 +2119,17 @@
             { id: 'DEMO-003', child: 'adam', title: 'Young Nutritionist Discovery Workshop', sdgs: [2, 3, 4], category: 'nutrition', date: '2026-09-22', measure: 'Learning activity completed', value: 1, unit: 'activity', evidence: 'Demo completion record', status: 'verified', note: 'Learning outcome needs a pre/post assessment to be quantified.' },
             { id: 'DEMO-004', child: 'maya', title: 'Community Learning Day', sdgs: [4, 17], category: 'education', date: '2026-09-28', measure: 'Community activity attendance', value: 1, unit: 'participant', evidence: 'Demo event record', status: 'pending', note: 'Partner confirmation required.' }
         ];
+
         function sdgEscape(value) {
             return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
         }
+
         function sdgStatusLabel(status, isBm) {
             if (status === 'verified') return isBm ? 'Disahkan (demo)' : 'Verified (demo)';
             if (status === 'rejected') return isBm ? 'Ditolak' : 'Rejected';
             return isBm ? 'Menunggu semakan' : 'Pending review';
         }
+
         function renderParentSdgPassport() {
             const isBm = currentLang === 'bm';
             const records = sdgEvidenceRecords.filter(r =>
@@ -2119,6 +2148,7 @@
                     <p class="text-[10px] text-slate-500 mt-1">${linked} ${isBm ? 'rekod' : 'records'} · ${confirmed} ${isBm ? 'disahkan' : 'verified'}</p>
                 </button>`;
             }).join('');
+
             const recordCards = records.length ? records.map(r => {
                 const child = childrenData[r.child];
                 const badges = r.sdgs.map(id => `<span class="inline-flex px-2 py-1 rounded-full bg-slate-100 text-slate-700 text-[9px] font-bold">SDG ${id}</span>`).join(' ');
@@ -2129,6 +2159,7 @@
                     <p class="text-[10px] text-slate-500">${sdgEscape(r.note || '')}</p>
                 </article>`;
             }).join('') : `<div class="p-5 text-center bg-white border border-dashed border-slate-300 rounded-xl text-xs text-slate-500">${isBm ? 'Tiada rekod untuk penapis ini.' : 'No records match these filters.'}</div>`;
+
             return `
                 <div class="bg-gradient-to-br from-emerald-700 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <div class="flex justify-between items-center">
@@ -2157,6 +2188,7 @@
                 </section>
             `;
         }
+
         function renderPartnerSdgPassport() {
             const isBm = currentLang === 'bm';
             const orgName = userProfiles.partner.orgName;
@@ -2171,6 +2203,7 @@
                     <p class="text-[10px] text-indigo-700">${sponsored * 12} ${isBm ? 'peserta terlibat' : 'participants engaged'} · ${sponsored} ${isBm ? 'program aktif' : 'active programs'}</p>
                 </div>`;
             }).join('');
+
             const reviewCards = records.map(r => {
                 const child = childrenData[r.child];
                 return `<article class="p-3 rounded-xl border border-slate-200 bg-white space-y-2">
@@ -2179,6 +2212,7 @@
                     ${r.status === 'pending' ? `<button onclick="reviewSdgRecord('${r.id}')" class="w-full rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-2">✓ ${isBm ? 'Sahkan Rekod Impak SDG' : 'Verify SDG Impact Record'}</button>` : `<p class="text-[10px] text-emerald-600 font-bold">✓ Verified by ${orgName}</p>`}
                 </article>`;
             }).join('');
+
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <div class="flex justify-between items-center">
@@ -2208,8 +2242,10 @@
                 </section>
             `;
         }
+
         function setSdgFilter(value) { sdgSelectedFilter = value; switchTab('sdg'); }
         function setSdgChildFilter(value) { sdgSelectedChild = value; switchTab('sdg'); }
+
         function addSdgRecord() {
             const titleEl = document.getElementById('sdg-new-title');
             const evidenceEl = document.getElementById('sdg-new-evidence');
@@ -2222,6 +2258,7 @@
             sdgEvidenceRecords.unshift({ id: 'DEMO-' + Date.now().toString().slice(-8), child: childEl.value, title, sdgs: [goal], category: 'community', date: new Date().toISOString().slice(0,10), measure: 'Activity recorded', value: 1, unit: 'record', evidence, status: 'pending', note: 'Demo record only. Evidence has not been independently verified.' });
             sdgSelectedFilter = 'all'; sdgSelectedChild = 'all'; switchTab('sdg');
         }
+
         function reviewSdgRecord(id) {
             const record = sdgEvidenceRecords.find(r => r.id === id);
             if (!record || record.status !== 'verified') {
@@ -2231,6 +2268,7 @@
                 switchTab('sdg');
             }
         }
+
         const contentData = { 
             layer1: ``, home: ``, programs: ``, layer3: ``, tokens: ``, lapaq: ``, sdg: ``, school: ``, 
             scanner: `
@@ -2249,6 +2287,7 @@
                 </div>
             `
         };
+
         function switchTab(tabKey) {
             activeTabKey = tabKey;
             if (currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
@@ -2301,6 +2340,7 @@
                 }
             });
         }
+
         function startScanner() {
             if (typeof Html5Qrcode !== 'undefined') {
                 if (html5QrCode) {
@@ -2325,12 +2365,14 @@
                 document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
             }
         }
+
         function simulateSuccessfulScan() {
             const child = childrenData[selectedChild];
             child.totalTokens += 25;
             child.impactTokens += 25;
             document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +25 Tokens Minted to ${child.name}!`;
         }
+
         window.addEventListener('DOMContentLoaded', () => { 
             updateStatusBarTime(); 
             switchTab('layer1'); 
