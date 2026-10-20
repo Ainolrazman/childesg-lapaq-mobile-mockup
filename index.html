@@ -2146,7 +2146,9 @@
                             <span>Okt '26</span>
                         </div>
                         <p class="text-[10px] text-slate-500 italic text-center pt-1">
-                            ${isBm ? 'Adam mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.' : 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.'}
+                            ${isBm 
+                                ? `${child.name} mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.` 
+                                : `${child.name} maintains a consistent healthy growth and stable BMI rate through October 2026.`}
                         </p>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-1">
@@ -2521,4 +2523,3 @@
     </script>
 </body>
 </html>
-
