@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <!-- App Header with Hamburger Menu & Flags Toggle -->
+        <!-- App Header with Hamburger Menu, Bell Icon & Flags Toggle -->
         <header class="bg-white border-b border-slate-200 px-3 py-2.5 flex justify-between items-center shrink-0 z-30 shadow-xs">
             <div class="flex items-center space-x-2">
                 <!-- Hamburger Menu Button -->
@@ -43,6 +43,11 @@
                 </div>
             </div>
             <div class="flex items-center space-x-1.5 shrink-0">
+                <!-- Bell Icon Notification Button with Badge -->
+                <button onclick="toggleNotificationDrawer()" class="relative p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center" title="Communications & Notifications">
+                    🔔
+                    <span id="notification-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">3</span>
+                </button>
                 <!-- Multi-Lingual Toggle with Great Britain & Malaysia Flags -->
                 <div class="bg-slate-100 p-0.5 rounded-lg flex items-center border border-slate-200">
                     <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 py-1 text-[10px] font-bold rounded-md transition bg-blue-600 text-white shadow-xs flex items-center space-x-1">
@@ -97,6 +102,32 @@
                 </div>
             </div>
         </div>
+
+        <!-- Slide-out Notification Drawer / Communications Center -->
+        <div id="notification-drawer-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="toggleNotificationDrawer()">
+            <div id="notification-drawer-content" class="absolute top-0 right-0 bottom-0 w-80 bg-white shadow-2xl flex flex-col p-5 space-y-4 transform translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg">🔔</span>
+                        <div>
+                            <span class="text-[10px] font-bold text-blue-600 uppercase block">Communications Hub</span>
+                            <h3 class="text-sm font-bold text-slate-900">Notifications & Approvals</h3>
+                        </div>
+                    </div>
+                    <button onclick="toggleNotificationDrawer()" class="p-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">✕</button>
+                </div>
+                
+                <div id="notification-list-container" class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+                    <!-- Populated dynamically via JavaScript -->
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 flex justify-between items-center">
+                    <button onclick="markAllNotificationsRead()" class="text-[10px] font-bold text-blue-600 hover:underline">Mark all as read</button>
+                    <span class="text-[10px] text-slate-400 font-mono">Live Sync</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Scrollable Screen Content Area -->
         <main id="app-content" class="flex-1 overflow-y-auto p-4 pb-24 hide-scrollbar space-y-4 relative">
             <div class="p-4 bg-white rounded-xl shadow-sm text-center">
@@ -202,6 +233,41 @@
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
+
+        // Notification System Communications Store
+        let appCommunications = [
+            {
+                id: 1,
+                type: 'approval',
+                title: 'Course Application Pending',
+                desc: 'Adam bin Ainol applied for "AI Nutrition & Health Junior Bootcamp".',
+                time: '10 mins ago',
+                unread: true,
+                actionText: 'Review',
+                actionTab: 'school'
+            },
+            {
+                id: 2,
+                type: 'reward',
+                title: 'Impact Tokens Minted',
+                desc: 'Maya earned +25 tokens for completing Zero Waste activity scan.',
+                time: '2 hours ago',
+                unread: true,
+                actionText: 'View Wallet',
+                actionTab: 'tokens'
+            },
+            {
+                id: 3,
+                type: 'system',
+                title: 'ESG Silver Tier Verified',
+                desc: 'Kemaih Sdn Bhd audit score reached 82/100 (5-Star Tier).',
+                time: '1 day ago',
+                unread: true,
+                actionText: 'View Dashboard',
+                actionTab: 'school'
+            }
+        ];
+
         const i18n = {
             en: {
                 logout: "🚪",
@@ -252,6 +318,7 @@
                 }
             }
         };
+
         function setLanguage(lang) {
             currentLang = lang;
             const btnEn = document.getElementById('lang-btn-en');
@@ -276,6 +343,7 @@
             document.getElementById('menu-item-tokens').innerText = i18n[currentLang].menu.tokens;
             switchTab(activeTabKey);
         }
+
         function toggleMenuDrawer() {
             const overlay = document.getElementById('nav-drawer-overlay');
             const content = document.getElementById('nav-drawer-content');
@@ -292,6 +360,87 @@
                 }, 300);
             }
         }
+
+        // Notification Drawer Toggle & Render Logic
+        function toggleNotificationDrawer() {
+            const overlay = document.getElementById('notification-drawer-overlay');
+            const content = document.getElementById('notification-drawer-content');
+            if (!overlay || !content) return;
+            if (overlay.classList.contains('hidden')) {
+                renderNotificationList();
+                overlay.classList.remove('hidden');
+                setTimeout(() => { content.classList.remove('translate-x-full'); }, 10);
+            } else {
+                content.classList.add('translate-x-full');
+                setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+            }
+        }
+
+        function renderNotificationList() {
+            const container = document.getElementById('notification-list-container');
+            const badge = document.getElementById('notification-badge');
+            if (!container) return;
+
+            const unreadCount = appCommunications.filter(c => c.unread).length;
+            if (badge) {
+                badge.innerText = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            }
+
+            if (appCommunications.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">No communications or notifications right now.</div>`;
+                return;
+            }
+
+            container.innerHTML = appCommunications.map((comm, idx) => `
+                <div class="p-3 bg-slate-50 hover:bg-blue-50/50 rounded-xl border ${comm.unread ? 'border-blue-200 bg-blue-50/20' : 'border-slate-200'} transition space-y-1.5 text-xs">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center space-x-1.5">
+                            <span>${comm.type === 'approval' ? '📝' : comm.type === 'reward' ? '🪙' : '🛡️'}</span>
+                            <strong class="text-slate-900">${comm.title}</strong>
+                        </div>
+                        <span class="text-[9px] text-slate-400 font-mono">${comm.time}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">${comm.desc}</p>
+                    <div class="flex justify-between items-center pt-1">
+                        <button onclick="handleNotificationAction(${comm.id}, '${comm.actionTab}')" class="text-[10px] font-bold text-blue-600 hover:underline">${comm.actionText} →</button>
+                        ${comm.unread ? `<span class="w-2 h-2 rounded-full bg-blue-600"></span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function markAllNotificationsRead() {
+            appCommunications.forEach(c => c.unread = false);
+            renderNotificationList();
+        }
+
+        function handleNotificationAction(id, targetTab) {
+            const comm = appCommunications.find(c => c.id === id);
+            if (comm) comm.unread = false;
+            toggleNotificationDrawer();
+            switchTab(targetTab);
+        }
+
+        function addCommunication(title, desc, type = 'approval', actionText = 'View', actionTab = 'school') {
+            appCommunications.unshift({
+                id: Date.now(),
+                type,
+                title,
+                desc,
+                time: 'Just now',
+                unread: true,
+                actionText,
+                actionTab
+            });
+            const badge = document.getElementById('notification-badge');
+            const unreadCount = appCommunications.filter(c => c.unread).length;
+            if (badge) {
+                badge.innerText = unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            }
+        }
+
         function openRoleDashboard() {
             if (currentUserRole === 'partner') {
                 switchTab('school');
@@ -820,7 +969,6 @@
                 </div>
             `;
         }
-
         // Helper function to render gorgeous SVG Stars for ratings
         function renderStarRatingSvg(rating, scoreText) {
             let starsHtml = '';
@@ -835,7 +983,6 @@
                 </div>
             `;
         }
-
         // Helper function to render SDG badges
         function renderSdgBadges(sdgIds) {
             const sdgInfoMap = {
@@ -848,13 +995,11 @@
                 15: { code: "SDG 15", title: "Life on Land", color: "bg-lime-100 text-lime-800 border-lime-300" },
                 17: { code: "SDG 17", title: "Partnerships for the Goals", color: "bg-blue-100 text-blue-800 border-blue-300" }
             };
-
             return sdgIds.map(id => {
                 const s = sdgInfoMap[id] || { code: `SDG ${id}`, title: `SDG ${id}`, color: "bg-slate-100 text-slate-800 border-slate-300" };
                 return `<span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-extrabold border ${s.color}" title="${s.title}">🌍 ${s.code}</span>`;
             }).join('');
         }
-
         function renderProgramsPage() {
             const isBm = currentLang === 'bm';
             
@@ -922,7 +1067,6 @@
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
-
                     <!-- STAR RATING & SDG BADGES ROW -->
                     <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                         <div>
@@ -936,7 +1080,6 @@
                             </div>
                         </div>
                     </div>
-
                     <p class="text-[11px] text-slate-600 leading-relaxed">${prog.desc}</p>
                     <div class="text-[10px] text-slate-400 font-mono">
                         📅 ${prog.startDate} to ${prog.endDate}
@@ -1037,6 +1180,9 @@
                 organizationCoursesMap[userProfiles.partner.orgName] = [];
             }
             organizationCoursesMap[userProfiles.partner.orgName].push(progName);
+
+            addCommunication("New Program Published", `Program "${progName}" was published to marketplace.`, 'system', 'View', 'programs');
+
             alert(isBm ? `✅ Berjaya Diterbitkan!\nProgram "${progName}" telah ditambah ke pasaran program rakan kongsi.` : `✅ Published Successfully!\nProgram "${progName}" has been successfully added to the partner programs marketplace.`);
             switchTab('programs');
         }
@@ -1077,6 +1223,9 @@
                 contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
+
+            addCommunication("Course Application Sent", `${child.name} applied for "${courseName}" at ${orgName}.`, 'approval', 'View Status', 'layer3');
+
             showModalOverlay(
                 isBm ? "Permohonan Diterima" : "Application Received", 
                 isBm ? `Terima kasih kerana memohon "${courseName}" untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for "${courseName}" on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
@@ -1508,6 +1657,7 @@
         }
         function confirmPaymentSuccess() {
             closePaymentModal();
+            addCommunication("Certification Tier Updated", "Payment successful. Audit trail submitted for review.", 'system', 'View Status', 'school');
             alert("✅ Payment Successful via FPX Online Banking!\nYour certification tier has been successfully updated and your audit trail has been submitted for review.");
         }
         function approveApplication(index) {
@@ -1521,6 +1671,9 @@
                     targetApp.status = "Approved";
                 }
             }
+
+            addCommunication("Course Application Approved", `${app.childName} was approved for "${app.courseName}".`, 'approval', 'View Profile', 'layer3');
+
             alert(currentLang === 'bm' ? `✅ Permohonan Diluluskan!\n${app.childName} telah diluluskan untuk "${app.courseName}".` : `✅ Application Approved!\n${app.childName} has been successfully approved for "${app.courseName}".`);
             pendingApplications.splice(index, 1);
             switchTab('school');
@@ -1530,6 +1683,8 @@
             if (!app) return;
             const emailAddr = app.parentEmail || userProfiles.parent.email;
             
+            addCommunication("Registration Form Sent", `Registration form emailed to ${emailAddr} for ${app.courseName}.`, 'approval', 'View', 'layer3');
+
             currentUserRole = 'parent';
             switchTab('home');
             showModalOverlay(
@@ -1591,6 +1746,9 @@
                         childrenData[key].communityTokens += parsedRating * 10;
                         childrenData[key].totalTokens += parsedRating * 10;
                     }
+
+                    addCommunication("Community Stars Awarded", `${studentName} received +${parsedRating * 10} community tokens.`, 'reward', 'View Wallet', 'tokens');
+
                     alert(isBm ? `🤝 Penilaian Komuniti & Kepimpinan Disimpan! Dianugerahkan ${parsedRating} bintang (${parsedRating * 10} token) kepada ${studentName}.` : `🤝 Community & Leadership Rating Saved! Awarded ${parsedRating} stars (${parsedRating * 10} tokens) to ${studentName}.`);
                     switchTab('school');
                 } else {
@@ -1768,6 +1926,8 @@
                 contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
+
+            addCommunication("Course Application Sent", `${child.name} applied for "${courseName}" at ${org}.`, 'approval', 'View Status', 'layer3');
             
             showModalOverlay(
                 isBm ? "Permohonan Diterima" : "Application Received", 
@@ -1941,6 +2101,9 @@
             child.rniClaimed = true;
             child.nutritionTokens += 10;
             child.totalTokens += 10;
+
+            addCommunication("Nutrition Tokens Minted", `+10 Nutrition Tokens added to ${child.name}'s wallet.`, 'reward', 'View Wallet', 'tokens');
+
             alert(isBm ? `🎉 Sasaran Diet RNI Harian Tercapai! 10 Token Pemakanan dicetak ke dompet ${child.name}.` : `🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
             switchTab('lapaq');
         }
@@ -2153,6 +2316,9 @@
             if (!record || record.status !== 'verified') {
                 record.status = 'verified';
                 record.note = 'Verified by Kemaih Sdn Bhd partner audit team.';
+
+                addCommunication("SDG Record Verified", `Record "${record.title}" was verified by partner team.`, 'approval', 'View Passport', 'sdg');
+
                 alert(currentLang === 'bm' ? '✅ Rekod impak SDG berjaya disahkan oleh Kemaih Sdn Bhd!' : '✅ SDG Impact record successfully verified by Kemaih Sdn Bhd!');
                 switchTab('sdg');
             }
@@ -2240,6 +2406,7 @@
                         const child = childrenData[selectedChild];
                         child.totalTokens += 25;
                         child.impactTokens += 25;
+                        addCommunication("Partner QR Scanned", `+25 tokens minted via scanner for ${child.name}.`, 'reward', 'View Wallet', 'tokens');
                         document.getElementById('scan-result').innerText = `Success! Partner QR Scanned: ${decodedText}. +25 Tokens Minted!`;
                         html5QrCode.stop().catch(() => {});
                     },
@@ -2255,13 +2422,14 @@
             const child = childrenData[selectedChild];
             child.totalTokens += 25;
             child.impactTokens += 25;
+            addCommunication("Partner QR Scanned (Simulation)", `+25 tokens minted via simulator for ${child.name}.`, 'reward', 'View Wallet', 'tokens');
             document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +25 Tokens Minted to ${child.name}!`;
         }
         window.addEventListener('DOMContentLoaded', () => { 
             updateStatusBarTime(); 
             switchTab('layer1'); 
+            renderNotificationList();
         });
     </script>
 </body>
 </html>
-
