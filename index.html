@@ -211,6 +211,7 @@
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
+        let sdgPassportViewMode = 'parent'; // 'parent' or 'partner'
 
         const i18n = {
             en: {
@@ -601,30 +602,22 @@
 
         function renderRegistrationPage() {
             const isBm = currentLang === 'bm';
-            const activeHeaderName = currentUserRole === 'parent' ? userProfiles.parent.name : userProfiles.partner.orgName;
-            
             return `
-                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-1">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-300">ChildESG™ Gateway</span>
-                    <h2 class="text-lg font-bold truncate">${activeHeaderName}</h2>
+                    <h2 class="text-xl font-bold">Registration & Authentication</h2>
                     <p class="text-xs text-slate-300">${isBm ? 'Log masuk atau daftar sebagai Ibu Bapa atau Rakan Kongsi' : 'Sign in or register as Parent or Organization Partner'}</p>
                 </div>
-                
-                <!-- Quick Version Select Tabs -->
-                <div class="grid grid-cols-2 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
-                    <button onclick="selectPresetRole('parent')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center space-y-0.5 ${currentUserRole === 'parent' ? 'bg-emerald-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
-                        <span>👤 1. Parent Login</span>
-                        <span class="text-[9px] opacity-90 truncate w-full text-center">(${userProfiles.parent.name})</span>
-                    </button>
-                    <button onclick="selectPresetRole('partner')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center space-y-0.5 ${currentUserRole === 'partner' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
-                        <span>🏢 2. Partner Org Login</span>
-                        <span class="text-[9px] opacity-90 truncate w-full text-center">(${userProfiles.partner.orgName})</span>
-                    </button>
-                </div>
-
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
                     
-                    <!-- Register / Login Action Tabs & Form -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran / Log Masuk' : 'Select Account Role'}</label>
+                        <select id="gateway-role-select" onchange="onGatewayRoleChange(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800">
+                            <option value="parent" ${currentUserRole === 'parent' ? 'selected' : ''}>${isBm ? '👤 Akaun Ibu Bapa / Penjaga' : '👤 Parent / Guardian Account'}</option>
+                            <option value="partner" ${currentUserRole === 'partner' ? 'selected' : ''}>${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
+                        </select>
+                    </div>
+
                     <div class="flex bg-slate-100 p-1 rounded-xl">
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
                         <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
@@ -642,16 +635,15 @@
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
-                            <input type="text" id="login-input-user" value="${currentUserRole === 'parent' ? userProfiles.parent.email : userProfiles.partner.email}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-bold">
+                            <input type="text" id="login-input-user" placeholder="guardian123 or partner@organization.my" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Kata Laluan' : 'Password'}</label>
-                            <input type="password" id="login-input-pass" value="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+                            <input type="password" id="login-input-pass" placeholder="••••••••" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
                         </div>
                         <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
                     </div>
 
-                    <!-- 3. Or Continue with Google / Facebook -->
                     <div class="space-y-2 pt-2 border-t border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase block text-center">${isBm ? 'Atau teruskan dengan' : 'Or continue with'}</span>
                         <div class="grid grid-cols-2 gap-2">
@@ -669,13 +661,15 @@
             `;
         }
 
-        function selectPresetRole(role) {
+        function onGatewayRoleChange(role) {
             currentUserRole = role;
-            switchTab('layer1');
+            if (currentAuthTab === 'register') {
+                toggleRegisterFields(role);
+            }
         }
 
         function handleSocialAuth(provider) {
-            alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name})! Loading Home Profile...`);
+            alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? 'Akaun Organisasi' : 'Akaun Ibu Bapa'})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? 'Organization Account' : 'Parent Account'})! Loading Home Profile...`);
             switchTab('home');
         }
 
@@ -687,7 +681,7 @@
                 container.innerHTML = `
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Penuh:' : 'Name:'}</label>
-                        <input type="text" id="reg-p-name" placeholder="Full Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold" value="${userProfiles.parent.name}">
+                        <input type="text" id="reg-p-name" placeholder="Full Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.parent.name}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Alamat E-mel:' : 'Email Address:'}</label>
@@ -720,7 +714,7 @@
                 container.innerHTML = `
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Organisasi:' : 'Name of Organization:'}</label>
-                        <input type="text" id="reg-o-name" placeholder="Organization Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold" value="${userProfiles.partner.orgName}">
+                        <input type="text" id="reg-o-name" placeholder="Organization Name" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg" value="${userProfiles.partner.orgName}">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nombor Pendaftaran:' : 'Registration Number:'}</label>
@@ -755,18 +749,25 @@
             switchTab('layer1'); 
             if (mode === 'register') {
                 setTimeout(() => {
-                    toggleRegisterFields(currentUserRole);
+                    const roleSelect = document.getElementById('gateway-role-select');
+                    const role = roleSelect ? roleSelect.value : currentUserRole;
+                    toggleRegisterFields(role);
                 }, 50);
             }
         }
 
         function handleLoginSubmit() {
-            alert(currentLang === 'bm' ? `Log masuk berjaya sebagai ${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name}! Memuatkan Profil Utama...` : `Authenticated successfully as ${currentUserRole === 'partner' ? userProfiles.partner.orgName : userProfiles.parent.name}! Loading Home Profile...`);
+            const roleSelect = document.getElementById('gateway-role-select');
+            if (roleSelect) currentUserRole = roleSelect.value;
+            alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
 
         function handleRegisterSubmit() {
-            if (currentUserRole === 'parent') {
+            const roleSelect = document.getElementById('gateway-role-select');
+            const roleSel = roleSelect ? roleSelect.value : currentUserRole;
+            currentUserRole = roleSel;
+            if (roleSel === 'parent') {
                 userProfiles.parent.name = document.getElementById('reg-p-name').value;
                 userProfiles.parent.email = document.getElementById('reg-p-email').value;
                 userProfiles.parent.phone = document.getElementById('reg-p-phone').value;
@@ -2045,8 +2046,16 @@
             if (status === 'rejected') return isBm ? 'Ditolak' : 'Rejected';
             return isBm ? 'Menunggu semakan' : 'Pending review';
         }
+        
+        function setSdgPassportMode(mode) {
+            sdgPassportViewMode = mode;
+            switchTab('sdg');
+        }
+
         function renderSdgImpactDashboard() {
             const isBm = currentLang === 'bm';
+            const headingName = sdgPassportViewMode === 'parent' ? userProfiles.parent.name : userProfiles.partner.orgName;
+            
             const records = sdgEvidenceRecords.filter(r =>
                 (sdgSelectedChild === 'all' || r.child === sdgSelectedChild) &&
                 (sdgSelectedFilter === 'all' || r.sdgs.includes(Number(sdgSelectedFilter)))
@@ -2075,11 +2084,23 @@
             }).join('') : `<div class="p-5 text-center bg-white border border-dashed border-slate-300 rounded-xl text-xs text-slate-500">${isBm ? 'Tiada rekod untuk penapis ini.' : 'No records match these filters.'}</div>`;
             return `
                 <div class="bg-gradient-to-br from-emerald-700 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
-                    <span class="inline-block bg-white/15 px-2 py-1 rounded-full text-[9px] uppercase tracking-wider font-bold">ChildESG · ${isBm ? 'Mod Prototaip' : 'Prototype module'}</span>
-                    <h2 class="text-xl font-extrabold">🌍 ${isBm ? 'Pasport Impak SDG' : 'SDG Impact Passport'}</h2>
+                    <span class="inline-block bg-white/15 px-2 py-1 rounded-full text-[9px] uppercase tracking-wider font-bold">ChildESG · ${isBm ? 'Pasport Impak SDG' : 'SDG Impact Passport'}</span>
+                    <h2 class="text-xl font-extrabold truncate">${headingName}</h2>
                     <p class="text-xs text-emerald-50">${isBm ? 'Rekod aktiviti kanak-kanak yang dipetakan kepada Matlamat Pembangunan Mampan, bersama bukti dan status semakan.' : 'Track child activities mapped to the Sustainable Development Goals, with evidence and review status.'}</p>
-                    <p class="text-[10px] text-emerald-100">${isBm ? 'Data contoh sahaja — bukan pensijilan SDG atau audit bebas.' : 'Illustrative demo data only — not SDG certification or an independent audit.'}</p>
                 </div>
+
+                <!-- Two version toggle at the top of SDG Passport -->
+                <div class="grid grid-cols-2 gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
+                    <button onclick="setSdgPassportMode('parent')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center space-y-0.5 ${sdgPassportViewMode === 'parent' ? 'bg-emerald-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
+                        <span>👤 1. Parent Login</span>
+                        <span class="text-[9px] opacity-90 truncate w-full text-center">(${userProfiles.parent.name})</span>
+                    </button>
+                    <button onclick="setSdgPassportMode('partner')" class="py-2 px-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center space-y-0.5 ${sdgPassportViewMode === 'partner' ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}">
+                        <span>🏢 2. Partner Org Login</span>
+                        <span class="text-[9px] opacity-90 truncate w-full text-center">(${userProfiles.partner.orgName})</span>
+                    </button>
+                </div>
+
                 <div class="grid grid-cols-3 gap-2">
                     <div class="bg-white p-3 rounded-xl border border-slate-200"><p class="text-[9px] text-slate-500">${isBm ? 'Jumlah rekod' : 'Activity records'}</p><p class="text-2xl font-black text-slate-900">${records.length}</p></div>
                     <div class="bg-white p-3 rounded-xl border border-slate-200"><p class="text-[9px] text-slate-500">${isBm ? 'Disahkan' : 'Reviewed'}</p><p class="text-2xl font-black text-emerald-700">${verified}</p></div>
