@@ -30,7 +30,6 @@
                 </div>
             </div>
         </div>
-
         <!-- App Header with Hamburger Menu & Flags Toggle -->
         <header class="bg-white border-b border-slate-200 px-3 py-2.5 flex justify-between items-center shrink-0 z-30 shadow-xs">
             <div class="flex items-center space-x-2">
@@ -60,8 +59,7 @@
                 </button>
             </div>
         </header>
-
-        <!-- Slide-out Navigation Drawer Menu (Cleaned up: Children & Partner Dashboards moved to bottom nav button) -->
+        <!-- Slide-out Navigation Drawer Menu -->
         <div id="nav-drawer-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="toggleMenuDrawer()">
             <div id="nav-drawer-content" class="absolute top-0 left-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-5 space-y-4 transform -translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -94,20 +92,17 @@
                         <span id="menu-item-tokens">Impact Tokens Wallet</span>
                     </button>
                 </div>
-
                 <div class="pt-3 border-t border-slate-100 text-[10px] text-slate-400 text-center font-mono">
                     ChildESG™ v2.6 • Secure PWA Mobile
                 </div>
             </div>
         </div>
-
         <!-- Main Scrollable Screen Content Area -->
         <main id="app-content" class="flex-1 overflow-y-auto p-4 pb-24 hide-scrollbar space-y-4 relative">
             <div class="p-4 bg-white rounded-xl shadow-sm text-center">
                 <p class="text-xs text-slate-500 font-bold">Loading ChildESG™ Platform...</p>
             </div>
         </main>
-
         <!-- Program Application Child Selector Modal -->
         <div id="program-child-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -131,7 +126,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Payment Gateway Modal Overlay -->
         <div id="payment-gateway-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -161,7 +155,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Custom Application Received Modal Overlay -->
         <div id="custom-modal-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 shadow-2xl w-full max-w-[300px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -177,7 +170,6 @@
                 </button>
             </div>
         </div>
-
         <!-- Bottom Navigation Bar with Dynamic Role-Based Dashboard Button -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 flex justify-around items-center shrink-0 z-40">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-3 text-emerald-600 transition-all">
@@ -192,14 +184,12 @@
                 </div>
                 <span class="text-[9px] font-extrabold text-indigo-700 mt-0.5">Dashboard</span>
             </button>
-
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span id="nav-label-home" class="text-[9px] font-bold">Home</span>
             </button>
         </nav>
     </div>
-
     <!-- App JavaScript Logic -->
     <script>
         let html5QrCode = null;
@@ -212,7 +202,6 @@
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
-
         const i18n = {
             en: {
                 logout: "🚪",
@@ -263,7 +252,6 @@
                 }
             }
         };
-
         function setLanguage(lang) {
             currentLang = lang;
             const btnEn = document.getElementById('lang-btn-en');
@@ -277,7 +265,6 @@
                     btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900 flex items-center space-x-1";
                 }
             }
-
             document.getElementById('nav-logout-btn').innerText = i18n[currentLang].logout;
             document.getElementById('nav-label-register').innerText = i18n[currentLang].register;
             document.getElementById('nav-label-home').innerText = i18n[currentLang].home;
@@ -287,10 +274,8 @@
             document.getElementById('menu-item-sdg').innerText = i18n[currentLang].menu.sdg;
             document.getElementById('menu-item-scanner').innerText = i18n[currentLang].menu.scanner;
             document.getElementById('menu-item-tokens').innerText = i18n[currentLang].menu.tokens;
-
             switchTab(activeTabKey);
         }
-
         function toggleMenuDrawer() {
             const overlay = document.getElementById('nav-drawer-overlay');
             const content = document.getElementById('nav-drawer-content');
@@ -307,7 +292,6 @@
                 }, 300);
             }
         }
-
         function openRoleDashboard() {
             if (currentUserRole === 'partner') {
                 switchTab('school');
@@ -323,10 +307,8 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`; }  function getMaxCalendarDateString() { const d = new Date(); d.setFullYear(d.getFullYear() + 1); const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`;
         }
-
         const todayDateStr = getTodayDateString();
         const maxDateStr = getMaxCalendarDateString();
-
         function updateStatusBarTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -380,10 +362,12 @@
                 "Junior Cycling Safety & Balance Clinic"
             ]
         };
-
         const featuredProgramsList = [
             {
                 org: "Kemaih Sdn Bhd",
+                rating: 5,
+                ratingScore: "5.0",
+                sdgs: [2, 3, 4],
                 title: "AI Nutrition & Health Junior Bootcamp",
                 category: "Nutrition and Health",
                 desc: "An immersive program teaching children and teens the fundamentals of balanced nutrition, caloric tracking, and artificial intelligence in food science.",
@@ -395,6 +379,9 @@
             },
             {
                 org: "KEMAS (Jabatan Kemajuan Masyarakat)",
+                rating: 5,
+                ratingScore: "4.9",
+                sdgs: [4, 10],
                 title: "Taska Permata Early Literacy Program",
                 category: "Community & Leadership",
                 desc: "Interactive reading, phonics, and cognitive development sessions tailored for early childhood growth across community centers.",
@@ -406,6 +393,9 @@
             },
             {
                 org: "Universiti Kebangsaan Malaysia (UKM)",
+                rating: 5,
+                ratingScore: "5.0",
+                sdgs: [2, 3, 4],
                 title: "Young Nutritionist Discovery Workshop",
                 category: "Nutrition and Health",
                 desc: "Led by expert nutritionists, kids learn food grouping, RNI metrics, and healthy cooking habits through hands-on experiments.",
@@ -417,6 +407,9 @@
             },
             {
                 org: "Malaysian Nature Society (MNS)",
+                rating: 4,
+                ratingScore: "4.8",
+                sdgs: [13, 15],
                 title: "Junior Eco-Warrior Forest Walk",
                 category: "Environment",
                 desc: "Outdoor guided exploration focusing on local flora and fauna biodiversity conservation and tree planting.",
@@ -428,6 +421,9 @@
             },
             {
                 org: "Kuala Lumpur Junior Rugby Club",
+                rating: 5,
+                ratingScore: "4.9",
+                sdgs: [3, 17],
                 title: "Basic Rugby Skills & Teamwork Clinic",
                 category: "Physical & Sports",
                 desc: "Non-contact touch rugby drills designed to foster teamwork, agility, stamina, and cardiovascular health.",
@@ -439,6 +435,9 @@
             },
             {
                 org: "Jaya Grocer Community Kitchen",
+                rating: 4,
+                ratingScore: "4.7",
+                sdgs: [2, 12],
                 title: "Junior Healthy Cooking & Baking Masterclass",
                 category: "Nutrition and Health",
                 desc: "Hands-on culinary class teaching children how to prepare wholesome meals with zero food waste ingredients.",
@@ -449,7 +448,6 @@
                 endDate: "2026-11-16"
             }
         ];
-
         const userProfiles = {
             parent: {
                 name: "Ainol Razman Bin Mohd Ghazaly",
@@ -470,7 +468,6 @@
                 personPhone: "+6012-3456789"
             }
         };
-
         let pendingApplications = [
             {
                 childKey: "adam",
@@ -489,7 +486,6 @@
                 parentEmail: "ainol.razman@example.com"
             }
         ];
-
         const malaysiaStatesOptions = `
             <option>W.P. Kuala Lumpur / Selangor</option>
             <option>Johor</option>
@@ -507,7 +503,6 @@
             <option>W.P. Labuan</option>
             <option>W.P. Putrajaya</option>
         `;
-
         const childrenData = {
             adam: {
                 name: "Adam",
@@ -579,7 +574,6 @@
                 ]
             }
         };
-
         const participantGroups = {
             "Vegan Cooking Class Cohort 3/2026": [
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", stars: 5, status: "Normal" },
@@ -592,7 +586,6 @@
                 { name: "Aishah Binti Omar", token: "#AO-33Z-KL03", attendanceRate: "92%", stars: 5, status: "Normal" }
             ]
         };
-
         function renderRegistrationPage() {
             const isBm = currentLang === 'bm';
             return `
@@ -610,7 +603,6 @@
                             <option value="partner" ${currentUserRole === 'partner' ? 'selected' : ''}>${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
                         </select>
                     </div>
-
                     <div class="flex bg-slate-100 p-1 rounded-xl">
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
                         <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
@@ -624,7 +616,6 @@
                         <div id="register-fields-container" class="space-y-2.5 pt-1"></div>
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">${isBm ? '✓ Daftar & Pergi ke Profil Utama' : '✓ Register & Go to Home Profile'}</button>
                     </div>
-
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
@@ -636,7 +627,6 @@
                         </div>
                         <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
                     </div>
-
                     <div class="space-y-2 pt-2 border-t border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase block text-center">${isBm ? 'Atau teruskan dengan' : 'Or continue with'}</span>
                         <div class="grid grid-cols-2 gap-2">
@@ -653,19 +643,16 @@
                 </div>
             `;
         }
-
         function onGatewayRoleChange(role) {
             currentUserRole = role;
             if (currentAuthTab === 'register') {
                 toggleRegisterFields(role);
             }
         }
-
         function handleSocialAuth(provider) {
             alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? 'Akaun Organisasi' : 'Akaun Ibu Bapa'})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? 'Organization Account' : 'Parent Account'})! Loading Home Profile...`);
             switchTab('home');
         }
-
         function toggleRegisterFields(role) {
             const container = document.getElementById('register-fields-container');
             const isBm = currentLang === 'bm';
@@ -736,7 +723,6 @@
                 `;
             }
         }
-
         function setAuthMode(mode) { 
             currentAuthTab = mode; 
             switchTab('layer1'); 
@@ -748,14 +734,12 @@
                 }, 50);
             }
         }
-
         function handleLoginSubmit() {
             const roleSelect = document.getElementById('gateway-role-select');
             if (roleSelect) currentUserRole = roleSelect.value;
             alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
-
         function handleRegisterSubmit() {
             const roleSelect = document.getElementById('gateway-role-select');
             const roleSel = roleSelect ? roleSelect.value : currentUserRole;
@@ -780,7 +764,6 @@
             alert(currentLang === 'bm' ? "Akaun berjaya didaftarkan! Memuatkan Profil Utama..." : "Account registered & details saved! Loading Home Profile...");
             switchTab('home');
         }
-
         function renderRegisteredChildrenList() {
             const isBm = currentLang === 'bm';
             return `
@@ -805,7 +788,6 @@
                 </div>
             `;
         }
-
         function renderAddChildSection() {
             const isBm = currentLang === 'bm';
             return `
@@ -837,6 +819,40 @@
                     </button>
                 </div>
             `;
+        }
+
+        // Helper function to render gorgeous SVG Stars for ratings
+        function renderStarRatingSvg(rating, scoreText) {
+            let starsHtml = '';
+            for (let i = 1; i <= 5; i++) {
+                const fillClass = i <= rating ? 'text-amber-400 fill-amber-400' : 'text-slate-300 fill-slate-200';
+                starsHtml += `<svg class="w-3.5 h-3.5 ${fillClass}" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+            }
+            return `
+                <div class="flex items-center space-x-1.5 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
+                    <div class="flex space-x-0.5">${starsHtml}</div>
+                    <span class="text-[11px] font-black text-amber-800 ml-0.5">${scoreText}</span>
+                </div>
+            `;
+        }
+
+        // Helper function to render SDG badges
+        function renderSdgBadges(sdgIds) {
+            const sdgInfoMap = {
+                2: { code: "SDG 2", title: "Zero Hunger", color: "bg-amber-100 text-amber-800 border-amber-300" },
+                3: { code: "SDG 3", title: "Good Health & Well-being", color: "bg-emerald-100 text-emerald-800 border-emerald-300" },
+                4: { code: "SDG 4", title: "Quality Education", color: "bg-red-100 text-red-800 border-red-300" },
+                10: { code: "SDG 10", title: "Reduced Inequalities", color: "bg-pink-100 text-pink-800 border-pink-300" },
+                12: { code: "SDG 12", title: "Responsible Consumption", color: "bg-yellow-100 text-yellow-800 border-yellow-300" },
+                13: { code: "SDG 13", title: "Climate Action", color: "bg-green-100 text-green-800 border-green-300" },
+                15: { code: "SDG 15", title: "Life on Land", color: "bg-lime-100 text-lime-800 border-lime-300" },
+                17: { code: "SDG 17", title: "Partnerships for the Goals", color: "bg-blue-100 text-blue-800 border-blue-300" }
+            };
+
+            return sdgIds.map(id => {
+                const s = sdgInfoMap[id] || { code: `SDG ${id}`, title: `SDG ${id}`, color: "bg-slate-100 text-slate-800 border-slate-300" };
+                return `<span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-extrabold border ${s.color}" title="${s.title}">🌍 ${s.code}</span>`;
+            }).join('');
         }
 
         function renderProgramsPage() {
@@ -896,7 +912,6 @@
                     </div>
                 `;
             }
-
             const programCards = featuredProgramsList.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
@@ -907,6 +922,21 @@
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
+
+                    <!-- STAR RATING & SDG BADGES ROW -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        <div>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Organization Rating:</span>
+                            ${renderStarRatingSvg(prog.rating || 5, prog.ratingScore || "5.0")}
+                        </div>
+                        <div>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Covered UN SDGs:</span>
+                            <div class="flex flex-wrap gap-1">
+                                ${renderSdgBadges(prog.sdgs || [2, 3, 4])}
+                            </div>
+                        </div>
+                    </div>
+
                     <p class="text-[11px] text-slate-600 leading-relaxed">${prog.desc}</p>
                     <div class="text-[10px] text-slate-400 font-mono">
                         📅 ${prog.startDate} to ${prog.endDate}
@@ -919,7 +949,6 @@
                     </div>
                 </div>
             `).join('');
-
             return `
                 <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Marketplace</span>
@@ -932,7 +961,6 @@
                 </div>
             `;
         }
-
         function toggleMarketCustomCategoryInput(val) {
             const wrapper = document.getElementById('market-custom-category-wrapper');
             if (!wrapper) return;
@@ -942,7 +970,6 @@
                 wrapper.classList.add('hidden');
             }
         }
-
         function checkProgramDescriptionWordCount() {
             const descInput = document.getElementById('market-prog-desc');
             const indicator = document.getElementById('word-count-indicator');
@@ -959,7 +986,6 @@
                 indicator.className = "text-[9px] font-bold text-slate-400";
             }
         }
-
         function handleMarketplaceAddProgram() {
             const isBm = currentLang === 'bm';
             const catSelect = document.getElementById('market-prog-category').value;
@@ -972,35 +998,32 @@
                 }
                 finalCategory = customInput;
             }
-
             const progName = document.getElementById('market-prog-name').value.trim();
             const progDesc = document.getElementById('market-prog-desc').value.trim();
             const startDate = document.getElementById('market-prog-start').value;
             const endDate = document.getElementById('market-prog-end').value;
-
             if (!progName) {
                 alert(isBm ? "Sila masukkan nama program atau aktiviti." : "Please enter the name of the program or activity.");
                 return;
             }
-
             if (!progDesc) {
                 alert(isBm ? "Sila masukkan ringkasan dan penerangan program." : "Please enter the program summary and description.");
                 return;
             }
-
             const wordCount = progDesc.split(/\s+/).length;
             if (wordCount > 150) {
                 alert(isBm ? `Penerangan program melebihi had 150 kata (Kini: ${wordCount} kata). Sila pendekkan.` : `Program description exceeds the 150-word limit (Current: ${wordCount} words). Please shorten it.`);
                 return;
             }
-
             if (endDate < startDate) {
                 alert(isBm ? "Tarikh tamat tidak boleh sebelum tarikh mula." : "End date cannot be earlier than start date.");
                 return;
             }
-
             featuredProgramsList.unshift({
                 org: userProfiles.partner.orgName,
+                rating: 5,
+                ratingScore: "5.0",
+                sdgs: [2, 3, 4],
                 title: progName,
                 category: finalCategory,
                 desc: progDesc,
@@ -1010,16 +1033,13 @@
                 startDate: startDate,
                 endDate: endDate
             });
-
             if (!organizationCoursesMap[userProfiles.partner.orgName]) {
                 organizationCoursesMap[userProfiles.partner.orgName] = [];
             }
             organizationCoursesMap[userProfiles.partner.orgName].push(progName);
-
             alert(isBm ? `✅ Berjaya Diterbitkan!\nProgram "${progName}" telah ditambah ke pasaran program rakan kongsi.` : `✅ Published Successfully!\nProgram "${progName}" has been successfully added to the partner programs marketplace.`);
             switchTab('programs');
         }
-
         function openProgramChildSelector(courseName, orgName) {
             pendingMarketplaceProgram = { courseName, orgName };
             const isBm = currentLang === 'bm';
@@ -1027,27 +1047,22 @@
             document.getElementById('prog-modal-subtitle').innerText = `"${courseName}" (${orgName})`;
             document.getElementById('program-child-modal').classList.remove('hidden');
         }
-
         function closeProgramChildModal() {
             document.getElementById('program-child-modal').classList.add('hidden');
             pendingMarketplaceProgram = null;
         }
-
         function confirmProgramApplication() {
             if (!pendingMarketplaceProgram) return;
             const chosenChildKey = document.getElementById('modal-child-select').value;
             const { courseName, orgName } = pendingMarketplaceProgram;
             closeProgramChildModal();
-
             const isBm = currentLang === 'bm';
             const child = childrenData[chosenChildKey];
             if (!child.appliedCourses) child.appliedCourses = [];
-
             if (child.appliedCourses.some(ac => ac.name === courseName)) {
                 showModalOverlay(isBm ? "Notis" : "Notice", `${child.name} ${isBm ? 'telah pun memohon untuk' : 'has already applied for'} "${courseName}".`);
                 return;
             }
-
             child.appliedCourses.push({
                 name: courseName,
                 org: orgName,
@@ -1062,13 +1077,11 @@
                 contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
-
             showModalOverlay(
                 isBm ? "Permohonan Diterima" : "Application Received", 
                 isBm ? `Terima kasih kerana memohon "${courseName}" untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for "${courseName}" on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
-
         function showModalOverlay(title, message) {
             const titleEl = document.getElementById('modal-title');
             const msgEl = document.getElementById('modal-message');
@@ -1079,7 +1092,6 @@
                 overlay.classList.remove('hidden');
             }
         }
-
         function closeModalOverlay() {
             const overlay = document.getElementById('custom-modal-overlay');
             if (overlay) {
@@ -1095,7 +1107,6 @@
                 document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
             }, 300);
         }
-
         function renderParentProfilePage() {
             const p = userProfiles.parent;
             const isBm = currentLang === 'bm';
@@ -1161,7 +1172,6 @@
                 ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
-
         function updateParentProfile() {
             userProfiles.parent.name = document.getElementById('hp-name').value;
             userProfiles.parent.email = document.getElementById('hp-email').value;
@@ -1172,7 +1182,6 @@
             userProfiles.parent.occupation = document.getElementById('hp-occ').value;
             alert(currentLang === 'bm' ? "Profil Penjaga berjaya dikemaskini!" : "Parents Guardian Profile updated successfully!");
         }
-
         function renderPartnerProfilePage() {
             const o = userProfiles.partner;
             const isBm = currentLang === 'bm';
@@ -1246,7 +1255,6 @@
                 </div>
             `;
         }
-
         function updatePartnerProfile() {
             userProfiles.partner.orgName = document.getElementById('ho-name').value;
             userProfiles.partner.regNumber = document.getElementById('ho-regno').value;
@@ -1257,12 +1265,10 @@
             userProfiles.partner.personPhone = document.getElementById('ho-pphone').value;
             alert(currentLang === 'bm' ? "Profil Rakan Kongsi berjaya dikemaskini!" : "Partner Organization Profile updated successfully!");
         }
-
         function switchPartnerDashboardLayer(layer) {
             partnerDashboardLayer = layer;
             switchTab('school');
         }
-
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
             const isBm = currentLang === 'bm';
@@ -1279,9 +1285,7 @@
                     </button>
                 </div>
             `;
-
             let layerContentHtml = '';
-
             if (partnerDashboardLayer === 'esg') {
                 layerContentHtml = `
                     <div class="bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950 rounded-2xl p-4 text-white shadow-lg space-y-3 relative overflow-hidden border border-slate-800">
@@ -1308,7 +1312,6 @@
                             <div class="bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold rounded p-1 shadow-xs">5⭐<br>80-100%</div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-indigo-200 space-y-3">
                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                             <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider flex items-center">
@@ -1333,7 +1336,6 @@
                                 </div>
                                 <button onclick="openPaymentGateway('Level 1: Baseline Assessment', 'RM699.00')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition shadow-xs">Pay Now →</button>
                             </div>
-
                             <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center text-xs">
                                 <div>
                                     <p class="font-bold text-slate-800">Level 2: Executive Report</p>
@@ -1341,7 +1343,6 @@
                                 </div>
                                 <button onclick="openPaymentGateway('Level 2: Executive Assessment Report', 'RM2,699.00')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition shadow-xs">Pay Now →</button>
                             </div>
-
                             <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center text-xs">
                                 <div>
                                     <p class="font-bold text-slate-800">Level 3: Comprehensive Cert.</p>
@@ -1351,7 +1352,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">📊 ${isBm ? 'Kad Skor 3 Pilar ESG (40+ Indikator)' : 'The 3 Pillars of ESG Scorecard (40+ Indicators)'}</h3>
                         <div class="space-y-2.5 text-xs">
@@ -1378,7 +1378,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">⚠️ ${isBm ? 'Peta Haba Risiko & Analisis Jurang' : 'Risk Heat Map & Gap Analysis Matrix'}</h3>
                         <p class="text-[11px] text-slate-600">5x5 grid matrix categorizing organizational risks by likelihood vs impact. Top identified focus areas:</p>
@@ -1401,7 +1400,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">🗺️ ${isBm ? 'Pelan Hala Tuju Penambahbaikan & Muat Naik Bukti' : 'Actionable Improvement Roadmap & Evidence Upload'}</h3>
                         <p class="text-[11px] text-slate-600">Milestones to transition from Silver to Gold certification, plus the evidence point audit trail repository (collecting 200+ evidence points):</p>
@@ -1422,7 +1420,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📥 ${isBm ? 'Hab Eksport Laporan Strategik' : 'Strategic Report Export & Use-Cases Hub'}</h3>
                         <p class="text-[11px] text-slate-600">One-click audit-ready PDF report generators optimized for multi-stakeholder financing and reporting:</p>
@@ -1466,7 +1463,6 @@
                 } else {
                     pendingHtml = `<p class="text-xs text-slate-400 italic text-center py-2">${isBm ? 'Tiada permohonan kursus buat masa ini.' : 'No pending course applications at this time.'}</p>`;
                 }
-
                 layerContentHtml = `
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-amber-700 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center justify-between">
@@ -1477,7 +1473,6 @@
                             ${pendingHtml}
                         </div>
                     </div>
-
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Program Dianjurkan & Peserta' : 'List of Programs Organized & Participants'}</h3>
                         <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
@@ -1491,7 +1486,6 @@
                     </div>
                 `;
             }
-
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Portal Rakan Kongsi' : 'Partner Portal'}</span>
@@ -1502,7 +1496,6 @@
                 ${layerContentHtml}
             `;
         }
-
         function openPaymentGateway(tierTitle, amountDue) {
             document.getElementById('pay-modal-title').innerText = "Secure Payment Gateway";
             document.getElementById('pay-modal-subtitle').innerText = tierTitle;
@@ -1510,16 +1503,13 @@
             document.getElementById('pay-amount-due').innerText = amountDue;
             document.getElementById('payment-gateway-modal').classList.remove('hidden');
         }
-
         function closePaymentModal() {
             document.getElementById('payment-gateway-modal').classList.add('hidden');
         }
-
         function confirmPaymentSuccess() {
             closePaymentModal();
             alert("✅ Payment Successful via FPX Online Banking!\nYour certification tier has been successfully updated and your audit trail has been submitted for review.");
         }
-
         function approveApplication(index) {
             const app = pendingApplications[index];
             if (!app) return;
@@ -1531,12 +1521,10 @@
                     targetApp.status = "Approved";
                 }
             }
-
             alert(currentLang === 'bm' ? `✅ Permohonan Diluluskan!\n${app.childName} telah diluluskan untuk "${app.courseName}".` : `✅ Application Approved!\n${app.childName} has been successfully approved for "${app.courseName}".`);
             pendingApplications.splice(index, 1);
             switchTab('school');
         }
-
         function sendFormToRecipient(index) {
             const app = pendingApplications[index];
             if (!app) return;
@@ -1544,13 +1532,11 @@
             
             currentUserRole = 'parent';
             switchTab('home');
-
             showModalOverlay(
                 currentLang === 'bm' ? "Permohonan Diterima" : "Application Received", 
                 currentLang === 'bm' ? `Terima kasih kerana memohon kursus / aktiviti.\n\nBorang pendaftaran akan dihantar ke E-mel (${emailAddr}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${emailAddr}), please fill in the form and email back to us.`
             );
         }
-
         function openParticipantGroup(groupName) { currentPartnerView = 'group_detail'; activeParticipantGroup = groupName; switchTab('school'); }
         function closeParticipantGroup() { currentPartnerView = 'dashboard'; activeParticipantGroup = ''; switchTab('school'); }
         
@@ -1587,7 +1573,6 @@
             `;
             return html;
         }
-
         function rateCommunityToken(studentName) {
             const isBm = currentLang === 'bm';
             const rating = prompt(isBm ? `Penilaian Penganjur untuk ${studentName} (1 hingga 5 Bintang):` : `Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
@@ -1613,13 +1598,11 @@
                 }
             }
         }
-
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             const isBm = currentLang === 'bm';
             
             const orgOptions = Object.keys(organizationCoursesMap).map(org => `<option value="${org}">${org}</option>`).join('');
-
             return `
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-indigo-400/30 pb-2.5">
@@ -1634,7 +1617,6 @@
                         <p class="text-xs text-indigo-100">${child.age} • ${child.school} • Token: <span class="font-mono bg-indigo-800 px-1.5 py-0.5 rounded text-indigo-200">${child.token}</span></p>
                     </div>
                 </div>
-
                 <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-4 text-white shadow-xl border border-indigo-500/30 space-y-3 relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
                     <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2.5">
@@ -1669,7 +1651,6 @@
                         <span class="text-[9px] text-indigo-300 font-mono">🔒 ${isBm ? 'Disahkan pada Hash Lejar: 0x89F...34A2' : 'Verified on Immutable Ledger Hash: 0x89F...34A2'}</span>
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📝 ${isBm ? 'Mohon Kursus / Aktiviti Baru' : 'Apply for New Course / Activities'}</h3>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Anda juga boleh meneroka senarai lengkap program di menu "Program Rakan Kongsi" (ikon ☰ atas).' : 'You can also browse the full advertised catalog in the menu (top-left ☰ icon).'}</p>
@@ -1687,7 +1668,6 @@
                         + ${isBm ? 'Mohon & Daftar Kursus' : 'Apply & Register Course'}
                     </button>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Kursus / Aktiviti Dipohon' : 'List course/Activity Applied'}</h3>
                     <div class="space-y-2">
@@ -1707,7 +1687,6 @@
                         }).join('') : `<p class="text-xs text-slate-400 italic">${isBm ? 'Tiada permohonan kursus dihantar lagi.' : 'No course or activity applications submitted yet.'}</p>`}
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 ${isBm ? 'Senarai Kursus Dihadiri' : 'List of Courses Attended'}</h3>
                     <div class="space-y-2">
@@ -1729,7 +1708,6 @@
                         }).join('') : `<p class="text-xs text-slate-400 italic">${isBm ? 'Tiada kursus dihadiri lagi.' : 'No courses attended yet.'}</p>`}
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Impak (Permainan Fizikal)' : 'Impact (Physical Play)'}</span><span class="text-xs font-extrabold text-amber-600">${child.impactTokens} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Jam Aktif:' : 'Active Hours:'} <strong class="text-slate-800">${child.activeHours} hrs</strong></p>
@@ -1755,14 +1733,12 @@
                 </div>
             `;
         }
-
         function updateCourseDropdown(selectedOrg) {
             const courseSelect = document.getElementById('apply-course-select');
             if (!courseSelect) return;
             const courses = organizationCoursesMap[selectedOrg] || [];
             courseSelect.innerHTML = courses.map(c => `<option value="${c}">${c}</option>`).join('');
         }
-
         function submitNewCourseApplication() {
             const orgSelect = document.getElementById('apply-org-select');
             const courseSelect = document.getElementById('apply-course-select');
@@ -1778,7 +1754,6 @@
                 showModalOverlay(isBm ? "Notis" : "Notice", `${child.name} ${isBm ? 'telah pun memohon untuk' : 'has already applied for'} "${courseName}".`);
                 return;
             }
-
             child.appliedCourses.push({
                 name: courseName,
                 org: org,
@@ -1799,7 +1774,6 @@
                 isBm ? `Terima kasih kerana memohon kursus / aktiviti untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
-
         function showModalOverlay(title, message) {
             const titleEl = document.getElementById('modal-title');
             const msgEl = document.getElementById('modal-message');
@@ -1810,7 +1784,6 @@
                 overlay.classList.remove('hidden');
             }
         }
-
         function closeModalOverlay() {
             const overlay = document.getElementById('custom-modal-overlay');
             if (overlay) {
@@ -1826,7 +1799,6 @@
                 document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
             }, 300);
         }
-
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -1842,7 +1814,6 @@
                 { name: isBm ? "Vitamin A" : "Vitamin A", current: 480, target: 500, unit: "µg RE", color: "bg-orange-500" },
                 { name: isBm ? "Vitamin C" : "Vitamin C", current: 38, target: 40, unit: "mg", color: "bg-rose-500" }
             ];
-
             let growthSvgContent = '';
             if (selectedChild === 'adam') {
                 growthSvgContent = `
@@ -1870,7 +1841,6 @@
                     </svg>
                 `;
             }
-
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
@@ -1895,7 +1865,6 @@
                         }
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 ${isBm ? 'Pemeriksaan Kesihatan & Pertumbuhan Tahunan' : 'Annual Health & Growth Check'}</h3>
@@ -1923,7 +1892,6 @@
                             ${isBm ? 'Adam mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.' : 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.'}
                         </p>
                     </div>
-
                     <div class="grid grid-cols-2 gap-2 pt-1">
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tinggi (cm)' : 'Height (cm)'}</label><input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Berat (kg)' : 'Weight (kg)'}</label><input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
@@ -1934,7 +1902,6 @@
                         <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
                     </div>
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
@@ -1959,7 +1926,6 @@
                 </div>
             `;
         }
-
         function recalculateGrowthMetrics() {
             const h = parseFloat(document.getElementById('input-height').value) || 100;
             const w = parseFloat(document.getElementById('input-weight').value) || 15;
@@ -1969,7 +1935,6 @@
             childrenData[selectedChild].weight = w;
             childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
         }
-
         function claimRNIToken() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -1979,7 +1944,6 @@
             alert(isBm ? `🎉 Sasaran Diet RNI Harian Tercapai! 10 Token Pemakanan dicetak ke dompet ${child.name}.` : `🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
             switchTab('lapaq');
         }
-
         function renderTokensPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -2025,7 +1989,6 @@
                 </div>
             `;
         }
-
         function redeemReward(rewardName, tokenCost) {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -2037,11 +2000,9 @@
                 alert(isBm ? `❌ Token Tidak Mencukupi!\n${child.name} mempunyai ${child.totalTokens} token, tetapi memerlukan${tokenCost} token.` : `❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
             }
         }
-
         function changeLaPaQChild(childKey) { selectedChild = childKey; switchTab('lapaq'); }
         function changeTokenChild(childKey) { selectedChild = childKey; switchTab('tokens'); }
         function switchChildView(childKey) { selectedChild = childKey; switchTab('layer3'); }
-
         const sdgCatalog = [
             { id: 2, icon: '🥗', name: 'Zero Hunger', bm: 'Sifar Kelaparan', color: 'amber', desc: 'Nutrition education, food access and healthier meals.' },
             { id: 3, icon: '💚', name: 'Good Health & Well-being', bm: 'Kesihatan Baik dan Kesejahteraan', color: 'emerald', desc: 'Healthy habits, physical activity and well-being.' },
@@ -2066,7 +2027,6 @@
             if (status === 'rejected') return isBm ? 'Ditolak' : 'Rejected';
             return isBm ? 'Menunggu semakan' : 'Pending review';
         }
-
         function renderParentSdgPassport() {
             const isBm = currentLang === 'bm';
             const records = sdgEvidenceRecords.filter(r =>
@@ -2085,7 +2045,6 @@
                     <p class="text-[10px] text-slate-500 mt-1">${linked} ${isBm ? 'rekod' : 'records'} · ${confirmed} ${isBm ? 'disahkan' : 'verified'}</p>
                 </button>`;
             }).join('');
-
             const recordCards = records.length ? records.map(r => {
                 const child = childrenData[r.child];
                 const badges = r.sdgs.map(id => `<span class="inline-flex px-2 py-1 rounded-full bg-slate-100 text-slate-700 text-[9px] font-bold">SDG ${id}</span>`).join(' ');
@@ -2096,7 +2055,6 @@
                     <p class="text-[10px] text-slate-500">${sdgEscape(r.note || '')}</p>
                 </article>`;
             }).join('') : `<div class="p-5 text-center bg-white border border-dashed border-slate-300 rounded-xl text-xs text-slate-500">${isBm ? 'Tiada rekod untuk penapis ini.' : 'No records match these filters.'}</div>`;
-
             return `
                 <div class="bg-gradient-to-br from-emerald-700 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <div class="flex justify-between items-center">
@@ -2125,14 +2083,12 @@
                 </section>
             `;
         }
-
         function renderPartnerSdgPassport() {
             const isBm = currentLang === 'bm';
             const orgName = userProfiles.partner.orgName;
             const records = sdgEvidenceRecords;
             const verified = records.filter(r => r.status === 'verified').length;
             const pending = records.filter(r => r.status === 'pending').length;
-
             const sdgCards = sdgCatalog.map(sdg => {
                 const sponsored = records.filter(r => r.sdgs.includes(sdg.id)).length;
                 return `<div class="p-3 rounded-xl border border-indigo-100 bg-indigo-50/50 space-y-1">
@@ -2141,7 +2097,6 @@
                     <p class="text-[10px] text-indigo-700">${sponsored * 12} ${isBm ? 'peserta terlibat' : 'participants engaged'} · ${sponsored} ${isBm ? 'program aktif' : 'active programs'}</p>
                 </div>`;
             }).join('');
-
             const reviewCards = records.map(r => {
                 const child = childrenData[r.child];
                 return `<article class="p-3 rounded-xl border border-slate-200 bg-white space-y-2">
@@ -2150,7 +2105,6 @@
                     ${r.status === 'pending' ? `<button onclick="reviewSdgRecord('${r.id}')" class="w-full rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-2">✓ ${isBm ? 'Sahkan Rekod Impak SDG' : 'Verify SDG Impact Record'}</button>` : `<p class="text-[10px] text-emerald-600 font-bold">✓ Verified by ${orgName}</p>`}
                 </article>`;
             }).join('');
-
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <div class="flex justify-between items-center">
@@ -2180,7 +2134,6 @@
                 </section>
             `;
         }
-
         function setSdgFilter(value) { sdgSelectedFilter = value; switchTab('sdg'); }
         function setSdgChildFilter(value) { sdgSelectedChild = value; switchTab('sdg'); }
         function addSdgRecord() {
@@ -2204,7 +2157,6 @@
                 switchTab('sdg');
             }
         }
-
         const contentData = { 
             layer1: ``, home: ``, programs: ``, layer3: ``, tokens: ``, lapaq: ``, sdg: ``, school: ``, 
             scanner: `
@@ -2223,7 +2175,6 @@
                 </div>
             `
         };
-
         function switchTab(tabKey) {
             activeTabKey = tabKey;
             if (currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
@@ -2265,7 +2216,6 @@
             else if (tabKey === 'school') content.innerHTML = renderPartnerDashboard();
             else if (tabKey === 'tokens') content.innerHTML = renderTokensPage();
             else content.innerHTML = contentData[tabKey];
-
             ['layer1', 'home'].forEach(k => {
                 const btn = document.getElementById(`nav-${k}`);
                 if (btn) {
@@ -2277,7 +2227,6 @@
                 }
             });
         }
-
         function startScanner() {
             if (typeof Html5Qrcode !== 'undefined') {
                 if (html5QrCode) {
@@ -2302,14 +2251,12 @@
                 document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
             }
         }
-
         function simulateSuccessfulScan() {
             const child = childrenData[selectedChild];
             child.totalTokens += 25;
             child.impactTokens += 25;
             document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +25 Tokens Minted to ${child.name}!`;
         }
-
         window.addEventListener('DOMContentLoaded', () => { 
             updateStatusBarTime(); 
             switchTab('layer1'); 
