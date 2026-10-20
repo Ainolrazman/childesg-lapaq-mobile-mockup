@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- App Header with Hamburger Menu, Flags Toggle, and Notification Bell Icon -->
+        <!-- App Header with Hamburger Menu, Flags Toggle, and Interactive Notification Bell -->
         <header class="bg-white border-b border-slate-200 px-3 py-2.5 flex justify-between items-center shrink-0 z-30 shadow-xs">
             <div class="flex items-center space-x-2">
                 <!-- Hamburger Menu Button -->
@@ -55,7 +55,7 @@
                         <span>BM</span>
                     </button>
                 </div>
-                <!-- Notification Bell Icon Button -->
+                <!-- Interactive Notification Bell Button with Badge -->
                 <button onclick="openNotificationsModal()" class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition relative flex items-center justify-center" title="Notifications">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                     <span id="notification-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-xs">3</span>
@@ -112,7 +112,7 @@
             </div>
         </main>
 
-        <!-- Notifications Modal Overlay -->
+        <!-- Color-Coded Alert Notifications Modal Overlay -->
         <div id="notifications-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[340px] text-left space-y-4 animate-in fade-in zoom-in duration-200">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -122,30 +122,44 @@
                     </div>
                     <button onclick="closeNotificationsModal()" class="p-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">✕</button>
                 </div>
-                <div class="space-y-2.5 max-h-[320px] overflow-y-auto text-xs pr-1">
-                    <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 space-y-1">
-                        <div class="flex justify-between items-center">
-                            <strong class="text-blue-900">🎓 Program Application Approved</strong>
-                            <span class="text-[9px] text-blue-600 font-mono">10m ago</span>
+                <div class="space-y-3 max-h-[340px] overflow-y-auto text-xs pr-1">
+                    <!-- Notification 1: Program Approval (Blue) -->
+                    <div class="p-3 bg-blue-50 rounded-xl border border-blue-200 shadow-2xs space-y-1.5 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
+                        <div class="flex justify-between items-center pl-1">
+                            <span class="font-extrabold text-blue-900 flex items-center space-x-1.5">
+                                <span>🎓</span> <span>Program Application Approved</span>
+                            </span>
+                            <span class="text-[9px] text-blue-600 font-mono font-bold bg-blue-100 px-1.5 py-0.5 rounded">10m ago</span>
                         </div>
-                        <p class="text-[11px] text-blue-800">Adam's registration for "AI Nutrition & Health Junior Bootcamp" has been approved by Kemaih Sdn Bhd.</p>
+                        <p class="text-[11px] text-blue-800 pl-1 leading-relaxed">Adam's registration for "AI Nutrition & Health Junior Bootcamp" has been officially approved by Kemaih Sdn Bhd.</p>
                     </div>
-                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 space-y-1">
-                        <div class="flex justify-between items-center">
-                            <strong class="text-emerald-900">🥗 LaPaQ RNI Milestone Met</strong>
-                            <span class="text-[9px] text-emerald-600 font-mono">2h ago</span>
+
+                    <!-- Notification 2: LaPaQ RNI Milestone (Emerald) -->
+                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 shadow-2xs space-y-1.5 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-600"></div>
+                        <div class="flex justify-between items-center pl-1">
+                            <span class="font-extrabold text-emerald-900 flex items-center space-x-1.5">
+                                <span>🥗</span> <span>LaPaQ RNI Milestone Met</span>
+                            </span>
+                            <span class="text-[9px] text-emerald-600 font-mono font-bold bg-emerald-100 px-1.5 py-0.5 rounded">2h ago</span>
                         </div>
-                        <p class="text-[11px] text-emerald-800">Maya reached 95% balanced RNI target today! 10 Nutrition Tokens are ready to be claimed.</p>
+                        <p class="text-[11px] text-emerald-800 pl-1 leading-relaxed">Maya reached 95% balanced RNI target today! 10 Nutrition Tokens are ready to be claimed in her wallet.</p>
                     </div>
-                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-100 space-y-1">
-                        <div class="flex justify-between items-center">
-                            <strong class="text-purple-900">🛡️ ESG Audit Report Updated</strong>
-                            <span class="text-[9px] text-purple-600 font-mono">1d ago</span>
+
+                    <!-- Notification 3: ESG Audit Report (Purple) -->
+                    <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 shadow-2xs space-y-1.5 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-purple-600"></div>
+                        <div class="flex justify-between items-center pl-1">
+                            <span class="font-extrabold text-purple-900 flex items-center space-x-1.5">
+                                <span>🛡️</span> <span>ESG Audit Report Updated</span>
+                            </span>
+                            <span class="text-[9px] text-purple-600 font-mono font-bold bg-purple-100 px-1.5 py-0.5 rounded">1d ago</span>
                         </div>
-                        <p class="text-[11px] text-purple-800">Silver Verified Institution status (82/100) successfully updated in the partner audit registry.</p>
+                        <p class="text-[11px] text-purple-800 pl-1 leading-relaxed">Silver Verified Institution status (82/100) successfully updated and hashed in the partner audit registry.</p>
                     </div>
                 </div>
-                <button onclick="markAllNotificationsRead()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-xl text-xs transition shadow">
+                <button onclick="markAllNotificationsRead()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
                     Mark All as Read ✓
                 </button>
             </div>
@@ -235,6 +249,7 @@
                 </div>
                 <span class="text-[9px] font-extrabold text-indigo-700 mt-0.5">Dashboard</span>
             </button>
+
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center py-1 px-3 text-slate-400 hover:text-slate-600 transition-all">
                 <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span id="nav-label-home" class="text-[9px] font-bold">Home</span>
@@ -380,7 +395,7 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`; 
         }  
-
+        
         function getMaxCalendarDateString() { 
             const d = new Date(); 
             d.setFullYear(d.getFullYear() + 1); 
@@ -686,6 +701,7 @@
                     <p class="text-xs text-slate-300">${isBm ? 'Log masuk atau daftar sebagai Ibu Bapa atau Rakan Kongsi' : 'Sign in or register as Parent or Organization Partner'}</p>
                 </div>
                 <div class="bg-white rounded-2xl p-4 shadow-md border border-slate-100 space-y-3">
+                    
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Pilih Peranan Pendaftaran / Log Masuk' : 'Select Account Role'}</label>
                         <select id="gateway-role-select" onchange="onGatewayRoleChange(this.value)" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800">
@@ -697,6 +713,7 @@
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
                         <button onclick="setAuthMode('login')" id="auth-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'login' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '🔐 Log Masuk' : '🔐 Login'}</button>
                     </div>
+                    
                     <div id="auth-form-register" class="${currentAuthTab === 'register' ? 'block' : 'hidden'} space-y-2.5">
                         <div class="p-2.5 bg-blue-50 rounded-lg border border-blue-100">
                             <span class="text-[10px] font-bold text-blue-700 uppercase">${isBm ? 'Persetujuan PDPA Termasuk' : 'PDPA Consent Included'}</span>
@@ -918,6 +935,7 @@
             `;
         }
 
+        // Helper function to render SVG Stars for ratings
         function renderStarRatingSvg(rating, scoreText) {
             let starsHtml = '';
             for (let i = 1; i <= 5; i++) {
@@ -932,6 +950,7 @@
             `;
         }
 
+        // Helper function to render SDG badges
         function renderSdgBadges(sdgIds) {
             const sdgInfoMap = {
                 2: { code: "SDG 2", title: "Zero Hunger", color: "bg-amber-100 text-amber-800 border-amber-300" },
@@ -1006,7 +1025,6 @@
                     </div>
                 `;
             }
-
             const programCards = featuredProgramsList.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
@@ -1017,6 +1035,7 @@
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
+                    <!-- STAR RATING & SDG BADGES ROW -->
                     <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                         <div>
                             <span class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Organization Rating:</span>
@@ -1041,7 +1060,6 @@
                     </div>
                 </div>
             `).join('');
-
             return `
                 <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Marketplace</span>
@@ -2113,6 +2131,7 @@
 
         let sdgSelectedFilter = 'all';
         let sdgSelectedChild = 'all';
+
         let sdgEvidenceRecords = [
             { id: 'DEMO-001', child: 'adam', title: 'Junior Eco-Warrior Bootcamp', sdgs: [4, 12, 13], category: 'environment', date: '2026-09-12', measure: 'Workshop attendance', value: 1, unit: 'participant', evidence: 'Demo attendance record', status: 'verified', note: 'Participation output only; environmental outcome not yet measured.' },
             { id: 'DEMO-002', child: 'maya', title: 'Healthy Cooking & Zero-Waste Workshop', sdgs: [2, 3, 12], category: 'nutrition', date: '2026-09-18', measure: 'Workshop attendance', value: 1, unit: 'participant', evidence: 'Demo partner attendance sheet', status: 'pending', note: 'Awaiting authorised partner review.' },
@@ -2203,7 +2222,6 @@
                     <p class="text-[10px] text-indigo-700">${sponsored * 12} ${isBm ? 'peserta terlibat' : 'participants engaged'} · ${sponsored} ${isBm ? 'program aktif' : 'active programs'}</p>
                 </div>`;
             }).join('');
-
             const reviewCards = records.map(r => {
                 const child = childrenData[r.child];
                 return `<article class="p-3 rounded-xl border border-slate-200 bg-white space-y-2">
@@ -2212,7 +2230,6 @@
                     ${r.status === 'pending' ? `<button onclick="reviewSdgRecord('${r.id}')" class="w-full rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-2">✓ ${isBm ? 'Sahkan Rekod Impak SDG' : 'Verify SDG Impact Record'}</button>` : `<p class="text-[10px] text-emerald-600 font-bold">✓ Verified by ${orgName}</p>`}
                 </article>`;
             }).join('');
-
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <div class="flex justify-between items-center">
@@ -2329,6 +2346,7 @@
             else if (tabKey === 'school') content.innerHTML = renderPartnerDashboard();
             else if (tabKey === 'tokens') content.innerHTML = renderTokensPage();
             else content.innerHTML = contentData[tabKey];
+
             ['layer1', 'home'].forEach(k => {
                 const btn = document.getElementById(`nav-${k}`);
                 if (btn) {
