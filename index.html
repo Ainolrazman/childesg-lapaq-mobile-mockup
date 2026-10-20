@@ -103,8 +103,20 @@
                     </button>
                 </div>
 
-                <div class="pt-3 border-t border-slate-100 text-[10px] text-slate-400 text-center font-mono">
-                    ChildESG™ v2.6 • Secure PWA Mobile
+                <!-- Dashboard Menu Image Logo at Bottom of Drawer -->
+                <div class="pt-3 border-t border-slate-100 flex flex-col items-center justify-center space-y-2">
+                    <div class="w-full bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-3 text-center shadow-inner border border-indigo-500/30 flex items-center justify-center space-x-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center text-white font-black text-sm shadow-md">
+                            🌍
+                        </div>
+                        <div class="text-left">
+                            <span class="text-[9px] uppercase tracking-wider text-indigo-300 font-extrabold block">Official Dashboard</span>
+                            <span class="text-xs font-bold text-white">ChildESG™ & LaPaQ</span>
+                        </div>
+                    </div>
+                    <div class="text-[9px] text-slate-400 font-mono">
+                        ChildESG™ v2.6 • Secure PWA Mobile
+                    </div>
                 </div>
             </div>
         </div>
@@ -2262,7 +2274,6 @@
             }
             else if (tabKey === 'lapaq') content.innerHTML = renderLaPaQPage();
             else if (tabKey === 'sdg') {
-                // Route based on role: parent -> Parent SDG Passport, partner -> Partner Org SDG Passport
                 if (currentUserRole === 'partner') {
                     content.innerHTML = renderPartnerSdgPassport();
                 } else {
