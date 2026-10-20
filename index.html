@@ -30,6 +30,7 @@
                 </div>
             </div>
         </div>
+
         <!-- App Header with Hamburger Menu & Flags Toggle -->
         <header class="bg-white border-b border-slate-200 px-3 py-2.5 flex justify-between items-center shrink-0 z-30 shadow-xs">
             <div class="flex items-center space-x-2">
@@ -59,6 +60,7 @@
                 </button>
             </div>
         </header>
+
         <!-- Slide-out Navigation Drawer Menu -->
         <div id="nav-drawer-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="toggleMenuDrawer()">
             <div id="nav-drawer-content" class="absolute top-0 left-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col p-5 space-y-4 transform -translate-x-full transition-transform duration-300" onclick="event.stopPropagation()">
@@ -75,9 +77,21 @@
                         <span>🏷️</span>
                         <span id="menu-item-programs">Partner Programs & Activities</span>
                     </button>
+                    <button onclick="switchTab('layer3'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
+                        <span>👶</span>
+                        <span id="menu-item-children">Children Profile & Passport</span>
+                    </button>
                     <button onclick="switchTab('lapaq'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
                         <span>🥗</span>
                         <span id="menu-item-lapaq">LaPaQ RNI Intelligence</span>
+                    </button>
+                    <button onclick="switchTab('sdg'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 flex items-center space-x-3 transition">
+                        <span>🌍</span>
+                        <span id="menu-item-sdg">SDG Impact Passport</span>
+                    </button>
+                    <button onclick="switchTab('school'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
+                        <span>🏢</span>
+                        <span id="menu-item-partner">Partner Organization Dashboard</span>
                     </button>
                     <button onclick="switchTab('scanner'); toggleMenuDrawer();" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 flex items-center space-x-3 transition">
                         <span>📷</span>
@@ -88,17 +102,20 @@
                         <span id="menu-item-tokens">Impact Tokens Wallet</span>
                     </button>
                 </div>
+
                 <div class="pt-3 border-t border-slate-100 text-[10px] text-slate-400 text-center font-mono">
                     ChildESG™ v2.6 • Secure PWA Mobile
                 </div>
             </div>
         </div>
+
         <!-- Main Scrollable Screen Content Area -->
         <main id="app-content" class="flex-1 overflow-y-auto p-4 pb-24 hide-scrollbar space-y-4 relative">
             <div class="p-4 bg-white rounded-xl shadow-sm text-center">
                 <p class="text-xs text-slate-500 font-bold">Loading ChildESG™ Platform...</p>
             </div>
         </main>
+
         <!-- Program Application Child Selector Modal -->
         <div id="program-child-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -122,6 +139,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Payment Gateway Modal Overlay -->
         <div id="payment-gateway-modal" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-5 shadow-2xl w-full max-w-[320px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -151,6 +169,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Custom Application Received Modal Overlay -->
         <div id="custom-modal-overlay" class="absolute inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 shadow-2xl w-full max-w-[300px] text-center space-y-4 animate-in fade-in zoom-in duration-200">
@@ -166,6 +185,7 @@
                 </button>
             </div>
         </div>
+
         <!-- Bottom Navigation Bar (Fixed with Register and Home Icons) -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 flex justify-around items-center shrink-0 z-40">
             <button onclick="switchTab('layer1')" id="nav-layer1" class="flex flex-col items-center py-1 px-3 text-emerald-600 transition-all">
@@ -178,6 +198,7 @@
             </button>
         </nav>
     </div>
+
     <!-- App JavaScript Logic -->
     <script>
         let html5QrCode = null;
@@ -190,6 +211,7 @@
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
+
         const i18n = {
             en: {
                 logout: "🚪",
@@ -198,7 +220,10 @@
                 menuTitle: "More Menu Choices",
                 menu: {
                     programs: "Partner Programs & Activities",
+                    children: "Children Profile & Passport",
                     lapaq: "LaPaQ RNI Intelligence",
+                    sdg: "SDG Impact Passport",
+                    partner: "Partner Organization Dashboard",
                     scanner: "QR Code Scanner",
                     tokens: "Impact Tokens Wallet"
                 },
@@ -208,6 +233,7 @@
                     programs: "Partner Programs & Activities",
                     layer3: "Children Profile",
                     lapaq: "LaPaQ RNI Analytics",
+                    sdg: "SDG Impact Passport",
                     school: "Partner Dashboard",
                     scanner: "QR Code Scanner",
                     tokens: "Impact Tokens Wallet"
@@ -220,7 +246,10 @@
                 menuTitle: "Pilihan Menu Lanjutan",
                 menu: {
                     programs: "Program & Aktiviti Rakan Kongsi",
+                    children: "Profil Kanak-kanak & Pasport",
                     lapaq: "Analisis RNI LaPaQ",
+                    sdg: "Pasport Impak SDG",
+                    partner: "Pemuka Organisasi Rakan Kongsi",
                     scanner: "Pengimbas Kod QR",
                     tokens: "Dompet Token Impak"
                 },
@@ -230,12 +259,14 @@
                     programs: "Program & Aktiviti Rakan Kongsi",
                     layer3: "Profil Kanak-kanak",
                     lapaq: "Analisis RNI LaPaQ",
+                    sdg: "Pasport Impak SDG",
                     school: "Pemuka Rakan Kongsi",
                     scanner: "Pengimbas Kod QR",
                     tokens: "Dompet Token Impak"
                 }
             }
         };
+
         function setLanguage(lang) {
             currentLang = lang;
             const btnEn = document.getElementById('lang-btn-en');
@@ -249,16 +280,22 @@
                     btnEn.className = "px-2 py-1 text-[10px] font-bold rounded-md transition text-slate-600 hover:text-slate-900 flex items-center space-x-1";
                 }
             }
+
             document.getElementById('nav-logout-btn').innerText = i18n[currentLang].logout;
             document.getElementById('nav-label-register').innerText = i18n[currentLang].register;
             document.getElementById('nav-label-home').innerText = i18n[currentLang].home;
             document.getElementById('drawer-menu-title').innerText = i18n[currentLang].menuTitle;
             document.getElementById('menu-item-programs').innerText = i18n[currentLang].menu.programs;
+            document.getElementById('menu-item-children').innerText = i18n[currentLang].menu.children;
             document.getElementById('menu-item-lapaq').innerText = i18n[currentLang].menu.lapaq;
+            document.getElementById('menu-item-sdg').innerText = i18n[currentLang].menu.sdg;
+            document.getElementById('menu-item-partner').innerText = i18n[currentLang].menu.partner;
             document.getElementById('menu-item-scanner').innerText = i18n[currentLang].menu.scanner;
             document.getElementById('menu-item-tokens').innerText = i18n[currentLang].menu.tokens;
+
             switchTab(activeTabKey);
         }
+
         function toggleMenuDrawer() {
             const overlay = document.getElementById('nav-drawer-overlay');
             const content = document.getElementById('nav-drawer-content');
@@ -283,6 +320,7 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
+
         function getMaxCalendarDateString() {
             const d = new Date();
             d.setFullYear(d.getFullYear() + 1);
@@ -291,8 +329,10 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
+
         const todayDateStr = getTodayDateString();
         const maxDateStr = getMaxCalendarDateString();
+
         function updateStatusBarTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -346,10 +386,10 @@
                 "Junior Cycling Safety & Balance Clinic"
             ]
         };
+
         const featuredProgramsList = [
             {
                 org: "Kemaih Sdn Bhd",
-                rating: 5,
                 title: "AI Nutrition & Health Junior Bootcamp",
                 category: "Nutrition and Health",
                 desc: "An immersive program teaching children and teens the fundamentals of balanced nutrition, caloric tracking, and artificial intelligence in food science.",
@@ -361,7 +401,6 @@
             },
             {
                 org: "KEMAS (Jabatan Kemajuan Masyarakat)",
-                rating: 5,
                 title: "Taska Permata Early Literacy Program",
                 category: "Community & Leadership",
                 desc: "Interactive reading, phonics, and cognitive development sessions tailored for early childhood growth across community centers.",
@@ -373,7 +412,6 @@
             },
             {
                 org: "Universiti Kebangsaan Malaysia (UKM)",
-                rating: 5,
                 title: "Young Nutritionist Discovery Workshop",
                 category: "Nutrition and Health",
                 desc: "Led by expert nutritionists, kids learn food grouping, RNI metrics, and healthy cooking habits through hands-on experiments.",
@@ -385,7 +423,6 @@
             },
             {
                 org: "Malaysian Nature Society (MNS)",
-                rating: 5,
                 title: "Junior Eco-Warrior Forest Walk",
                 category: "Environment",
                 desc: "Outdoor guided exploration focusing on local flora and fauna biodiversity conservation and tree planting.",
@@ -397,7 +434,6 @@
             },
             {
                 org: "Kuala Lumpur Junior Rugby Club",
-                rating: 4,
                 title: "Basic Rugby Skills & Teamwork Clinic",
                 category: "Physical & Sports",
                 desc: "Non-contact touch rugby drills designed to foster teamwork, agility, stamina, and cardiovascular health.",
@@ -409,7 +445,6 @@
             },
             {
                 org: "Jaya Grocer Community Kitchen",
-                rating: 5,
                 title: "Junior Healthy Cooking & Baking Masterclass",
                 category: "Nutrition and Health",
                 desc: "Hands-on culinary class teaching children how to prepare wholesome meals with zero food waste ingredients.",
@@ -420,6 +455,7 @@
                 endDate: "2026-11-16"
             }
         ];
+
         const userProfiles = {
             parent: {
                 name: "Ainol Razman Ghazali",
@@ -440,6 +476,7 @@
                 personPhone: "+6012-3456789"
             }
         };
+
         let pendingApplications = [
             {
                 childKey: "adam",
@@ -458,6 +495,7 @@
                 parentEmail: "ainol.razman@example.com"
             }
         ];
+
         const malaysiaStatesOptions = `
             <option>W.P. Kuala Lumpur / Selangor</option>
             <option>Johor</option>
@@ -475,6 +513,7 @@
             <option>W.P. Labuan</option>
             <option>W.P. Putrajaya</option>
         `;
+
         const childrenData = {
             adam: {
                 name: "Adam",
@@ -496,7 +535,6 @@
                 activeHours: 12.5,
                 ecoTokens: 300,
                 foodWasteKg: 4.2,
-                recycledKg: 12.5,
                 nutritionTokens: 250,
                 activityTokens: 150,
                 activityHours: 28.0,
@@ -532,7 +570,6 @@
                 activeHours: 9.0,
                 ecoTokens: 200,
                 foodWasteKg: 2.8,
-                recycledKg: 8.0,
                 nutritionTokens: 180,
                 activityTokens: 80,
                 activityHours: 18.5,
@@ -548,6 +585,7 @@
                 ]
             }
         };
+
         const participantGroups = {
             "Vegan Cooking Class Cohort 3/2026": [
                 { name: "Adam bin Ainol", token: "#AB-34X-KEMAIH", attendanceRate: "100%", stars: 5, status: "Normal" },
@@ -560,20 +598,6 @@
                 { name: "Aishah Binti Omar", token: "#AO-33Z-KL03", attendanceRate: "92%", stars: 5, status: "Normal" }
             ]
         };
-        
-        // Helper function to render crisp solid SVG stars
-        function renderSolidStars(rating = 5) {
-            let svgHtml = '<span class="inline-flex items-center space-x-0.5 text-amber-500 ml-1.5" title="' + rating + ' Star Rating">';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= rating) {
-                    svgHtml += `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
-                } else {
-                    svgHtml += `<svg class="w-3.5 h-3.5 fill-slate-300" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
-                }
-            }
-            svgHtml += '</span>';
-            return svgHtml;
-        }
 
         function renderRegistrationPage() {
             const isBm = currentLang === 'bm';
@@ -593,6 +617,7 @@
                             <option value="partner" ${currentUserRole === 'partner' ? 'selected' : ''}>${isBm ? '🏢 Akaun Organisasi Rakan Kongsi' : '🏢 Organization Partner Account'}</option>
                         </select>
                     </div>
+
                     <!-- 2. Register / Login Action Tabs & Form -->
                     <div class="flex bg-slate-100 p-1 rounded-xl">
                         <button onclick="setAuthMode('register')" id="auth-tab-register" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition ${currentAuthTab === 'register' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}">${isBm ? '📝 Daftar' : '📝 Register'}</button>
@@ -607,6 +632,7 @@
                         <div id="register-fields-container" class="space-y-2.5 pt-1"></div>
                         <button onclick="handleRegisterSubmit()" class="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-blue-700 transition mt-1">${isBm ? '✓ Daftar & Pergi ke Profil Utama' : '✓ Register & Go to Home Profile'}</button>
                     </div>
+
                     <div id="auth-form-login" class="${currentAuthTab === 'login' ? 'block' : 'hidden'} space-y-2.5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Pengguna / E-mel' : 'Username / Email'}</label>
@@ -618,6 +644,7 @@
                         </div>
                         <button onclick="handleLoginSubmit()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition mt-1">${isBm ? 'Log Masuk → Pergi ke Profil' : 'Sign In → Go to Home Profile'}</button>
                     </div>
+
                     <!-- 3. Or Continue with Google / Facebook -->
                     <div class="space-y-2 pt-2 border-t border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase block text-center">${isBm ? 'Atau teruskan dengan' : 'Or continue with'}</span>
@@ -635,16 +662,19 @@
                 </div>
             `;
         }
+
         function onGatewayRoleChange(role) {
             currentUserRole = role;
             if (currentAuthTab === 'register') {
                 toggleRegisterFields(role);
             }
         }
+
         function handleSocialAuth(provider) {
             alert(currentLang === 'bm' ? `Berjaya log masuk menggunakan ${provider} (${currentUserRole === 'partner' ? 'Akaun Organisasi' : 'Akaun Ibu Bapa'})! Memuatkan Profil Utama...` : `Successfully authenticated with ${provider} (${currentUserRole === 'partner' ? 'Organization Account' : 'Parent Account'})! Loading Home Profile...`);
             switchTab('home');
         }
+
         function toggleRegisterFields(role) {
             const container = document.getElementById('register-fields-container');
             const isBm = currentLang === 'bm';
@@ -715,6 +745,7 @@
                 `;
             }
         }
+
         function setAuthMode(mode) { 
             currentAuthTab = mode; 
             switchTab('layer1'); 
@@ -726,12 +757,14 @@
                 }, 50);
             }
         }
+
         function handleLoginSubmit() {
             const roleSelect = document.getElementById('gateway-role-select');
             if (roleSelect) currentUserRole = roleSelect.value;
             alert(currentLang === 'bm' ? "Log masuk berjaya! Memuatkan Profil Utama..." : "Authenticated successfully! Loading Home Profile...");
             switchTab('home');
         }
+
         function handleRegisterSubmit() {
             const roleSelect = document.getElementById('gateway-role-select');
             const roleSel = roleSelect ? roleSelect.value : currentUserRole;
@@ -756,6 +789,7 @@
             alert(currentLang === 'bm' ? "Akaun berjaya didaftarkan! Memuatkan Profil Utama..." : "Account registered & details saved! Loading Home Profile...");
             switchTab('home');
         }
+
         function renderRegisteredChildrenList() {
             const isBm = currentLang === 'bm';
             return `
@@ -780,6 +814,7 @@
                 </div>
             `;
         }
+
         function renderAddChildSection() {
             const isBm = currentLang === 'bm';
             return `
@@ -812,6 +847,7 @@
                 </div>
             `;
         }
+
         function renderProgramsPage() {
             const isBm = currentLang === 'bm';
             
@@ -869,16 +905,14 @@
                     </div>
                 `;
             }
+
             const programCards = featuredProgramsList.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
                         <div>
                             <span class="text-[9px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full uppercase">${prog.category}</span>
                             <h3 class="text-xs font-bold text-slate-900 mt-1">${prog.title}</h3>
-                            <p class="text-[10px] text-indigo-600 font-semibold flex items-center flex-wrap gap-1 mt-0.5">
-                                <span>🏢 ${prog.org}</span>
-                                ${renderSolidStars(prog.rating || 5)}
-                            </p>
+                            <p class="text-[10px] text-indigo-600 font-semibold">🏢 ${prog.org}</p>
                         </div>
                         <span class="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full shrink-0">${prog.badge}</span>
                     </div>
@@ -894,6 +928,7 @@
                     </div>
                 </div>
             `).join('');
+
             return `
                 <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Marketplace</span>
@@ -906,6 +941,7 @@
                 </div>
             `;
         }
+
         function toggleMarketCustomCategoryInput(val) {
             const wrapper = document.getElementById('market-custom-category-wrapper');
             if (!wrapper) return;
@@ -915,6 +951,7 @@
                 wrapper.classList.add('hidden');
             }
         }
+
         function checkProgramDescriptionWordCount() {
             const descInput = document.getElementById('market-prog-desc');
             const indicator = document.getElementById('word-count-indicator');
@@ -931,6 +968,7 @@
                 indicator.className = "text-[9px] font-bold text-slate-400";
             }
         }
+
         function handleMarketplaceAddProgram() {
             const isBm = currentLang === 'bm';
             const catSelect = document.getElementById('market-prog-category').value;
@@ -943,30 +981,35 @@
                 }
                 finalCategory = customInput;
             }
+
             const progName = document.getElementById('market-prog-name').value.trim();
             const progDesc = document.getElementById('market-prog-desc').value.trim();
             const startDate = document.getElementById('market-prog-start').value;
             const endDate = document.getElementById('market-prog-end').value;
+
             if (!progName) {
                 alert(isBm ? "Sila masukkan nama program atau aktiviti." : "Please enter the name of the program or activity.");
                 return;
             }
+
             if (!progDesc) {
                 alert(isBm ? "Sila masukkan ringkasan dan penerangan program." : "Please enter the program summary and description.");
                 return;
             }
+
             const wordCount = progDesc.split(/\s+/).length;
             if (wordCount > 150) {
                 alert(isBm ? `Penerangan program melebihi had 150 kata (Kini: ${wordCount} kata). Sila pendekkan.` : `Program description exceeds the 150-word limit (Current: ${wordCount} words). Please shorten it.`);
                 return;
             }
+
             if (endDate < startDate) {
                 alert(isBm ? "Tarikh tamat tidak boleh sebelum tarikh mula." : "End date cannot be earlier than start date.");
                 return;
             }
+
             featuredProgramsList.unshift({
                 org: userProfiles.partner.orgName,
-                rating: 5,
                 title: progName,
                 category: finalCategory,
                 desc: progDesc,
@@ -976,13 +1019,16 @@
                 startDate: startDate,
                 endDate: endDate
             });
+
             if (!organizationCoursesMap[userProfiles.partner.orgName]) {
                 organizationCoursesMap[userProfiles.partner.orgName] = [];
             }
             organizationCoursesMap[userProfiles.partner.orgName].push(progName);
+
             alert(isBm ? `✅ Berjaya Diterbitkan!\nProgram "${progName}" telah ditambah ke pasaran program rakan kongsi.` : `✅ Published Successfully!\nProgram "${progName}" has been successfully added to the partner programs marketplace.`);
             switchTab('programs');
         }
+
         function openProgramChildSelector(courseName, orgName) {
             pendingMarketplaceProgram = { courseName, orgName };
             const isBm = currentLang === 'bm';
@@ -990,22 +1036,27 @@
             document.getElementById('prog-modal-subtitle').innerText = `"${courseName}" (${orgName})`;
             document.getElementById('program-child-modal').classList.remove('hidden');
         }
+
         function closeProgramChildModal() {
             document.getElementById('program-child-modal').classList.add('hidden');
             pendingMarketplaceProgram = null;
         }
+
         function confirmProgramApplication() {
             if (!pendingMarketplaceProgram) return;
             const chosenChildKey = document.getElementById('modal-child-select').value;
             const { courseName, orgName } = pendingMarketplaceProgram;
             closeProgramChildModal();
+
             const isBm = currentLang === 'bm';
             const child = childrenData[chosenChildKey];
             if (!child.appliedCourses) child.appliedCourses = [];
+
             if (child.appliedCourses.some(ac => ac.name === courseName)) {
                 showModalOverlay(isBm ? "Notis" : "Notice", `${child.name} ${isBm ? 'telah pun memohon untuk' : 'has already applied for'} "${courseName}".`);
                 return;
             }
+
             child.appliedCourses.push({
                 name: courseName,
                 org: orgName,
@@ -1020,11 +1071,13 @@
                 contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
+
             showModalOverlay(
                 isBm ? "Permohonan Diterima" : "Application Received", 
                 isBm ? `Terima kasih kerana memohon "${courseName}" untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for "${courseName}" on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
+
         function renderParentProfilePage() {
             const p = userProfiles.parent;
             const isBm = currentLang === 'bm';
@@ -1087,21 +1140,10 @@
                         ${isBm ? 'Kemaskini' : 'Update'}
                     </button>
                 </div>
-                ${renderRegisteredChildrenList()}
-                ${renderAddChildSection()}
-                <!-- Children Profile & Passport section at bottom of Parents Guardian Home Profile -->
-                <div class="bg-gradient-to-br from-indigo-900 to-blue-900 rounded-xl p-4 text-white shadow-sm border border-indigo-200 space-y-3">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                        <h3 class="text-xs font-bold uppercase tracking-wider flex items-center">👶 ${isBm ? 'Profil Kanak-kanak & Pasport' : 'Children Profile & Passport'}</h3>
-                        <span class="text-[9px] bg-indigo-500/40 text-indigo-200 font-bold px-2 py-0.5 rounded-full">Hub</span>
-                    </div>
-                    <p class="text-[11px] text-indigo-100">${isBm ? 'Akses pantas ke pasport digital, metrik pertumbuhan dan lencana impak anak anda.' : 'Quick access to your children digital passport, growth metrics, and impact badges.'}</p>
-                    <button onclick="switchTab('layer3')" class="w-full bg-white hover:bg-slate-100 text-indigo-900 font-bold py-2.5 rounded-xl text-xs transition shadow">
-                        ${isBm ? 'Buka Profil Kanak-kanak →' : 'Open Children Profile →'}
-                    </button>
-                </div>
+                ${renderRegisteredChildrenList()}${renderAddChildSection()}
             `;
         }
+
         function updateParentProfile() {
             userProfiles.parent.name = document.getElementById('hp-name').value;
             userProfiles.parent.email = document.getElementById('hp-email').value;
@@ -1112,6 +1154,7 @@
             userProfiles.parent.occupation = document.getElementById('hp-occ').value;
             alert(currentLang === 'bm' ? "Profil Penjaga berjaya dikemaskini!" : "Parents Guardian Profile updated successfully!");
         }
+
         function renderPartnerProfilePage() {
             const o = userProfiles.partner;
             const isBm = currentLang === 'bm';
@@ -1183,19 +1226,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- Partner Organization Dashboard section at bottom of Partner Organization Home Profile -->
-                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-xl p-4 text-white shadow-sm border border-indigo-300 space-y-3">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-2">
-                        <h3 class="text-xs font-bold uppercase tracking-wider flex items-center">🏢 ${isBm ? 'Pemuka Organisasi Rakan Kongsi' : 'Partner Organization Dashboard'}</h3>
-                        <span class="text-[9px] bg-indigo-500/40 text-indigo-200 font-bold px-2 py-0.5 rounded-full">Management</span>
-                    </div>
-                    <p class="text-[11px] text-slate-300">${isBm ? 'Akses penuh ke kad skor ESG, pematuhan pensijilan, dan pengurusan roster peserta.' : 'Full access to ESG scorecard, certification tiers compliance, and participant roster management.'}</p>
-                    <button onclick="switchTab('school')" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
-                        ${isBm ? 'Buka Pemuka Rakan Kongsi →' : 'Open Partner Dashboard →'}
-                    </button>
-                </div>
             `;
         }
+
         function updatePartnerProfile() {
             userProfiles.partner.orgName = document.getElementById('ho-name').value;
             userProfiles.partner.regNumber = document.getElementById('ho-regno').value;
@@ -1206,10 +1239,12 @@
             userProfiles.partner.personPhone = document.getElementById('ho-pphone').value;
             alert(currentLang === 'bm' ? "Profil Rakan Kongsi berjaya dikemaskini!" : "Partner Organization Profile updated successfully!");
         }
+
         function switchPartnerDashboardLayer(layer) {
             partnerDashboardLayer = layer;
             switchTab('school');
         }
+
         function renderPartnerDashboard() {
             if (currentPartnerView === 'group_detail') return renderParticipantGroupDetails(activeParticipantGroup);
             const isBm = currentLang === 'bm';
@@ -1227,40 +1262,37 @@
                     </button>
                 </div>
             `;
+
             let layerContentHtml = '';
+
             if (partnerDashboardLayer === 'esg') {
                 layerContentHtml = `
-                    <!-- Partner Overall Score & Star Rating Box (High-Contrast Dark Theme) -->
-                    <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 border border-slate-700 rounded-2xl p-4 text-white shadow-xl space-y-3 relative overflow-hidden">
-                        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500/10 rounded-full blur-xl pointer-events-none"></div>
-                        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                            <span class="text-[10px] uppercase font-bold tracking-wider bg-slate-800 text-amber-400 border border-slate-700 px-2 py-0.5 rounded-full">🏆 Partner Overall Score</span>
-                            <span class="text-xs font-bold bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full">5-Star Tier</span>
+                    <!-- Partner Overall Score & Star Rating Box -->
+                    <div class="bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-4 text-white shadow-lg space-y-3 relative overflow-hidden">
+                        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+                        <div class="flex justify-between items-center border-b border-white/20 pb-2">
+                            <span class="text-[10px] uppercase font-bold tracking-wider bg-white/20 px-2 py-0.5 rounded-full">🏆 Partner Overall Score</span>
+                            <span class="text-xs font-bold bg-emerald-500 text-white px-2 py-0.5 rounded-full">5-Star Tier</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <div>
                                 <span class="text-4xl font-black tracking-tight text-white drop-shadow-sm">82%</span>
-                                <p class="text-[11px] text-slate-300 font-semibold mt-0.5">Silver Verified Institution</p>
+                                <p class="text-[11px] text-amber-100 font-semibold mt-0.5">Silver Verified Institution</p>
                             </div>
                             <div class="text-right">
-                                <div class="inline-flex items-center space-x-0.5 text-amber-400 drop-shadow">
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                                </div>
-                                <span class="text-[9px] text-slate-400 font-bold uppercase block mt-0.5">80 - 100 Score Rating</span>
+                                <div class="text-xl tracking-tight text-yellow-200 drop-shadow">⭐⭐⭐⭐⭐</div>
+                                <span class="text-[9px] text-amber-100 font-bold uppercase">80 - 100 Score Rating</span>
                             </div>
                         </div>
-                        <div class="pt-2 border-t border-slate-700 grid grid-cols-5 gap-1 text-center text-[9px] font-semibold text-slate-300">
-                            <div class="bg-slate-800/80 border border-slate-700 rounded p-1">1⭐<br>0-40%</div>
-                            <div class="bg-slate-800/80 border border-slate-700 rounded p-1">2⭐<br>41-50%</div>
-                            <div class="bg-slate-800/80 border border-slate-700 rounded p-1">3⭐<br>51-60%</div>
-                            <div class="bg-slate-800/80 border border-slate-700 rounded p-1">4⭐<br>61-79%</div>
-                            <div class="bg-blue-600 text-white font-bold rounded p-1 shadow-xs border border-blue-500">5⭐<br>80-100%</div>
+                        <div class="pt-2 border-t border-white/20 grid grid-cols-5 gap-1 text-center text-[9px] font-semibold text-amber-100">
+                            <div class="bg-black/10 rounded p-1">1⭐<br>0-40%</div>
+                            <div class="bg-black/10 rounded p-1">2⭐<br>41-50%</div>
+                            <div class="bg-black/10 rounded p-1">3⭐<br>51-60%</div>
+                            <div class="bg-black/10 rounded p-1">4⭐<br>61-79%</div>
+                            <div class="bg-white/30 text-white font-bold rounded p-1 shadow-xs">5⭐<br>80-100%</div>
                         </div>
                     </div>
+
                     <!-- 1. ESG Maturity & Certification Status Card (Dashboard Overview) -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-indigo-200 space-y-3">
                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -1286,6 +1318,7 @@
                                 </div>
                                 <button onclick="openPaymentGateway('Level 1: Baseline Assessment', 'RM699.00')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition shadow-xs">Pay Now →</button>
                             </div>
+
                             <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center text-xs">
                                 <div>
                                     <p class="font-bold text-slate-800">Level 2: Executive Report</p>
@@ -1293,6 +1326,7 @@
                                 </div>
                                 <button onclick="openPaymentGateway('Level 2: Executive Assessment Report', 'RM2,699.00')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition shadow-xs">Pay Now →</button>
                             </div>
+
                             <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 flex justify-between items-center text-xs">
                                 <div>
                                     <p class="font-bold text-slate-800">Level 3: Comprehensive Cert.</p>
@@ -1302,6 +1336,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- 2. The 3 Pillars of ESG Scorecard (40+ Indicators Breakdown) -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">📊 ${isBm ? 'Kad Skor 3 Pilar ESG (40+ Indikator)' : 'The 3 Pillars of ESG Scorecard (40+ Indicators)'}</h3>
@@ -1329,6 +1364,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- 3. Risk Heat Map & Gap Analysis Matrix -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">⚠️ ${isBm ? 'Peta Haba Risiko & Analisis Jurang' : 'Risk Heat Map & Gap Analysis Matrix'}</h3>
@@ -1352,6 +1388,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- 4. Actionable Improvement Roadmap & Evidence Point Upload -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b border-slate-100 pb-2">🗺️ ${isBm ? 'Pelan Hala Tuju Penambahbaikan & Muat Naik Bukti' : 'Actionable Improvement Roadmap & Evidence Upload'}</h3>
@@ -1373,6 +1410,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- 5. Strategic Report Export & Use-Cases Hub -->
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📥 ${isBm ? 'Hab Eksport Laporan Strategik' : 'Strategic Report Export & Use-Cases Hub'}</h3>
@@ -1417,6 +1455,7 @@
                 } else {
                     pendingHtml = `<p class="text-xs text-slate-400 italic text-center py-2">${isBm ? 'Tiada permohonan kursus buat masa ini.' : 'No pending course applications at this time.'}</p>`;
                 }
+
                 layerContentHtml = `
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-amber-700 uppercase tracking-wider border-b border-slate-100 pb-2 flex items-center justify-between">
@@ -1427,6 +1466,7 @@
                             ${pendingHtml}
                         </div>
                     </div>
+
                     <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                         <h3 class="text-xs font-bold text-indigo-700 uppercase tracking-wider border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Program Dianjurkan & Peserta' : 'List of Programs Organized & Participants'}</h3>
                         <div onclick="openParticipantGroup('Vegan Cooking Class Cohort 3/2026')" class="p-3 bg-slate-50 hover:bg-indigo-50 rounded-lg flex justify-between items-center border border-slate-100 cursor-pointer">
@@ -1440,6 +1480,7 @@
                     </div>
                 `;
             }
+
             return `
                 <div class="bg-gradient-to-br from-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-indigo-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Portal Rakan Kongsi' : 'Partner Portal'}</span>
@@ -1450,6 +1491,7 @@
                 ${layerContentHtml}
             `;
         }
+
         function openPaymentGateway(tierTitle, amountDue) {
             document.getElementById('pay-modal-title').innerText = "Secure Payment Gateway";
             document.getElementById('pay-modal-subtitle').innerText = tierTitle;
@@ -1457,13 +1499,16 @@
             document.getElementById('pay-amount-due').innerText = amountDue;
             document.getElementById('payment-gateway-modal').classList.remove('hidden');
         }
+
         function closePaymentModal() {
             document.getElementById('payment-gateway-modal').classList.add('hidden');
         }
+
         function confirmPaymentSuccess() {
             closePaymentModal();
             alert("✅ Payment Successful via FPX Online Banking!\nYour certification tier has been successfully updated and your audit trail has been submitted for review.");
         }
+
         function approveApplication(index) {
             const app = pendingApplications[index];
             if (!app) return;
@@ -1475,10 +1520,12 @@
                     targetApp.status = "Approved";
                 }
             }
+
             alert(currentLang === 'bm' ? `✅ Permohonan Diluluskan!\n${app.childName} telah diluluskan untuk "${app.courseName}".` : `✅ Application Approved!\n${app.childName} has been successfully approved for "${app.courseName}".`);
             pendingApplications.splice(index, 1);
             switchTab('school');
         }
+
         function sendFormToRecipient(index) {
             const app = pendingApplications[index];
             if (!app) return;
@@ -1486,11 +1533,13 @@
             
             currentUserRole = 'parent';
             switchTab('home');
+
             showModalOverlay(
                 currentLang === 'bm' ? "Permohonan Diterima" : "Application Received", 
                 currentLang === 'bm' ? `Terima kasih kerana memohon kursus / aktiviti.\n\nBorang pendaftaran akan dihantar ke E-mel (${emailAddr}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity.\n\nA registration form will be sent to your Email (${emailAddr}), please fill in the form and email back to us.`
             );
         }
+
         function openParticipantGroup(groupName) { currentPartnerView = 'group_detail'; activeParticipantGroup = groupName; switchTab('school'); }
         function closeParticipantGroup() { currentPartnerView = 'dashboard'; activeParticipantGroup = ''; switchTab('school'); }
         
@@ -1527,6 +1576,7 @@
             `;
             return html;
         }
+
         function rateCommunityToken(studentName) {
             const isBm = currentLang === 'bm';
             const rating = prompt(isBm ? `Penilaian Penganjur untuk ${studentName} (1 hingga 5 Bintang):` : `Organizer / Peer Rating for ${studentName} (1 to 5 Stars):`, "5");
@@ -1552,11 +1602,13 @@
                 }
             }
         }
+
         function renderChildProfile(childKey) {
             const child = childrenData[childKey];
             const isBm = currentLang === 'bm';
             
             const orgOptions = Object.keys(organizationCoursesMap).map(org => `<option value="${org}">${org}</option>`).join('');
+
             return `
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-indigo-400/30 pb-2.5">
@@ -1571,6 +1623,7 @@
                         <p class="text-xs text-indigo-100">${child.age} • ${child.school} • Token: <span class="font-mono bg-indigo-800 px-1.5 py-0.5 rounded text-indigo-200">${child.token}</span></p>
                     </div>
                 </div>
+
                 <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-4 text-white shadow-xl border border-indigo-500/30 space-y-3 relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl pointer-events-none"></div>
                     <div class="flex justify-between items-center border-b border-indigo-500/30 pb-2.5">
@@ -1605,6 +1658,7 @@
                         <span class="text-[9px] text-indigo-300 font-mono">🔒 ${isBm ? 'Disahkan pada Hash Lejar: 0x89F...34A2' : 'Verified on Immutable Ledger Hash: 0x89F...34A2'}</span>
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📝 ${isBm ? 'Mohon Kursus / Aktiviti Baru' : 'Apply for New Course / Activities'}</h3>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Anda juga boleh meneroka senarai lengkap program di menu "Program Rakan Kongsi" (ikon ☰ atas).' : 'You can also browse the full advertised catalog in the menu (top-left ☰ icon).'}</p>
@@ -1622,6 +1676,7 @@
                         + ${isBm ? 'Mohon & Daftar Kursus' : 'Apply & Register Course'}
                     </button>
                 </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📋 ${isBm ? 'Senarai Kursus / Aktiviti Dipohon' : 'List course/Activity Applied'}</h3>
                     <div class="space-y-2">
@@ -1641,6 +1696,7 @@
                         }).join('') : `<p class="text-xs text-slate-400 italic">${isBm ? 'Tiada permohonan kursus dihantar lagi.' : 'No course or activity applications submitted yet.'}</p>`}
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center border-b border-slate-100 pb-2">📚 ${isBm ? 'Senarai Kursus Dihadiri' : 'List of Courses Attended'}</h3>
                     <div class="space-y-2">
@@ -1662,16 +1718,16 @@
                         }).join('') : `<p class="text-xs text-slate-400 italic">${isBm ? 'Tiada kursus dihadiri lagi.' : 'No courses attended yet.'}</p>`}
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Aktiviti Fizikal' : 'Physical Activities'}</span><span class="text-xs font-extrabold text-amber-600">${child.impactTokens} Tokens</span></div>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Impak (Permainan Fizikal)' : 'Impact (Physical Play)'}</span><span class="text-xs font-extrabold text-amber-600">${child.impactTokens} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Jam Aktif:' : 'Active Hours:'} <strong class="text-slate-800">${child.activeHours} hrs</strong></p>
-                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Fizikal)' : 'Scan Partner QR for Physical Activities'}</button>
+                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Fizikal)' : 'Scan Partner QR for Physical Play'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko' : 'Eco Habits'}</span><span class="text-xs font-extrabold text-teal-600">${child.ecoTokens} Tokens</span></div>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko (Sifar Sisa)' : 'Eco-Habits (Zero Waste)'}</span><span class="text-xs font-extrabold text-teal-600">${child.ecoTokens} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Sisa Makanan Dialih Keluar:' : 'Food Waste Diverted:'} <strong class="text-emerald-600">${child.foodWasteKg} kg</strong></p>
-                    <p class="text-[10px] text-slate-500">${isBm ? 'Bahan Kitar Semula Diselamatkan:' : 'Recycled Material Savaged:'} <strong class="text-teal-600">${child.recycledKg} kg</strong></p>
-                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Tabiat Eko)' : 'Scan Partner QR for Eco Habits'}</button>
+                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Sifar Sisa)' : 'Scan Partner QR for Zero Waste'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 ${isBm ? 'Token Pemakanan' : 'Nutrition Tokens'}</span><span class="text-xs font-extrabold text-emerald-600">${child.nutritionTokens} Tokens</span></div>
@@ -1688,12 +1744,14 @@
                 </div>
             `;
         }
+
         function updateCourseDropdown(selectedOrg) {
             const courseSelect = document.getElementById('apply-course-select');
             if (!courseSelect) return;
             const courses = organizationCoursesMap[selectedOrg] || [];
             courseSelect.innerHTML = courses.map(c => `<option value="${c}">${c}</option>`).join('');
         }
+
         function submitNewCourseApplication() {
             const orgSelect = document.getElementById('apply-org-select');
             const courseSelect = document.getElementById('apply-course-select');
@@ -1709,6 +1767,7 @@
                 showModalOverlay(isBm ? "Notis" : "Notice", `${child.name} ${isBm ? 'telah pun memohon untuk' : 'has already applied for'} "${courseName}".`);
                 return;
             }
+
             child.appliedCourses.push({
                 name: courseName,
                 org: org,
@@ -1720,7 +1779,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
@@ -1729,6 +1788,7 @@
                 isBm ? `Terima kasih kerana memohon kursus / aktiviti untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
+
         function showModalOverlay(title, message) {
             const titleEl = document.getElementById('modal-title');
             const msgEl = document.getElementById('modal-message');
@@ -1739,6 +1799,7 @@
                 overlay.classList.remove('hidden');
             }
         }
+
         function closeModalOverlay() {
             const overlay = document.getElementById('custom-modal-overlay');
             if (overlay) {
@@ -1754,6 +1815,7 @@
                 document.getElementById('scan-result').innerText = `Camera active. Scanning for [${category}] QR Code...`;
             }, 300);
         }
+
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -1769,6 +1831,7 @@
                 { name: isBm ? "Vitamin A" : "Vitamin A", current: 480, target: 500, unit: "µg RE", color: "bg-orange-500" },
                 { name: isBm ? "Vitamin C" : "Vitamin C", current: 38, target: 40, unit: "mg", color: "bg-rose-500" }
             ];
+
             let growthSvgContent = '';
             if (selectedChild === 'adam') {
                 growthSvgContent = `
@@ -1796,6 +1859,7 @@
                     </svg>
                 `;
             }
+
             return `
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
@@ -1820,6 +1884,7 @@
                         }
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 ${isBm ? 'Pemeriksaan Kesihatan & Pertumbuhan Tahunan' : 'Annual Health & Growth Check'}</h3>
@@ -1847,6 +1912,7 @@
                             ${isBm ? 'Adam mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.' : 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.'}
                         </p>
                     </div>
+
                     <div class="grid grid-cols-2 gap-2 pt-1">
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tinggi (cm)' : 'Height (cm)'}</label><input type="number" id="input-height" value="${child.height}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Berat (kg)' : 'Weight (kg)'}</label><input type="number" id="input-weight" value="${child.weight}" oninput="recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
@@ -1857,6 +1923,7 @@
                         <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
@@ -1881,6 +1948,7 @@
                 </div>
             `;
         }
+
         function recalculateGrowthMetrics() {
             const h = parseFloat(document.getElementById('input-height').value) || 100;
             const w = parseFloat(document.getElementById('input-weight').value) || 15;
@@ -1890,6 +1958,7 @@
             childrenData[selectedChild].weight = w;
             childrenData[selectedChild].bmi = `${bmiValue} kg/m²`;
         }
+
         function claimRNIToken() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -1899,6 +1968,7 @@
             alert(isBm ? `🎉 Sasaran Diet RNI Harian Tercapai! 10 Token Pemakanan dicetak ke dompet ${child.name}.` : `🎉 Daily RNI Balanced Diet Target Met! 10 Nutrition Tokens minted to ${child.name}'s wallet.`);
             switchTab('lapaq');
         }
+
         function renderTokensPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -1944,6 +2014,7 @@
                 </div>
             `;
         }
+
         function redeemReward(rewardName, tokenCost) {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
@@ -1955,11 +2026,118 @@
                 alert(isBm ? `❌ Token Tidak Mencukupi!\n${child.name} mempunyai ${child.totalTokens} token, tetapi memerlukan${tokenCost} token.` : `❌ Insufficient Tokens!\n${child.name} has ${child.totalTokens} tokens, but requires${tokenCost} tokens for this reward.`);
             }
         }
+
         function changeLaPaQChild(childKey) { selectedChild = childKey; switchTab('lapaq'); }
         function changeTokenChild(childKey) { selectedChild = childKey; switchTab('tokens'); }
         function switchChildView(childKey) { selectedChild = childKey; switchTab('layer3'); }
+
+        // ------------------------------------------------------------------
+        // SDG IMPACT PASSPORT MODULE (prototype / demo data only)
+        // For production, persist these records through an authenticated API.
+        // A QR scan or attendance alone is not independent proof of an outcome.
+        // ------------------------------------------------------------------
+        const sdgCatalog = [
+            { id: 2, icon: '🥗', name: 'Zero Hunger', bm: 'Sifar Kelaparan', color: 'amber', desc: 'Nutrition education, food access and healthier meals.' },
+            { id: 3, icon: '💚', name: 'Good Health & Well-being', bm: 'Kesihatan Baik dan Kesejahteraan', color: 'emerald', desc: 'Healthy habits, physical activity and well-being.' },
+            { id: 4, icon: '📚', name: 'Quality Education', bm: 'Pendidikan Berkualiti', color: 'red', desc: 'Learning, skills, participation and lifelong learning.' },
+            { id: 12, icon: '♻️', name: 'Responsible Consumption', bm: 'Penggunaan Bertanggungjawab', color: 'yellow', desc: 'Food waste reduction, reuse and responsible choices.' },
+            { id: 13, icon: '🌱', name: 'Climate Action', bm: 'Tindakan Iklim', color: 'green', desc: 'Climate awareness and measurable environmental action.' },
+            { id: 17, icon: '🤝', name: 'Partnerships for the Goals', bm: 'Kerjasama demi Matlamat', color: 'blue', desc: 'Schools, families, businesses and community partners working together.' }
+        ];
+        let sdgSelectedFilter = 'all';
+        let sdgSelectedChild = 'all';
+        let sdgEvidenceRecords = [
+            { id: 'DEMO-001', child: 'adam', title: 'Junior Eco-Warrior Bootcamp', sdgs: [4, 12, 13], category: 'environment', date: '2026-09-12', measure: 'Workshop attendance', value: 1, unit: 'participant', evidence: 'Demo attendance record', status: 'verified', note: 'Participation output only; environmental outcome not yet measured.' },
+            { id: 'DEMO-002', child: 'maya', title: 'Healthy Cooking & Zero-Waste Workshop', sdgs: [2, 3, 12], category: 'nutrition', date: '2026-09-18', measure: 'Workshop attendance', value: 1, unit: 'participant', evidence: 'Demo partner attendance sheet', status: 'pending', note: 'Awaiting authorised partner review.' },
+            { id: 'DEMO-003', child: 'adam', title: 'Young Nutritionist Discovery Workshop', sdgs: [2, 3, 4], category: 'nutrition', date: '2026-09-22', measure: 'Learning activity completed', value: 1, unit: 'activity', evidence: 'Demo completion record', status: 'verified', note: 'Learning outcome needs a pre/post assessment to be quantified.' },
+            { id: 'DEMO-004', child: 'maya', title: 'Community Learning Day', sdgs: [4, 17], category: 'education', date: '2026-09-28', measure: 'Community activity attendance', value: 1, unit: 'participant', evidence: 'Demo event record', status: 'pending', note: 'Partner confirmation required.' }
+        ];
+        function sdgEscape(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        }
+        function sdgStatusLabel(status, isBm) {
+            if (status === 'verified') return isBm ? 'Disahkan (demo)' : 'Verified (demo)';
+            if (status === 'rejected') return isBm ? 'Ditolak' : 'Rejected';
+            return isBm ? 'Menunggu semakan' : 'Pending review';
+        }
+        function renderSdgImpactDashboard() {
+            const isBm = currentLang === 'bm';
+            const records = sdgEvidenceRecords.filter(r =>
+                (sdgSelectedChild === 'all' || r.child === sdgSelectedChild) &&
+                (sdgSelectedFilter === 'all' || r.sdgs.includes(Number(sdgSelectedFilter)))
+            );
+            const verified = records.filter(r => r.status === 'verified').length;
+            const pending = records.filter(r => r.status === 'pending').length;
+            const sdgCards = sdgCatalog.map(sdg => {
+                const linked = records.filter(r => r.sdgs.includes(sdg.id)).length;
+                const confirmed = records.filter(r => r.sdgs.includes(sdg.id) && r.status === 'verified').length;
+                return `<button onclick="setSdgFilter('${sdg.id}')" class="text-left p-3 rounded-xl border ${String(sdgSelectedFilter) === String(sdg.id) ? 'border-emerald-500 ring-2 ring-emerald-100 bg-emerald-50' : 'border-slate-200 bg-white hover:border-emerald-300'} transition">
+                    <div class="flex items-center justify-between"><span class="text-xl">${sdg.icon}</span><span class="text-[10px] font-bold text-slate-500">SDG ${sdg.id}</span></div>
+                    <p class="text-xs font-extrabold text-slate-800 mt-2">${isBm ? sdg.bm : sdg.name}</p>
+                    <p class="text-[10px] text-slate-500 mt-1">${linked} ${isBm ? 'rekod' : 'records'} · ${confirmed} ${isBm ? 'disahkan' : 'verified'}</p>
+                </button>`;
+            }).join('');
+            const recordCards = records.length ? records.map(r => {
+                const child = childrenData[r.child];
+                const badges = r.sdgs.map(id => `<span class="inline-flex px-2 py-1 rounded-full bg-slate-100 text-slate-700 text-[9px] font-bold">SDG ${id}</span>`).join(' ');
+                return `<article class="p-3 rounded-xl border border-slate-200 bg-white space-y-2">
+                    <div class="flex justify-between gap-2 items-start"><div><h4 class="text-xs font-extrabold text-slate-900">${sdgEscape(r.title)}</h4><p class="text-[10px] text-slate-500 mt-1">${sdgEscape(child ? child.name : r.child)} · ${sdgEscape(r.date)} · ${sdgEscape(r.id)}</p></div><span class="shrink-0 text-[9px] font-bold px-2 py-1 rounded-full ${r.status === 'verified' ? 'bg-emerald-100 text-emerald-800' : r.status === 'rejected' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">${sdgStatusLabel(r.status,isBm)}</span></div>
+                    <div class="flex flex-wrap gap-1">${badges}</div>
+                    <div class="grid grid-cols-2 gap-2"><div class="bg-slate-50 rounded-lg p-2"><p class="text-[9px] text-slate-500">${isBm ? 'Ukuran' : 'Measure'}</p><p class="text-[10px] font-bold text-slate-800">${sdgEscape(r.measure)}</p><p class="text-[10px] text-slate-600">${sdgEscape(r.value)} ${sdgEscape(r.unit)}</p></div><div class="bg-slate-50 rounded-lg p-2"><p class="text-[9px] text-slate-500">${isBm ? 'Bukti' : 'Evidence'}</p><p class="text-[10px] font-bold text-slate-800">${sdgEscape(r.evidence)}</p></div></div>
+                    <p class="text-[10px] text-slate-500">${sdgEscape(r.note || '')}</p>
+                    ${r.status === 'pending' ? `<button onclick="reviewSdgRecord('${r.id}')" class="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold py-2">${isBm ? 'Simulasi semakan rakan kongsi' : 'Simulate partner review'}</button>` : ''}
+                </article>`;
+            }).join('') : `<div class="p-5 text-center bg-white border border-dashed border-slate-300 rounded-xl text-xs text-slate-500">${isBm ? 'Tiada rekod untuk penapis ini.' : 'No records match these filters.'}</div>`;
+            return `
+                <div class="bg-gradient-to-br from-emerald-700 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
+                    <span class="inline-block bg-white/15 px-2 py-1 rounded-full text-[9px] uppercase tracking-wider font-bold">ChildESG · ${isBm ? 'Mod Prototaip' : 'Prototype module'}</span>
+                    <h2 class="text-xl font-extrabold">🌍 ${isBm ? 'Pasport Impak SDG' : 'SDG Impact Passport'}</h2>
+                    <p class="text-xs text-emerald-50">${isBm ? 'Rekod aktiviti kanak-kanak yang dipetakan kepada Matlamat Pembangunan Mampan, bersama bukti dan status semakan.' : 'Track child activities mapped to the Sustainable Development Goals, with evidence and review status.'}</p>
+                    <p class="text-[10px] text-emerald-100">${isBm ? 'Data contoh sahaja — bukan pensijilan SDG atau audit bebas.' : 'Illustrative demo data only — not SDG certification or an independent audit.'}</p>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-white p-3 rounded-xl border border-slate-200"><p class="text-[9px] text-slate-500">${isBm ? 'Jumlah rekod' : 'Activity records'}</p><p class="text-2xl font-black text-slate-900">${records.length}</p></div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-200"><p class="text-[9px] text-slate-500">${isBm ? 'Disahkan' : 'Reviewed'}</p><p class="text-2xl font-black text-emerald-700">${verified}</p></div>
+                    <div class="bg-white p-3 rounded-xl border border-slate-200"><p class="text-[9px] text-slate-500">${isBm ? 'Menunggu' : 'Pending'}</p><p class="text-2xl font-black text-amber-600">${pending}</p></div>
+                </div>
+                <section class="space-y-2"><div class="flex items-center justify-between"><h3 class="text-sm font-extrabold text-slate-900">${isBm ? 'Fokus SDG' : 'SDG focus areas'}</h3><button onclick="setSdgFilter('all')" class="text-[10px] text-emerald-700 font-bold">${isBm ? 'Semua' : 'Show all'}</button></div><div class="grid grid-cols-2 gap-2">${sdgCards}</div></section>
+                <section class="bg-white rounded-xl border border-slate-200 p-3 space-y-3"><div><h3 class="text-sm font-extrabold text-slate-900">${isBm ? 'Penapis & rekod bukti' : 'Filters & evidence records'}</h3><p class="text-[10px] text-slate-500 mt-1">${isBm ? 'Pilih profil atau SDG untuk melihat rekod berkaitan.' : 'Choose a child or SDG to view related records.'}</p></div>
+                    <select onchange="setSdgChildFilter(this.value)" class="w-full p-2.5 border border-slate-200 bg-slate-50 rounded-lg text-xs font-bold"><option value="all" ${sdgSelectedChild==='all'?'selected':''}>${isBm ? 'Semua kanak-kanak' : 'All children'}</option><option value="adam" ${sdgSelectedChild==='adam'?'selected':''}>Adam</option><option value="maya" ${sdgSelectedChild==='maya'?'selected':''}>Maya</option></select>
+                    <div class="space-y-2">${recordCards}</div>
+                </section>
+                <section class="bg-white rounded-xl border border-slate-200 p-4 space-y-3"><div><h3 class="text-sm font-extrabold text-slate-900">${isBm ? 'Tambah rekod aktiviti' : 'Add an activity record'}</h3><p class="text-[10px] text-slate-500">${isBm ? 'Rekod baharu bermula sebagai menunggu semakan.' : 'New records start as pending review.'}</p></div>
+                    <label class="block text-[10px] font-bold text-slate-600">${isBm ? 'Kanak-kanak' : 'Child'}<select id="sdg-new-child" class="mt-1 w-full p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-xs"><option value="adam">Adam</option><option value="maya">Maya</option></select></label>
+                    <label class="block text-[10px] font-bold text-slate-600">${isBm ? 'Nama aktiviti' : 'Activity name'}<input id="sdg-new-title" maxlength="100" class="mt-1 w-full p-2.5 rounded-lg border border-slate-200 text-xs" placeholder="e.g. School garden activity"></label>
+                    <label class="block text-[10px] font-bold text-slate-600">${isBm ? 'SDG utama' : 'Primary SDG'}<select id="sdg-new-goal" class="mt-1 w-full p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-xs">${sdgCatalog.map(x=>`<option value="${x.id}">SDG ${x.id} — ${isBm?x.bm:x.name}</option>`).join('')}</select></label>
+                    <label class="block text-[10px] font-bold text-slate-600">${isBm ? 'Bukti / rujukan' : 'Evidence / reference'}<input id="sdg-new-evidence" maxlength="160" class="mt-1 w-full p-2.5 rounded-lg border border-slate-200 text-xs" placeholder="Attendance sheet, photo reference, assessment ID..."></label>
+                    <button onclick="addSdgRecord()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold">＋ ${isBm ? 'Tambah rekod menunggu semakan' : 'Add pending record'}</button>
+                </section>
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-[10px] text-amber-900 space-y-1"><p class="font-extrabold">${isBm ? 'Penting untuk penggunaan sebenar' : 'Important before production'}</p><p>${isBm ? 'Pengesahan di sini hanyalah simulasi UI. Sistem sebenar memerlukan log masuk berperanan, API pelayan, kawalan akses penjaga, rekod audit, dasar penyimpanan data kanak-kanak dan semakan bukti oleh pihak yang diberi kuasa.' : 'Review actions here are UI simulations. Production needs role-based login, server-side APIs, guardian consent/access controls, audit logs, child-data retention rules and authorised evidence review.'}</p></div>
+            `;
+        }
+        function setSdgFilter(value) { sdgSelectedFilter = value; switchTab('sdg'); }
+        function setSdgChildFilter(value) { sdgSelectedChild = value; switchTab('sdg'); }
+        function addSdgRecord() {
+            const titleEl = document.getElementById('sdg-new-title');
+            const evidenceEl = document.getElementById('sdg-new-evidence');
+            const childEl = document.getElementById('sdg-new-child');
+            const goalEl = document.getElementById('sdg-new-goal');
+            const title = titleEl ? titleEl.value.trim() : '';
+            const evidence = evidenceEl ? evidenceEl.value.trim() : '';
+            if (!title || !evidence) { alert(currentLang === 'bm' ? 'Sila masukkan nama aktiviti dan rujukan bukti.' : 'Please enter an activity name and evidence reference.'); return; }
+            const goal = Number(goalEl.value);
+            sdgEvidenceRecords.unshift({ id: 'DEMO-' + Date.now().toString().slice(-8), child: childEl.value, title, sdgs: [goal], category: 'community', date: new Date().toISOString().slice(0,10), measure: 'Activity recorded', value: 1, unit: 'record', evidence, status: 'pending', note: 'Demo record only. Evidence has not been independently verified.' });
+            sdgSelectedFilter = 'all'; sdgSelectedChild = 'all'; switchTab('sdg');
+        }
+        function reviewSdgRecord(id) {
+            const record = sdgEvidenceRecords.find(r => r.id === id);
+            if (!record || record.status !== 'pending') return;
+            const ok = confirm(currentLang === 'bm' ? 'Simulasi semakan: tandakan rekod ini sebagai disemak? Ini bukan pengesahan sebenar.' : 'Simulate a review and mark this record as reviewed? This is not real verification.');
+            if (ok) { record.status = 'verified'; record.note = 'Marked reviewed in local prototype; this does not represent independent verification.'; switchTab('sdg'); }
+        }
+
         const contentData = { 
-            layer1: ``, home: ``, programs: ``, layer3: ``, tokens: ``, lapaq: ``, school: ``, 
+            layer1: ``, home: ``, programs: ``, layer3: ``, tokens: ``, lapaq: ``, sdg: ``, school: ``, 
             scanner: `
                 <div class="bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-5 text-white shadow-lg">
                     <span class="bg-violet-500/50 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Camera Integration</span>
@@ -1976,6 +2154,7 @@
                 </div>
             `
         };
+
         function switchTab(tabKey) {
             activeTabKey = tabKey;
             if (currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
@@ -2009,9 +2188,11 @@
                 }, 50);
             }
             else if (tabKey === 'lapaq') content.innerHTML = renderLaPaQPage();
+            else if (tabKey === 'sdg') content.innerHTML = renderSdgImpactDashboard();
             else if (tabKey === 'school') content.innerHTML = renderPartnerDashboard();
             else if (tabKey === 'tokens') content.innerHTML = renderTokensPage();
             else content.innerHTML = contentData[tabKey];
+
             ['layer1', 'home'].forEach(k => {
                 const btn = document.getElementById(`nav-${k}`);
                 if (btn) {
@@ -2023,6 +2204,7 @@
                 }
             });
         }
+
         function startScanner() {
             if (typeof Html5Qrcode !== 'undefined') {
                 if (html5QrCode) {
@@ -2047,12 +2229,14 @@
                 document.getElementById('scan-result').innerText = `Scanner library loading... Please refresh.`;
             }
         }
+
         function simulateSuccessfulScan() {
             const child = childrenData[selectedChild];
             child.totalTokens += 25;
             child.impactTokens += 25;
             document.getElementById('scan-result').innerText = `Success! Simulated Partner QR Scanned: STATION-KEMAIH-01. +25 Tokens Minted to ${child.name}!`;
         }
+
         window.addEventListener('DOMContentLoaded', () => { 
             updateStatusBarTime(); 
             switchTab('layer1'); 
