@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -496,6 +497,7 @@
                 activeHours: 12.5,
                 ecoTokens: 300,
                 foodWasteKg: 4.2,
+                recycledKg: 12.5,
                 nutritionTokens: 250,
                 activityTokens: 150,
                 activityHours: 28.0,
@@ -531,6 +533,7 @@
                 activeHours: 9.0,
                 ecoTokens: 200,
                 foodWasteKg: 2.8,
+                recycledKg: 8.0,
                 nutritionTokens: 180,
                 activityTokens: 80,
                 activityHours: 18.5,
@@ -1661,14 +1664,15 @@
                     </div>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Impak (Permainan Fizikal)' : 'Impact (Physical Play)'}</span><span class="text-xs font-extrabold text-amber-600">${child.impactTokens} Tokens</span></div>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🏃 ${isBm ? 'Aktiviti Fizikal' : 'Physical Activities'}</span><span class="text-xs font-extrabold text-amber-600">${child.impactTokens} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Jam Aktif:' : 'Active Hours:'} <strong class="text-slate-800">${child.activeHours} hrs</strong></p>
-                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Fizikal)' : 'Scan Partner QR for Physical Play'}</button>
+                    <button onclick="openLiveScannerModal('Physical Play')" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Fizikal)' : 'Scan Partner QR for Physical Activities'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko (Sifar Sisa)' : 'Eco-Habits (Zero Waste)'}</span><span class="text-xs font-extrabold text-teal-600">${child.ecoTokens} Tokens</span></div>
+                    <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🌱 ${isBm ? 'Tabiat Eko' : 'Eco Habits'}</span><span class="text-xs font-extrabold text-teal-600">${child.ecoTokens} Tokens</span></div>
                     <p class="text-[10px] text-slate-500">${isBm ? 'Sisa Makanan Dialih Keluar:' : 'Food Waste Diverted:'} <strong class="text-emerald-600">${child.foodWasteKg} kg</strong></p>
-                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Sifar Sisa)' : 'Scan Partner QR for Zero Waste'}</button>
+                    <p class="text-[10px] text-slate-500">${isBm ? 'Bahan Kitar Semula Diselamatkan:' : 'Recycled Material Savaged:'} <strong class="text-teal-600">${child.recycledKg} kg</strong></p>
+                    <button onclick="openLiveScannerModal('Eco Zero Waste')" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg text-xs transition mt-1">📷 ${isBm ? 'Imbas QR Rakan Kongsi (Tabiat Eko)' : 'Scan Partner QR for Eco Habits'}</button>
                 </div>
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
                     <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800">🥗 ${isBm ? 'Token Pemakanan' : 'Nutrition Tokens'}</span><span class="text-xs font-extrabold text-emerald-600">${child.nutritionTokens} Tokens</span></div>
@@ -1717,7 +1721,7 @@
                 childName: `${child.name} (${child.token})`,
                 courseName: `${courseName} (${org})`,
                 parentName: userProfiles.parent.name,
-                contact: `${userProfiles.parent.phone} /${userProfiles.parent.email}`,
+                contact: `${userProfiles.parent.phone} / ${userProfiles.parent.email}`,
                 parentEmail: userProfiles.parent.email
             });
             
@@ -2057,3 +2061,4 @@
     </script>
 </body>
 </html>
+```
