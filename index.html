@@ -236,7 +236,6 @@
         let marketplaceSearchQuery = '';
         let marketplaceStartDate = '';
         let marketplaceEndDate = '';
-
         const notificationsData = {
             parent: [
                 {
@@ -454,7 +453,6 @@
         lapaqEndDate = todayDateStr;
         marketplaceStartDate = todayDateStr;
         marketplaceEndDate = maxDateStr;
-
         function updateStatusBarTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -752,7 +750,6 @@
             marketplaceSearchQuery = '';
             marketplaceStartDate = todayDateStr;
             marketplaceEndDate = maxDateStr;
-
             userProfiles = {
                 parent: {
                     name: "Ainol Razman Bin Mohd Ghazaly",
@@ -1214,7 +1211,6 @@
                     </div>
                 `;
             }
-
             const searchAndCalendarBox = `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-3">
                     <div class="flex items-center space-x-2 border-b border-slate-100 pb-2">
@@ -1239,20 +1235,16 @@
                     </div>
                 </div>
             `;
-
             const filteredPrograms = featuredProgramsList.filter(prog => {
                 const matchesQuery = !marketplaceSearchQuery || 
                     prog.title.toLowerCase().includes(marketplaceSearchQuery) || 
                     prog.org.toLowerCase().includes(marketplaceSearchQuery) || 
                     prog.category.toLowerCase().includes(marketplaceSearchQuery) || 
                     prog.desc.toLowerCase().includes(marketplaceSearchQuery);
-
                 const matchesDate = (!marketplaceStartDate || prog.endDate >= marketplaceStartDate) && 
                                     (!marketplaceEndDate || prog.startDate <= marketplaceEndDate);
-
                 return matchesQuery && matchesDate;
             });
-
             const programCards = filteredPrograms.length > 0 ? filteredPrograms.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
@@ -1292,7 +1284,6 @@
                     <p class="text-xs text-slate-500 font-bold">${isBm ? 'Tiada program dijumpai mengikut kriteria carian anda.' : 'No programs found matching your search criteria.'}</p>
                 </div>
             `;
-
             return `
                 <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Marketplace</span>
@@ -2151,7 +2142,6 @@
                     if (diffDays > 0) multiplier = diffDays;
                 }
             }
-
             const rawMetrics = [
                 { name: isBm ? "Kalori (Kcal)" : "Calories (Kcal)", current: 1620, target: 1800, unit: "kcal", color: "bg-emerald-500" },
                 { name: isBm ? "Karbohidrat" : "Carbohydrate", current: 225, target: 240, unit: "g", color: "bg-blue-500" },
@@ -2163,13 +2153,11 @@
                 { name: isBm ? "Vitamin A" : "Vitamin A", current: 480, target: 500, unit: "µg RE", color: "bg-orange-500" },
                 { name: isBm ? "Vitamin C" : "Vitamin C", current: 38, target: 40, unit: "mg", color: "bg-rose-500" }
             ];
-
             const rniMetrics = rawMetrics.map(m => ({
                 ...m,
                 current: m.current * multiplier,
                 target: m.target * multiplier
             }));
-
             let growthSvgContent = '';
             if (selectedChild === 'adam') {
                 growthSvgContent = `
@@ -2201,10 +2189,13 @@
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
                         <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
-                        <select onchange="changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
-                            <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
-                            <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
-                        </select>
+                        <div class="flex items-center space-x-2">
+                            <a href="https://lapaq.app:3000/login" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition shadow-md inline-block">Sign in to LaPaQ</a>
+                            <select onchange="changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
+                                <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
+                                <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
@@ -2258,7 +2249,6 @@
                         <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
                     </div>
                 </div>
-
                 <!-- TIME SPAN CALCULATOR SELECTION PANEL FOR RNI INTELLIGENCE -->
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -2275,7 +2265,6 @@
                         <button onclick="setLaPaQTimeSpan('1month')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${lapaqTimeSpan === '1month' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Month</button>
                         <button onclick="setLaPaQTimeSpan('custom')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${lapaqTimeSpan === 'custom' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Date Search</button>
                     </div>
-
                     ${lapaqTimeSpan === 'custom' ? `
                         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
                             <span class="text-[9px] font-bold text-slate-500 uppercase block">${isBm ? 'Pilih Tarikh Dengan Kalendar:' : 'Date Search with Calendar:'}</span>
@@ -2292,7 +2281,6 @@
                         </div>
                     ` : ''}
                 </div>
-
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
