@@ -230,6 +230,13 @@
         let currentLang = 'en'; 
         let activeTabKey = 'layer1';
         let pendingMarketplaceProgram = null;
+        let lapaqTimeSpan = '1day';
+        let lapaqStartDate = '';
+        let lapaqEndDate = '';
+        let marketplaceSearchQuery = '';
+        let marketplaceStartDate = '';
+        let marketplaceEndDate = '';
+
         const notificationsData = {
             parent: [
                 {
@@ -442,6 +449,12 @@
         }
         const todayDateStr = getTodayDateString();
         const maxDateStr = getMaxCalendarDateString();
+        
+        // Initialize default dates for date filters
+        lapaqEndDate = todayDateStr;
+        marketplaceStartDate = todayDateStr;
+        marketplaceEndDate = maxDateStr;
+
         function updateStatusBarTime() {
             const now = new Date();
             let hours = now.getHours();
@@ -733,6 +746,13 @@
             currentLang = 'en'; 
             activeTabKey = 'layer1';
             pendingMarketplaceProgram = null;
+            lapaqTimeSpan = '1day';
+            lapaqStartDate = '';
+            lapaqEndDate = todayDateStr;
+            marketplaceSearchQuery = '';
+            marketplaceStartDate = todayDateStr;
+            marketplaceEndDate = maxDateStr;
+
             userProfiles = {
                 parent: {
                     name: "Ainol Razman Bin Mohd Ghazaly",
@@ -1131,6 +1151,12 @@
                 return `<span class="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] font-extrabold border ${s.color}" title="${s.title}">🌍 ${s.code}</span>`;
             }).join('');
         }
+        function updateMarketplaceFilters() {
+            marketplaceSearchQuery = (document.getElementById('market-search-input')?.value || '').toLowerCase();
+            marketplaceStartDate = document.getElementById('market-filter-start')?.value || todayDateStr;
+            marketplaceEndDate = document.getElementById('market-filter-end')?.value || maxDateStr;
+            switchTab('programs');
+        }
         function renderProgramsPage() {
             const isBm = currentLang === 'bm';
             
@@ -1188,7 +1214,46 @@
                     </div>
                 `;
             }
-            const programCards = featuredProgramsList.map((prog, idx) => `
+
+            const searchAndCalendarBox = `
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 space-y-3">
+                    <div class="flex items-center space-x-2 border-b border-slate-100 pb-2">
+                        <span class="text-sm">🔍</span>
+                        <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">${isBm ? 'Carian Program & Aktiviti' : 'Search for Programs & Activities'}</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <input type="text" id="market-search-input" value="${marketplaceSearchQuery}" oninput="updateMarketplaceFilters()" placeholder="${isBm ? 'Cari program, aktiviti, atau rakan kongsi...' : 'Search programs, activities, or partners...'}" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <div>
+                            <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1">${isBm ? 'Julat Tarikh Program (Hari ini hingga 1 Tahun)' : 'Program Date Range (Today to 1 Year)'}</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <span class="text-[9px] text-slate-400 font-semibold block mb-0.5">From (Today)</span>
+                                    <input type="date" id="market-filter-start" value="${marketplaceStartDate}" min="${todayDateStr}" max="${maxDateStr}" onchange="updateMarketplaceFilters()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-700">
+                                </div>
+                                <div>
+                                    <span class="text-[9px] text-slate-400 font-semibold block mb-0.5">To (1 Year Max)</span>
+                                    <input type="date" id="market-filter-end" value="${marketplaceEndDate}" min="${todayDateStr}" max="${maxDateStr}" onchange="updateMarketplaceFilters()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold text-slate-700">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const filteredPrograms = featuredProgramsList.filter(prog => {
+                const matchesQuery = !marketplaceSearchQuery || 
+                    prog.title.toLowerCase().includes(marketplaceSearchQuery) || 
+                    prog.org.toLowerCase().includes(marketplaceSearchQuery) || 
+                    prog.category.toLowerCase().includes(marketplaceSearchQuery) || 
+                    prog.desc.toLowerCase().includes(marketplaceSearchQuery);
+
+                const matchesDate = (!marketplaceStartDate || prog.endDate >= marketplaceStartDate) && 
+                                    (!marketplaceEndDate || prog.startDate <= marketplaceEndDate);
+
+                return matchesQuery && matchesDate;
+            });
+
+            const programCards = filteredPrograms.length > 0 ? filteredPrograms.map((prog, idx) => `
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2.5">
                     <div class="flex justify-between items-start">
                         <div>
@@ -1222,13 +1287,19 @@
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `).join('') : `
+                <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-slate-100">
+                    <p class="text-xs text-slate-500 font-bold">${isBm ? 'Tiada program dijumpai mengikut kriteria carian anda.' : 'No programs found matching your search criteria.'}</p>
+                </div>
+            `;
+
             return `
                 <div class="bg-gradient-to-br from-indigo-800 to-blue-900 rounded-2xl p-5 text-white shadow-lg space-y-2">
                     <span class="bg-blue-500/40 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Partner Marketplace</span>
                     <h2 class="text-xl font-bold">${isBm ? 'Program & Aktiviti Rakan Kongsi' : 'Partner Programs & Activities'}</h2>
                     <p class="text-xs text-blue-100">${isBm ? 'Teroka dan mohon program ESG, bengkel, dan aktiviti kanak-kanak yang diiklankan oleh rakan institusi.' : 'Browse and apply for advertised ESG programs, workshops, and children activities from institutional partners.'}</p>
                 </div>
+                ${searchAndCalendarBox}
                 ${addProgramPanelHtml}
                 <div class="space-y-3">
                     ${programCards}
@@ -2048,11 +2119,40 @@
                 isBm ? `Terima kasih kerana memohon kursus / aktiviti untuk ${child.name}.\n\nBorang pendaftaran akan dihantar ke E-mel anda (${userProfiles.parent.email}), sila isi dan e-mel kembali kepada kami.` : `Thank you for applying for the course / activity on behalf of ${child.name}.\n\nA registration form will be sent to your Email (${userProfiles.parent.email}), please fill in the form and email back to us.`
             );
         }
+        function setLaPaQTimeSpan(span) {
+            lapaqTimeSpan = span;
+            switchTab('lapaq');
+        }
+        function updateLaPaQCustomDates() {
+            lapaqStartDate = document.getElementById('lapaq-start-date')?.value || '';
+            lapaqEndDate = document.getElementById('lapaq-end-date')?.value || todayDateStr;
+            switchTab('lapaq');
+        }
         function renderLaPaQPage() {
             const child = childrenData[selectedChild];
             const isBm = currentLang === 'bm';
             
-            const rniMetrics = [
+            // Adjust base intake multipliers depending on chosen time span
+            let multiplier = 1;
+            let spanLabel = isBm ? "1 Hari" : "1 Day";
+            if (lapaqTimeSpan === '1week') {
+                multiplier = 7;
+                spanLabel = isBm ? "1 Minggu" : "1 Week";
+            } else if (lapaqTimeSpan === '1month') {
+                multiplier = 30;
+                spanLabel = isBm ? "1 Bulan" : "1 Month";
+            } else if (lapaqTimeSpan === 'custom') {
+                spanLabel = isBm ? "Carian Tarikh" : "Date Range";
+                if (lapaqStartDate && lapaqEndDate) {
+                    const start = new Date(lapaqStartDate);
+                    const end = new Date(lapaqEndDate);
+                    const diffTime = Math.abs(end - start);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    if (diffDays > 0) multiplier = diffDays;
+                }
+            }
+
+            const rawMetrics = [
                 { name: isBm ? "Kalori (Kcal)" : "Calories (Kcal)", current: 1620, target: 1800, unit: "kcal", color: "bg-emerald-500" },
                 { name: isBm ? "Karbohidrat" : "Carbohydrate", current: 225, target: 240, unit: "g", color: "bg-blue-500" },
                 { name: isBm ? "Protein" : "Protein", current: 42, target: 45, unit: "g", color: "bg-indigo-500" },
@@ -2063,6 +2163,13 @@
                 { name: isBm ? "Vitamin A" : "Vitamin A", current: 480, target: 500, unit: "µg RE", color: "bg-orange-500" },
                 { name: isBm ? "Vitamin C" : "Vitamin C", current: 38, target: 40, unit: "mg", color: "bg-rose-500" }
             ];
+
+            const rniMetrics = rawMetrics.map(m => ({
+                ...m,
+                current: m.current * multiplier,
+                target: m.target * multiplier
+            }));
+
             let growthSvgContent = '';
             if (selectedChild === 'adam') {
                 growthSvgContent = `
@@ -2103,14 +2210,6 @@
                         <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
                         <p class="text-xs text-slate-300 mt-0.5">${isBm ? 'Profil pematuhan Pengambilan Nutrien Disyorkan (RNI)' : 'Recommended Nutrient Intake (RNI) compliance profile'}</p>
                     </div>
-                    <!-- Lapaq Account Login Link Button -->
-                    <div class="pt-1">
-                        <a href="https://lapaq.app:3000/login" target="_blank" rel="noopener noreferrer" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 border border-orange-400/30">
-                            <span>🔑</span>
-                            <span>${isBm ? 'Log Masuk ke Akaun Lapaq Anda' : "Login to Your Lapaq's Account"}</span>
-                            <span>→</span>
-                        </a>
-                    </div>
                     <div class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
                         <div>
                             <p class="text-slate-300 text-[10px] font-bold uppercase">${isBm ? 'Sasaran Diet RNI Harian' : 'Daily RNI Diet Target'}</p>
@@ -2146,9 +2245,7 @@
                             <span>Okt '26</span>
                         </div>
                         <p class="text-[10px] text-slate-500 italic text-center pt-1">
-                            ${isBm 
-                                ? `${child.name} mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.` 
-                                : `${child.name} maintains a consistent healthy growth and stable BMI rate through October 2026.`}
+                            ${isBm ? 'Adam mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.' : 'Adam maintains a consistent healthy growth and stable BMI rate through October 2026.'}
                         </p>
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-1">
@@ -2161,10 +2258,45 @@
                         <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
                     </div>
                 </div>
+
+                <!-- TIME SPAN CALCULATOR SELECTION PANEL FOR RNI INTELLIGENCE -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
+                            <span>⏱️</span>
+                            <span>${isBm ? 'Tetapan Tempoh Masa RNI' : 'RNI Time Span Calculator'}</span>
+                        </h3>
+                        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">${spanLabel}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-4 gap-1.5 bg-slate-100 p-1 rounded-xl text-center">
+                        <button onclick="setLaPaQTimeSpan('1day')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${lapaqTimeSpan === '1day' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Day</button>
+                        <button onclick="setLaPaQTimeSpan('1week')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${lapaqTimeSpan === '1week' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Week</button>
+                        <button onclick="setLaPaQTimeSpan('1month')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${lapaqTimeSpan === '1month' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Month</button>
+                        <button onclick="setLaPaQTimeSpan('custom')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${lapaqTimeSpan === 'custom' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Date Search</button>
+                    </div>
+
+                    ${lapaqTimeSpan === 'custom' ? `
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">${isBm ? 'Pilih Tarikh Dengan Kalendar:' : 'Date Search with Calendar:'}</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">From (Open)</label>
+                                    <input type="date" id="lapaq-start-date" value="${lapaqStartDate}" max="${todayDateStr}" onchange="updateLaPaQCustomDates()" class="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">To (Today)</label>
+                                    <input type="date" id="lapaq-end-date" value="${lapaqEndDate}" max="${todayDateStr}" onchange="updateLaPaQCustomDates()" class="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+
                 <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                         <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
-                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${isBm ? 'Tempoh:' : 'Span:'} 1 Hari</span>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${isBm ? 'Tempoh:' : 'Span:'} ${spanLabel}</span>
                     </div>
                     <div class="space-y-3">
                         ${rniMetrics.map(m => {
