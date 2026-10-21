@@ -2186,16 +2186,16 @@
                 `;
             }
             return `
+                <div class="mb-3 text-right">
+                    <a href="https://lapaq.app:3000/login" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition shadow-md inline-block">Sign in to LaPaQ</a>
+                </div>
                 <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
                         <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
-                        <div class="flex items-center space-x-2">
-                            <a href="https://lapaq.app:3000/login" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition shadow-md inline-block">Sign in to LaPaQ</a>
-                            <select onchange="changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
-                                <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
-                                <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
-                            </select>
-                        </div>
+                        <select onchange="changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
+                            <option value="adam" ${selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
+                            <option value="maya" ${selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
+                        </select>
                     </div>
                     <div>
                         <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
