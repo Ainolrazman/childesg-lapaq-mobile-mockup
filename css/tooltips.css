@@ -1,1 +1,6 @@
+/* css/tooltips.css */
 
+/* Menu day nutrition card */
+.menu-day-card { transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s; cursor: pointer; }
+.menu-day-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); border-color: rgba(129, 140, 248, 0.7) !important; }
+.menu-day-card.pinned { border-color: rgba(129, 140, 248, 0.9) !important; box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.4), 0 8px 24px rgba(0,0,0,0.4); }
