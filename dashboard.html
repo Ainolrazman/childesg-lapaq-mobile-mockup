@@ -10,10 +10,7 @@
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/tooltips.css"> 
-    tailwind.config = {
+    <link rel="stylesheet" href="css/tooltips.css">
     <script>
         tailwind.config = {
             theme: {
@@ -904,149 +901,35 @@
     <div class="space-y-3"><h4 class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">1. Nutrient Adequacy Scorecard (Malaysian Dietary Guidelines)</h4><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs"><div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1"><span class="text-slate-400 font-semibold">Macronutrient Balance</span><p class="text-lg font-black text-white">92% Match</p><p class="text-[10px] text-emerald-400">Optimal Protein-to-Carb Ratio</p></div><div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1"><span class="text-slate-400 font-semibold">RNI Target Compliance</span><p class="text-lg font-black text-amber-400">78% Compliant</p><p class="text-[10px] text-amber-400">Calcium & Vit C Deficit Alerts</p></div><div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1"><span class="text-slate-400 font-semibold">Fortification Status</span><p class="text-lg font-black text-emerald-400">Active (SEJAHTERA)</p><p class="text-[10px] text-slate-400">Daily Milk & Green Leafy Boost</p></div></div></div>
     <div class="space-y-3 pt-2">
         <div class="flex justify-between items-center gap-2 flex-wrap">
-            <h4 class="text-xs font-extrabold text-indigo-400 uppercase tracking-wider">2. Weekly Menu Plan Configurator (SEJAHTERA Cycle)</h4>
-            <div class="flex items-center space-x-2">
-                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">Cycle Week 3 Active</span>
-                <button type="button" onclick="openNewMenuModal()" class="text-[10px] font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg transition shadow">＋ Create New Menu</button>
+<h4 class="text-xs font-extrabold text-indigo-400 uppercase tracking-wider">2. RMT Standard Menu Library</h4>            <div class="flex items-center space-x-2">
+<span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">20 MoE Standard Menus</span>
+    <button type="button" onclick="openNewMenuModal()" class="text-[10px] font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg transition shadow">＋ Create New Menu</button>
             </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs"><div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1"><span class="font-bold text-white block">Monday</span><p class="text-[10px] text-slate-300">Nasi Goreng Ikan Bilis + Carrot & Bayam Soup + Fresh Papaya</p><span class="text-[9px] text-emerald-400 font-mono block">Balanced • 410 kcal</span></div><div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1"><span class="font-bold text-white block">Tuesday</span><p class="text-[10px] text-slate-300">Chicken Porridge + Steamed Edamame + Calcium Fortified Milk</p><span class="text-[9px] text-emerald-400 font-mono block">High-Protein • 390 kcal</span></div><div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1"><span class="font-bold text-white block">Wednesday</span><p class="text-[10px] text-slate-300">Bee Hoon Sup Ayam + Sawi Hijau + Fresh Honeydew Melon</p><span class="text-[9px] text-emerald-400 font-mono block">Balanced • 420 kcal</span></div><div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1"><span class="font-bold text-white block">Thursday</span><p class="text-[10px] text-slate-300">Rice + Sweet & Sour Fish Fillet + Broccoli & Cabbage + Banana</p><span class="text-[9px] text-emerald-400 font-mono block">Fortified • 450 kcal</span></div><div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1"><span class="font-bold text-white block">Friday</span><p class="text-[10px] text-slate-300">Macaroni Soup with Minced Beef + Carrots + Fresh Orange Slices</p><span class="text-[9px] text-emerald-400 font-mono block">High-Iron • 430 kcal</span></div></div>
-
-        <div class="pt-3 space-y-2 border-t border-slate-800/70">
-            <div class="flex justify-between items-center">
-                <h5 class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Custom Menu Library (SEJAHTERA)</h5>
-        <!-- ⚡ 5-Day Nutrition Comparison (per menu) -->
-        <div class="bg-slate-950 border border-indigo-500/30 rounded-xl p-3 space-y-2">
+        <input type="text" id="rmt-menu-search" oninput="filterRmtMenus()" placeholder="🔍 Search 20 RMT menus (Nasi, Bihun, Ayam, Bubur...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <div id="rmt-menu-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 text-xs">
+            <div class="col-span-full text-center text-slate-500 text-[10px] italic py-2">Loading 20 RMT menus...</div>
+        </div>
+                <div class="bg-slate-950 border border-emerald-500/30 rounded-xl p-3 space-y-2 mt-3">
             <div class="flex justify-between items-center flex-wrap gap-1">
-                <p class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-400">🍽️ Full 5-Day Nutrition Comparison</p>
-                <span class="text-[9px] font-mono text-slate-500">Per menu (Mon–Fri) · % RNI for 7–12 yrs</span>
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">📊 RMT Average vs Kemaih Cohort Average (% of RNI)</p>
+                <span class="text-[9px] font-mono text-slate-500">Per single meal serving · 7–12 yrs</span>
             </div>
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left text-[10px]" style="min-width: 620px;">
-                    <thead class="text-[9px] font-extrabold uppercase text-slate-500 border-b border-slate-800">
-                        <tr>
-                            <th class="py-1.5 px-2">Nutrient</th>
-                            <th class="py-1.5 px-2 text-center">Mon</th>
-                            <th class="py-1.5 px-2 text-center">Tue</th>
-                            <th class="py-1.5 px-2 text-center">Wed</th>
-                            <th class="py-1.5 px-2 text-center">Thu</th>
-                            <th class="py-1.5 px-2 text-center">Fri</th>
-                            <th class="py-1.5 px-2 text-center border-l border-slate-800 text-emerald-400">Avg</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/60 font-mono">
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">⚡ Energy (kcal)</td>
-                            <td class="py-1 px-2 text-center text-amber-300">410</td>
-                            <td class="py-1 px-2 text-center text-amber-300">390</td>
-                            <td class="py-1 px-2 text-center text-amber-300">420</td>
-                            <td class="py-1 px-2 text-center text-amber-300">450</td>
-                            <td class="py-1 px-2 text-center text-amber-300">430</td>
-                            <td class="py-1 px-2 text-center text-amber-300 font-bold border-l border-slate-800">420</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🍚 Carbs (g)</td>
-                            <td class="py-1 px-2 text-center text-rose-300">52</td>
-                            <td class="py-1 px-2 text-center text-rose-300">48</td>
-                            <td class="py-1 px-2 text-center text-rose-300">58</td>
-                            <td class="py-1 px-2 text-center text-rose-300">55</td>
-                            <td class="py-1 px-2 text-center text-rose-300">55</td>
-                            <td class="py-1 px-2 text-center text-rose-300 font-bold border-l border-slate-800">53.6</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🥩 Protein (g)</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">18.5</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">24</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">20</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">22</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">21</td>
-                            <td class="py-1 px-2 text-center text-indigo-300 font-bold border-l border-slate-800">21.1</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🥦 Fiber (g)</td>
-                            <td class="py-1 px-2 text-center text-rose-300">4.2</td>
-                            <td class="py-1 px-2 text-center text-amber-300">5.8</td>
-                            <td class="py-1 px-2 text-center text-rose-300">3.5</td>
-                            <td class="py-1 px-2 text-center text-amber-300">4.8</td>
-                            <td class="py-1 px-2 text-center text-rose-300">3.8</td>
-                            <td class="py-1 px-2 text-center text-rose-300 font-bold border-l border-slate-800">4.4</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🍬 Sugar (g)</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">12</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">14</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">11</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">16</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">15</td>
-                            <td class="py-1 px-2 text-center text-emerald-300 font-bold border-l border-slate-800">13.6</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🧂 Sodium (mg)</td>
-                            <td class="py-1 px-2 text-center text-amber-300">620</td>
-                            <td class="py-1 px-2 text-center text-amber-300">480</td>
-                            <td class="py-1 px-2 text-center text-amber-300">700</td>
-                            <td class="py-1 px-2 text-center text-amber-300">580</td>
-                            <td class="py-1 px-2 text-center text-amber-300">560</td>
-                            <td class="py-1 px-2 text-center text-amber-300 font-bold border-l border-slate-800">588</td>
-                        </tr>
-                        <tr class="bg-rose-950/20">
-                            <td class="py-1 px-2 font-sans font-bold text-rose-300">🥛 Calcium (mg)</td>
-                            <td class="py-1 px-2 text-center text-rose-300">145</td>
-                            <td class="py-1 px-2 text-center text-amber-300">380</td>
-                            <td class="py-1 px-2 text-center text-rose-300">130</td>
-                            <td class="py-1 px-2 text-center text-rose-300">180</td>
-                            <td class="py-1 px-2 text-center text-rose-300">175</td>
-                            <td class="py-1 px-2 text-center text-rose-300 font-bold border-l border-slate-800">202</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🩸 Iron (mg)</td>
-                            <td class="py-1 px-2 text-center text-amber-300">3.2</td>
-                            <td class="py-1 px-2 text-center text-amber-300">2.8</td>
-                            <td class="py-1 px-2 text-center text-amber-300">2.6</td>
-                            <td class="py-1 px-2 text-center text-amber-300">3.5</td>
-                            <td class="py-1 px-2 text-center text-amber-300">4.2</td>
-                            <td class="py-1 px-2 text-center text-amber-300 font-bold border-l border-slate-800">3.3</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🍌 Potassium (mg)</td>
-                            <td class="py-1 px-2 text-center text-amber-300">720</td>
-                            <td class="py-1 px-2 text-center text-amber-300">780</td>
-                            <td class="py-1 px-2 text-center text-amber-300">640</td>
-                            <td class="py-1 px-2 text-center text-amber-300">850</td>
-                            <td class="py-1 px-2 text-center text-amber-300">620</td>
-                            <td class="py-1 px-2 text-center text-amber-300 font-bold border-l border-slate-800">762</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🥕 Vitamin A (µg)</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">480</td>
-                            <td class="py-1 px-2 text-center text-rose-300">220</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">340</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">380</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">620</td>
-                            <td class="py-1 px-2 text-center text-indigo-300 font-bold border-l border-slate-800">408</td>
-                        </tr>
-                        <tr>
-                            <td class="py-1 px-2 font-sans font-bold text-slate-300">🍊 Vitamin C (mg)</td>
-                            <td class="py-1 px-2 text-center text-indigo-300">28</td>
-                            <td class="py-1 px-2 text-center text-rose-300">12</td>
-                            <td class="py-1 px-2 text-center text-rose-300">22</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">45</td>
-                            <td class="py-1 px-2 text-center text-emerald-300">52</td>
-                            <td class="py-1 px-2 text-center text-indigo-300 font-bold border-l border-slate-800">31.8</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div id="rmt-comparison-table" class="overflow-x-auto custom-scrollbar">
+                <div class="text-slate-500 text-[10px] italic text-center py-2">Loading comparison…</div>
             </div>
             <div class="flex flex-wrap gap-x-3 gap-y-1 pt-1 border-t border-slate-800/60 text-[9px] font-mono text-slate-500">
                 <span>🟢 ≥100% RNI</span>
                 <span>🔵 50–99%</span>
                 <span>🟡 25–49%</span>
                 <span>🔴 &lt;25%</span>
-                <span class="text-slate-600">· Sugar: lower is better (all within WHO &lt;10% limit)</span>
+                <span class="text-slate-600">· RMT avg from 20 MoE menus · Cohort = Kemaih N=220</span>
             </div>
         </div>
-
-                
+        <div class="pt-3 space-y-2 border-t border-slate-800/70">
+            <div class="flex justify-between items-center">
+                <h5 class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Custom Menu Library (SEJAHTERA)</h5>
+        
                 <span id="custom-menu-count" class="text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">0 Menus</span>
             </div>
             <p id="custom-menu-empty" class="text-[10px] text-slate-500 italic bg-slate-950 border border-dashed border-slate-800 rounded-xl p-3 text-center">No custom menus yet — click <strong class="text-emerald-400">＋ Create New Menu</strong> to build one with ingredients, measurements and micronutrient counts.</p>
@@ -1428,11 +1311,7 @@
 </div>
 
 <!-- ================= SDG IMPACT MATRIX HOVER TOOLTIP ================= --><!-- ================= MENU DAY NUTRITION TOOLTIP ================= -->
-<style>
-    .menu-day-card { transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.2s; cursor: pointer; }
-    .menu-day-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); border-color: rgba(129, 140, 248, 0.7) !important; }
-    .menu-day-card.pinned { border-color: rgba(129, 140, 248, 0.9) !important; box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.4), 0 8px 24px rgba(0,0,0,0.4); }
-</style>
+
 <div id="menu-day-tooltip"
      class="fixed z-[85] pointer-events-none opacity-0 transition-opacity duration-150"
      style="background: rgba(15,23,42,0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(99,102,241,0.45); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);"></div>
@@ -3094,6 +2973,238 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+    // ============================================================
+    // RMT MENU LIBRARY (Phase 5.5)
+    // ============================================================
+    let rmtMenus = [];
+    let rmtAverages = {};
+    let currentRmtFilter = '';
+    let rmtPinnedMenuId = null;
+    let rmtHideTimeout = null;
+
+    async function initRmtMenus() {
+        try {
+            const mod = await import('./data/rmt-menus.js');
+            rmtMenus = mod.rmtMenus;
+            rmtAverages = mod.rmtAverages;
+            renderRmtMenuGrid();
+            renderRmtComparison();
+        } catch (err) {
+            console.error('Failed to load RMT menus:', err);
+            const grid = document.getElementById('rmt-menu-grid');
+            if (grid) grid.innerHTML = `<div class="col-span-full text-center text-rose-400 text-[10px] italic py-2">⚠️ Failed to load RMT menus. Check console.</div>`;
+        }
+    }
+
+    function filterRmtMenus() {
+        const el = document.getElementById('rmt-menu-search');
+        currentRmtFilter = el ? el.value : '';
+        renderRmtMenuGrid();
+    }
+
+    function renderRmtMenuGrid() {
+        const grid = document.getElementById('rmt-menu-grid');
+        if (!grid) return;
+        const q = currentRmtFilter.toLowerCase().trim();
+        const filtered = !q ? rmtMenus : rmtMenus.filter(m => m.name.toLowerCase().includes(q));
+        if (!filtered.length) {
+            grid.innerHTML = `<div class="col-span-full text-center text-slate-500 text-[10px] italic py-3">No menus match "${q.replace(/</g,'&lt;')}". <button onclick="document.getElementById('rmt-menu-search').value=''; filterRmtMenus();" class="text-emerald-400 underline font-semibold ml-1">Clear search</button></div>`;
+            return;
+        }
+        grid.innerHTML = filtered.map(m => {
+            const kcal = m.nutrients['Energy'];
+            const entries = Object.entries(m.nutrients).map(([k, v]) => ({ k, v, pct: (v / RNI_REFERENCE[k].ref) * 100 }));
+            const critical = entries.filter(e => e.pct < 25).length;
+            const warning  = entries.filter(e => e.pct >= 25 && e.pct < 50).length;
+            const adequate = entries.filter(e => e.pct >= 50).length;
+            return `
+                <div class="rmt-menu-card bg-slate-950 border border-slate-800 p-2.5 rounded-xl space-y-1 cursor-pointer hover:border-indigo-500/50 transition"
+                     data-rmt-id="${m.id}"
+                     onmouseenter="showRmtTooltip(event, ${m.id})"
+                     onmouseleave="hideRmtTooltip()"
+                     onclick="pinRmtTooltip(event, ${m.id})">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[9px] font-mono text-slate-500">#${String(m.id).padStart(2,'0')}</span>
+                        <span class="text-[9px] font-mono text-emerald-400 font-bold">${kcal} kcal</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-white leading-tight min-h-[24px]" title="${m.name.replace(/"/g,'&quot;')}">${m.name}</p>
+                    ${m.note ? `<p class="text-[8px] font-mono text-amber-400/70 leading-tight">${m.note}</p>` : ''}
+                    <div class="flex items-center gap-1.5 text-[8px] font-mono">
+                        <span class="text-rose-400">🔴${critical}</span>
+                        <span class="text-amber-400">🟡${warning}</span>
+                        <span class="text-emerald-400">🟢${adequate}</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function buildRmtTooltip(menuId, isPinned) {
+        const m = rmtMenus.find(x => x.id === menuId);
+        if (!m) return '';
+        const icons = { 'Energy':'⚡','Carbohydrates':'🍚','Protein':'🥩','Fiber':'🥦','Sugar':'🍬','Sodium':'🧂','Calcium':'🥛','Iron':'🩸','Potassium':'🍌','Vitamin A':'🥕','Vitamin C':'🍊' };
+        const units = { 'Energy':'kcal','Carbohydrates':'g','Protein':'g','Fiber':'g','Sugar':'g','Sodium':'mg','Calcium':'mg','Iron':'mg','Potassium':'mg','Vitamin A':'µg','Vitamin C':'mg' };
+        const rows = Object.entries(m.nutrients).map(([k, v]) => {
+            const pct = (v / RNI_REFERENCE[k].ref) * 100;
+            const st = getMenuDayStatus(pct);
+            return `<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(2,6,23,0.6);border:1px solid rgba(51,65,85,0.5);border-radius:8px;">
+                <span style="font-size:12px;flex-shrink:0;">${icons[k] || '•'}</span>
+                <span style="font-size:10px;color:#cbd5e1;font-weight:600;min-width:78px;">${k}</span>
+                <span style="font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;color:#ffffff;min-width:62px;text-align:right;">${v} ${units[k]}</span>
+                <span style="font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:700;color:${st.color};min-width:40px;text-align:right;">${pct.toFixed(0)}%</span>
+                <div style="width:44px;height:4px;background:rgba(30,41,59,1);border-radius:9999px;overflow:hidden;flex-shrink:0;"><div style="width:${Math.min(100,pct)}%;height:100%;background:${st.barColor};border-radius:9999px;"></div></div>
+            </div>`;
+        }).join('');
+        const closeBtn = isPinned
+            ? `<button type="button" onclick="event.stopPropagation(); unpinRmtTooltip();" title="Close (or press Esc)" style="width:22px;height:22px;border-radius:9999px;background:rgba(244,63,94,0.2);border:1px solid rgba(244,63,94,0.4);color:#fb7185;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;flex-shrink:0;">✕</button>`
+            : '';
+        const footer = isPinned
+            ? `<div style="font-size:8px;font-family:'JetBrains Mono',monospace;color:#64748b;text-align:center;padding-top:6px;border-top:1px solid rgba(51,65,85,0.5);margin-top:8px;">📌 Pinned · Click ✕ or press Esc to close</div>`
+            : `<div style="font-size:8px;font-family:'JetBrains Mono',monospace;color:#64748b;text-align:center;padding-top:6px;border-top:1px solid rgba(51,65,85,0.5);margin-top:8px;">Click to pin · Esc to close</div>`;
+        return `<div style="padding:14px;min-width:340px;max-width:380px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding-bottom:10px;border-bottom:1px solid rgba(51,65,85,0.5);">
+                <div style="min-width:0;">
+                    <p style="font-size:9px;font-family:'JetBrains Mono',monospace;font-weight:700;color:#818cf8;margin-bottom:3px;letter-spacing:0.5px;">RMT MENU #${String(m.id).padStart(2,'0')} · MoE STANDARD</p>
+                    <p style="font-size:14px;font-weight:800;color:#ffffff;line-height:1.2;">${m.name}</p>
+                    ${m.note ? `<p style="font-size:9px;color:#fbbf24;margin-top:3px;font-family:'JetBrains Mono',monospace;">${m.note}</p>` : ''}
+                </div>
+                ${closeBtn}
+            </div>
+            <div style="margin-top:10px;">
+                <p style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:#818cf8;margin-bottom:6px;">11-Nutrient Breakdown (per serving)</p>
+                <div style="display:grid;grid-template-columns:1fr;gap:4px;">${rows}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid rgba(51,65,85,0.5);font-size:9px;font-family:'JetBrains Mono',monospace;color:#64748b;">
+                <span>% of RNI · 7–12 yrs</span>
+                <span>MoE Lampiran B</span>
+            </div>
+            ${footer}
+        </div>`;
+    }
+
+    function positionRmtTooltip(tooltip, cardEl) {
+        const rect = cardEl.getBoundingClientRect();
+        const tw = 380, th = tooltip.offsetHeight || 480;
+        let left = rect.right + 12, top = rect.top;
+        if (left + tw > window.innerWidth - 12) left = rect.left - tw - 12;
+        if (left < 12) left = 12;
+        if (top + th > window.innerHeight - 12) top = window.innerHeight - th - 12;
+        if (top < 12) top = 12;
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    }
+
+    function showRmtTooltip(event, menuId) {
+        if (rmtPinnedMenuId !== null) return;
+        const tooltip = document.getElementById('menu-day-tooltip');
+        if (!tooltip) return;
+        if (rmtHideTimeout) { clearTimeout(rmtHideTimeout); rmtHideTimeout = null; }
+        tooltip.innerHTML = buildRmtTooltip(menuId, false);
+        tooltip.classList.add('pointer-events-none');
+        tooltip.classList.remove('opacity-0');
+        tooltip.classList.add('opacity-100');
+        requestAnimationFrame(() => positionRmtTooltip(tooltip, event.currentTarget));
+    }
+
+    function hideRmtTooltip() {
+        if (rmtPinnedMenuId !== null) return;
+        if (rmtHideTimeout) clearTimeout(rmtHideTimeout);
+        rmtHideTimeout = setTimeout(() => {
+            if (rmtPinnedMenuId !== null) return;
+            const tooltip = document.getElementById('menu-day-tooltip');
+            if (!tooltip) return;
+            tooltip.classList.add('opacity-0');
+            tooltip.classList.remove('opacity-100');
+        }, 80);
+    }
+
+    function pinRmtTooltip(event, menuId) {
+        event.stopPropagation();
+        if (rmtPinnedMenuId === menuId) { unpinRmtTooltip(); return; }
+        const tooltip = document.getElementById('menu-day-tooltip');
+        if (!tooltip) return;
+        if (rmtHideTimeout) { clearTimeout(rmtHideTimeout); rmtHideTimeout = null; }
+        rmtPinnedMenuId = menuId;
+        tooltip.innerHTML = buildRmtTooltip(menuId, true);
+        tooltip.classList.remove('pointer-events-none');
+        tooltip.classList.remove('opacity-0');
+        tooltip.classList.add('opacity-100');
+        document.querySelectorAll('.rmt-menu-card').forEach(c => c.classList.remove('pinned'));
+        if (event.currentTarget) event.currentTarget.classList.add('pinned');
+        requestAnimationFrame(() => positionRmtTooltip(tooltip, event.currentTarget));
+    }
+
+    function unpinRmtTooltip() {
+        rmtPinnedMenuId = null;
+        if (rmtHideTimeout) { clearTimeout(rmtHideTimeout); rmtHideTimeout = null; }
+        const tooltip = document.getElementById('menu-day-tooltip');
+        if (tooltip) {
+            tooltip.classList.add('pointer-events-none', 'opacity-0');
+            tooltip.classList.remove('opacity-100');
+        }
+        document.querySelectorAll('.rmt-menu-card').forEach(c => c.classList.remove('pinned'));
+    }
+
+    function renderRmtComparison() {
+        const container = document.getElementById('rmt-comparison-table');
+        if (!container) return;
+        const cohortPct = {
+            'Energy': 30.5, 'Carbohydrates': 27.9, 'Protein': 111.6, 'Fiber': 15.5, 'Sugar': 11.8,
+            'Sodium': 39.7, 'Calcium': 15.9, 'Iron': 70.3, 'Potassium': 7.9, 'Vitamin A': 68.6, 'Vitamin C': 40.3
+        };
+        const icons = { 'Energy':'⚡','Carbohydrates':'🍚','Protein':'🥩','Fiber':'🥦','Sugar':'🍬','Sodium':'🧂','Calcium':'🥛','Iron':'🩸','Potassium':'🍌','Vitamin A':'🥕','Vitamin C':'🍊' };
+        const lowerIsBetter = ['Sugar', 'Sodium'];
+        const rows = Object.entries(rmtAverages).map(([k, v]) => {
+            const rmtPct = (v / RNI_REFERENCE[k].ref) * 100;
+            const cohPct = cohortPct[k] || 0;
+            const delta  = rmtPct - cohPct;
+            const rmtStatus = getMenuDayStatus(rmtPct);
+            const cohStatus = getMenuDayStatus(cohPct);
+            const rmtWins = lowerIsBetter.includes(k) ? (rmtPct < cohPct) : (rmtPct > cohPct);
+            const winBadge = Math.abs(delta) < 1
+                ? '<span class="text-slate-500 text-[9px] font-mono">≈ tie</span>'
+                : (rmtWins
+                    ? '<span class="text-emerald-400 text-[9px] font-mono font-bold">▲ RMT</span>'
+                    : '<span class="text-rose-400 text-[9px] font-mono font-bold">▼ Cohort</span>');
+            const deltaStr = (delta >= 0 ? '+' : '') + delta.toFixed(1) + ' pp';
+            return `<tr class="hover:bg-slate-800/40 transition">
+                <td class="py-1.5 px-2 font-sans font-bold text-slate-200">${icons[k] || '•'} ${k}</td>
+                <td class="py-1.5 px-2 text-center font-mono font-bold" style="color:${rmtStatus.color}">${rmtPct.toFixed(1)}%</td>
+                <td class="py-1.5 px-2 text-center font-mono font-bold" style="color:${cohStatus.color}">${cohPct.toFixed(1)}%</td>
+                <td class="py-1.5 px-2 text-center font-mono text-slate-400">${deltaStr}</td>
+                <td class="py-1.5 px-2 text-center">${winBadge}</td>
+            </tr>`;
+        }).join('');
+        container.innerHTML = `<table class="w-full text-left text-[10px]">
+            <thead class="text-[9px] font-extrabold uppercase text-slate-500 border-b border-slate-800">
+                <tr>
+                    <th class="py-1.5 px-2">Nutrient</th>
+                    <th class="py-1.5 px-2 text-center">RMT Avg (20 menus)</th>
+                    <th class="py-1.5 px-2 text-center">Kemaih Cohort (N=220)</th>
+                    <th class="py-1.5 px-2 text-center">Delta</th>
+                    <th class="py-1.5 px-2 text-center">Leader</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono">${rows}</tbody>
+        </table>`;
+    }
+
+    document.addEventListener('click', (e) => {
+        if (rmtPinnedMenuId === null) return;
+        const tooltip = document.getElementById('menu-day-tooltip');
+        if (tooltip && tooltip.contains(e.target)) return;
+        if (e.target.closest('.rmt-menu-card')) return;
+        unpinRmtTooltip();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && rmtPinnedMenuId !== null) unpinRmtTooltip();
+    });
+        // Expose RMT functions for inline HTML event handlers
+    window.filterRmtMenus = filterRmtMenus;
+    window.showRmtTooltip = showRmtTooltip;
+    window.hideRmtTooltip = hideRmtTooltip;
+    window.pinRmtTooltip = pinRmtTooltip;
+    window.unpinRmtTooltip = unpinRmtTooltip;
 
             /* ============================================================ */
     /* ===== MENU DAY CARD NUTRITION TOOLTIP ====================== */
@@ -3361,6 +3472,7 @@
         initSocialSDKs();
         buildNutrientGrid();
         renderCustomMenus();
+        initRmtMenus();
         updateWasteStats();
         const leftoversInput = document.getElementById('waste-log-leftovers');
         if (leftoversInput) leftoversInput.addEventListener('input', updateWasteCostPreview);
