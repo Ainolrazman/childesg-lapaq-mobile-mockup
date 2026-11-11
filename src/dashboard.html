@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChildESG™ & LaPaQ Partner Governance Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/tooltips.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+                    colors: { brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 900: '#14532d' } }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full flex flex-col font-sans overflow-hidden antialiased bg-slate-950 text-slate-100">
+
+<!-- ================= HEADER ================= -->
+<header class="h-20 min-h-20 bg-slate-900/90 border-b border-slate-800/80 px-6 py-3 flex items-center justify-between shrink-0 backdrop-blur-md z-30">
+    <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-indigo-600 p-0.5 shadow-lg shadow-emerald-500/10">
+                <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-emerald-400 text-lg tracking-tighter">CE</div>
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-base font-extrabold text-white tracking-tight whitespace-nowrap">ChildESG™ & LaPaQ Hub</h1>
+                    <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">v2.9 Enterprise</span>
+                </div>
+                <p class="text-xs text-slate-400 font-medium">Partner Governance: <span class="text-indigo-300 font-bold">Kemaih Sdn Bhd</span> • Reg: <span class="font-mono text-slate-300">202001012345</span></p>
+            </div>
+        </div>
+    </div>
+
+<div class="flex items-center space-x-3">
+    <div class="hidden xl:flex items-center space-x-3 bg-slate-950 border border-slate-800/80 px-3 py-1.5 rounded-xl text-xs font-mono">
+        <span class="flex items-center text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span>
+            Ledger: <span class="text-white ml-1 font-bold">0x89F...34A2</span>
+        </span>
+        <span class="text-slate-700">|</span>
+        <span class="text-slate-400">WHO Standard RNI Engine v4.2</span>
+    </div>
+
+    <a href="index.html" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 text-xs font-bold rounded-xl transition flex items-center space-x-1.5">
+        <span>📱</span><span class="hidden sm:inline">Mobile PWA</span>
+    </a>
+
+    <a href="https://lapaq.app:3000/login" target="_blank" rel="noopener noreferrer" id="lapaq-portal-header-btn" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center space-x-1.5 shadow-lg shadow-emerald-600/20 border border-emerald-400/30">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        <span>Lapaq Portal Login</span>
+    </a>
+
+    <button onclick="openAuthModal()" id="auth-header-btn" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center space-x-1.5 shadow-lg shadow-blue-600/20 border border-blue-400/30">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        <span>Partner Portal Login</span>
+    </button>
+
+    <a href="https://childesg-mobile.vercel.app/reports/fy2026/kemaih-esg-report-fy2026.html" target="_blank" rel="noopener noreferrer"
+       class="bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-2 shadow-lg shadow-indigo-600/20">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+        <span class="hidden md:inline">View Report</span>
+    </a>
+
+    <div class="relative">
+        <button onclick="toggleProfileDropdown()" class="flex items-center space-x-3 pl-2 border-l border-slate-800 hover:opacity-85 transition cursor-pointer text-left focus:outline-none">
+            <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 font-black text-sm">AR</div>
+            <div class="hidden lg:block">
+                <p class="text-xs font-bold text-slate-200 flex items-center space-x-1">
+                    <span>Ainol Razman</span>
+                    <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </p>
+                <p class="text-[10px] font-semibold text-emerald-400">Chief Executive Officer</p>
+            </div>
+        </button>
+
+        <div id="profile-dropdown-panel" class="absolute right-0 mt-3 w-72 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-4 space-y-3 z-50 hidden backdrop-blur-md">
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white font-black text-base shadow-md">AR</div>
+                <div>
+                    <p class="text-xs font-black text-white">Ainol Razman</p>
+                    <p class="text-[10px] font-bold text-emerald-400">Chief Executive Officer</p>
+                    <p class="text-[10px] text-slate-400 font-mono">ainol.razman@kemaih.org</p>
+                </div>
+            </div>
+            <div class="space-y-1 text-xs text-slate-300">
+                <div class="flex justify-between items-center py-1.5 px-2 bg-slate-950/60 rounded-xl">
+                    <span class="text-slate-400 text-[10px]">Entity Registered</span>
+                    <span class="font-bold text-indigo-300">Kemaih Sdn Bhd</span>
+                </div>
+                <div class="flex justify-between items-center py-1.5 px-2 bg-slate-950/60 rounded-xl">
+                    <span class="text-slate-400 text-[10px]">Security Clearance</span>
+                    <span class="font-bold text-emerald-400">Level 4 (Admin / CEO)</span>
+                </div>
+                <div class="flex justify-between items-center py-1.5 px-2 bg-slate-950/60 rounded-xl">
+                    <span class="text-slate-400 text-[10px]">Session Status</span>
+                    <span class="font-mono text-emerald-400 text-[10px]">Active (0x89F...)</span>
+                </div>
+            </div>
+            <div class="pt-2 border-t border-slate-800">
+                <button onclick="handleUserLogout()" class="w-full bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 font-bold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    <span>Secure Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</header>
+
+<div class="flex-1 flex overflow-hidden">
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="w-64 bg-slate-900/60 border-r border-slate-800/80 flex flex-col justify-between shrink-0 p-4 space-y-6">
+    <div class="space-y-6">
+        <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 px-3 block mb-2">Partner Portals</span>
+            <nav class="space-y-1">
+                <button id="nav-new-program" onclick="switchMainTab('new-program')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition"><span class="text-base">✨</span><span>New Program & Activity</span></button>
+                <button id="nav-esg" onclick="switchMainTab('esg')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition"><span class="text-base">🏆</span><span>ESG & Impact Overview</span></button>
+                <button id="nav-lapaq" onclick="switchMainTab('lapaq')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 bg-indigo-600 text-white shadow-md shadow-indigo-600/20 transition"><span class="text-base">🥗</span><span>LaPaQ Nutrition & Growth</span></button>
+                <button id="nav-roster" onclick="switchMainTab('roster')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition"><span class="text-base">📋</span><span>Programs & Roster Hub</span></button>
+                <button id="nav-audit" onclick="switchMainTab('audit')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold flex items-center space-x-3 text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition"><span class="text-base">🛡️</span><span>Audit & Ledger Logs</span></button>
+            </nav>
+        </div>
+
+        <div class="bg-slate-950/80 rounded-2xl p-3.5 border border-slate-800/80 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 flex items-center">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    Live Filters
+                </span>
+                <button onclick="resetGlobalFilters()" class="text-[9px] font-bold text-slate-400 hover:text-white transition">Reset</button>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">State / Region</label>
+                    <select id="filter-region" onchange="applyGlobalFilters()" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="all">All Deployment States</option>
+                        <option value="kl">W.P. Kuala Lumpur</option>
+                        <option value="selangor" selected>Selangor (PJ & Shah Alam)</option>
+                        <option value="perak">Perak (Ipoh)</option>
+                        <option value="pahang">Pahang (Kuantan)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Child Cohort / Age</label>
+                    <select id="filter-cohort" onchange="applyGlobalFilters()" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="all">All Audited Cohorts (0 - 12 Yrs)</option>
+                        <option value="toddlers">Early Childhood (0 - 5 Yrs)</option>
+                        <option value="juniors">Primary Juniors (6 - 9 Yrs)</option>
+                        <option value="seniors">Pre-Teens (10 - 12 Yrs)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Partner Organization</label>
+                    <select id="filter-partner" onchange="applyGlobalFilters()" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="kemaih" selected>Kemaih Sdn Bhd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Time Horizon</label>
+                    <div class="grid grid-cols-3 gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800">
+                        <button onclick="setFilterTime('1m')" id="time-1m" class="py-1 text-[10px] font-bold rounded-lg text-slate-400 hover:text-white transition">1M</button>
+                        <button onclick="setFilterTime('6m')" id="time-6m" class="py-1 text-[10px] font-bold rounded-lg bg-indigo-600 text-white shadow transition">6M</button>
+                        <button onclick="setFilterTime('ytd')" id="time-ytd" class="py-1 text-[10px] font-bold rounded-lg text-slate-400 hover:text-white transition">YTD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-slate-900 to-indigo-950/80 rounded-2xl p-3.5 border border-indigo-500/30 text-xs space-y-2">
+        <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-indigo-300 uppercase tracking-wider">Current Tier</span>
+            <span class="bg-emerald-500/20 text-emerald-400 font-extrabold px-2 py-0.5 rounded-md text-[10px] border border-emerald-500/30">Silver Verified</span>
+        </div>
+        <p class="font-black text-white text-base">82 <span class="text-xs font-bold text-slate-400">/ 100 ESG Score</span></p>
+        <button onclick="openWizardModal()" class="w-full bg-indigo-600/80 hover:bg-indigo-600 text-white font-bold py-1.5 rounded-xl text-[10px] transition shadow-xs flex items-center justify-center space-x-1"><span>Upgrade to Gold Tier</span><span>→</span></button>
+    </div>
+</aside>
+
+<!-- ================= MAIN VIEWPORT ================= -->
+<main id="dashboard-viewport" class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-6">
+
+    <!-- ============ VIEW: NEW PROGRAM ============ -->
+    <section id="view-new-program" class="space-y-6 hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6">
+            <div>
+                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">Initiative Builder</span>
+                <h2 class="text-lg font-black text-white tracking-tight mt-1">Launch New Child ESG & Nutrition Activity</h2>
+                <p class="text-xs text-slate-400 mt-0.5">Design, register, and bind UN Sustainable Development Goal evidence streams for Kemaih Sdn Bhd.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="openHistoryModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/80 font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-2"><span>📜</span><span>History</span></button>
+                <button onclick="openNewProgramModal()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-emerald-600/20 flex items-center space-x-2"><span>✨ Create New Program</span></button>
+            </div>
+        </div>
+
+        <!-- Collapsible: Filters -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-lg shrink-0">🔍</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Filter Programs &amp; Activities</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Filter by course, date range, location &amp; participant count</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80 space-y-3">
+                        <div class="flex items-center justify-end pb-1">
+                            <button onclick="resetProgramFilters()" class="text-[10px] font-bold text-slate-400 hover:text-white transition">Reset Program Filters</button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Course / Activity Name (by State)</label>
+                                <select id="prog-filter-course" onchange="applyProgramFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500">
+                                    <option value="all">All Kemaih Courses</option>
+                                    <optgroup label="📍 W.P. Kuala Lumpur">
+                                        <option value="AI Nutrition & Health Junior Bootcamp">AI Nutrition & Health Junior Bootcamp</option>
+                                        <option value="LaPaQ Micronutrient Fortification Workshop">LaPaQ Micronutrient Fortification Workshop</option>
+                                        <option value="Sustainable Food Systems Seminar">Sustainable Food Systems Seminar</option>
+                                        <option value="Kemaih Youth Leadership & Fitness Orientation">Kemaih Youth Leadership & Fitness Orientation</option>
+                                    </optgroup>
+                                    <optgroup label="📍 Selangor">
+                                        <option value="Zero Waste Kids Workshop">Zero Waste Kids Workshop (Petaling Jaya)</option>
+                                        <option value="Program SEJAHTERA School Meal Trial">Program SEJAHTERA School Meal Trial (Shah Alam)</option>
+                                        <option value="ChildESG Baseline Health Assessment">ChildESG Baseline Health Assessment (Petaling Jaya)</option>
+                                        <option value="Early Childhood Nutrition Screening">Early Childhood Nutrition Screening (Shah Alam)</option>
+                                    </optgroup>
+                                    <optgroup label="📍 Perak">
+                                        <option value="Junior Active Physical Play & Fitness">Junior Active Physical Play & Fitness (Ipoh)</option>
+                                        <option value="Community Wellness & Hygiene Drive">Community Wellness & Hygiene Drive (Ipoh)</option>
+                                    </optgroup>
+                                    <optgroup label="📍 Pahang">
+                                        <option value="Eco-Warrior Tree Planting & Biodiversity">Eco-Warrior Tree Planting & Biodiversity (Kuantan)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Execution Date Range</label>
+                                <div class="flex items-center gap-1.5">
+                                    <input type="date" id="prog-filter-date-from" onchange="applyProgramFilters()" title="From date" class="flex-1 min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500">
+                                    <span class="text-[9px] font-bold text-slate-500 uppercase shrink-0">to</span>
+                                    <input type="date" id="prog-filter-date-to" onchange="applyProgramFilters()" title="To date" class="flex-1 min-w-0 bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500">
+                                </div>
+                            </div>
+                            <div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Location / Hub</label><select id="prog-filter-location" onchange="applyProgramFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"><option value="all">All Locations</option><option value="Kuala Lumpur">Kuala Lumpur Hub</option><option value="Petaling Jaya">Petaling Jaya Center</option><option value="Shah Alam">Shah Alam Center</option><option value="Ipoh">Ipoh Regional Center</option><option value="Kuantan">Kuantan Community Hub</option></select></div>
+                            <div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Min. Participants</label><select id="prog-filter-participants" onchange="applyProgramFilters()" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs font-semibold text-slate-200 focus:outline-none focus:border-emerald-500"><option value="0">Any Capacity</option><option value="25">25+ Participants</option><option value="35">35+ Participants</option><option value="45">45+ Participants</option></select></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Programs Grid -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-lg shrink-0">📋</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Active Programs &amp; Activities</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">All Kemaih courses across deployment hubs</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap"><strong id="programs-filtered-count" class="mr-1">10</strong> Programs</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div id="programs-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ VIEW: ESG OVERVIEW ============ -->
+    <section id="view-esg" class="space-y-6 hidden">
+
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6">
+            <div>
+                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">ESG Governance</span>
+                <h2 class="text-lg font-black text-white tracking-tight mt-1">ESG & Impact Overview</h2>
+                <p class="text-xs text-slate-400 mt-0.5">Institutional ESG compliance, SDG alignment, and certification tier management for Kemaih Sdn Bhd.</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="openWizardModal()" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/20 flex items-center space-x-2 border border-indigo-400/30">
+                    <span>🏆</span>
+                    <span>Certification Wizard</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Collapsible: KPI Cards -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-lg shrink-0">📊</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Key Performance Indicators</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Children reached · Tokens minted · Hubs · Compliance · Waste</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 space-y-2 relative overflow-hidden group hover:border-emerald-500/50 transition">
+                                <div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Audited Children</span><span class="text-emerald-400 text-lg">👶</span></div>
+                                <div class="flex items-baseline space-x-2"><span id="kpi-children" class="text-2xl font-black text-white tracking-tight">220</span><span class="text-[10px] font-extrabold text-emerald-400">+12% vs last mo</span></div>
+                                <p class="text-[10px] text-slate-400">Verified across sample cohorts</p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 space-y-2 relative overflow-hidden group hover:border-amber-500/50 transition">
+                                <div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Impact Tokens Minted</span><span class="text-amber-400 text-lg">🪙</span></div>
+                                <div class="flex items-baseline space-x-2"><span id="kpi-tokens" class="text-2xl font-black text-white tracking-tight">45,850</span><span class="text-[10px] font-extrabold text-amber-400">+1,250 today</span></div>
+                                <p class="text-[10px] text-slate-400">Redeemable in partner rewards ecosystem</p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 space-y-2 relative overflow-hidden group hover:border-indigo-500/50 transition">
+                                <div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Active School / Hubs</span><span class="text-indigo-400 text-lg">🏫</span></div>
+                                <div class="flex items-baseline space-x-2"><span id="kpi-hubs" class="text-2xl font-black text-white tracking-tight">14</span><span class="text-[10px] font-extrabold text-indigo-400">3 States Covered</span></div>
+                                <p class="text-[10px] text-slate-400">Taska, SK Schools & Community Hubs</p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 space-y-2 relative overflow-hidden group hover:border-teal-500/50 transition">
+                                <div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">ESG Compliance Rate</span><span class="text-teal-400 text-lg">🛡️</span></div>
+                                <div class="flex items-baseline space-x-2"><span id="kpi-compliance" class="text-2xl font-black text-white tracking-tight">82%</span><span class="text-[10px] font-extrabold text-teal-400">Silver Tier</span></div>
+                                <p class="text-[10px] text-slate-400">40+ Child Protection & Safety Criteria</p>
+                            </div>
+                            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 space-y-2 relative overflow-hidden group hover:border-green-500/50 transition">
+                                <div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Food Waste Diverted</span><span class="text-green-400 text-lg">🌱</span></div>
+                                <div class="flex items-baseline space-x-2"><span id="kpi-waste" class="text-2xl font-black text-white tracking-tight">1,420 kg</span><span class="text-[10px] font-extrabold text-green-400">-3.4t CO₂e</span></div>
+                                <p class="text-[10px] text-slate-400">Zero Waste Kitchen Initiative</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Methodology -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-lg shrink-0">📐</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Transparent ChildESG™ Assessment Scoring Methodology</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Criteria, weights, verification, and score governance</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">40+ Criteria</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80 space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-3.5 bg-blue-950/20 border border-blue-500/30 rounded-xl space-y-1"><div class="flex items-center space-x-2"><span class="bg-blue-500/20 text-blue-400 font-mono text-[10px] font-extrabold px-2 py-0.5 rounded border border-blue-500/30 uppercase">System-Generated Score</span><span class="text-xs font-bold text-white">Automated Real-Time Telemetry</span></div><p class="text-[11px] text-slate-300">Continuous AI-driven evaluation using daily meal logs, WHO z-score growth checkups, and workshop attendance. Serves as internal diagnostic monitoring.</p></div>
+                            <div class="p-3.5 bg-emerald-950/20 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex items-center space-x-2"><span class="bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-extrabold px-2 py-0.5 rounded border border-emerald-500/30 uppercase">Independently Certified Result</span><span class="text-xs font-bold text-white">Accredited Auditor Verified</span></div><p class="text-[11px] text-slate-300">Formally audited by certified third-party ESG assessors against SHA-256 ledger records. Required for official investor due diligence and grant submissions.</p></div>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-950/80 text-[10px] font-extrabold uppercase text-slate-400 border-b border-slate-800">
+                                    <tr><th class="py-3 px-3">Pillar &amp; Focus Area</th><th class="py-3 px-3">Assessment Criteria</th><th class="py-3 px-3">Weight</th><th class="py-3 px-3">Evidence Sources</th><th class="py-3 px-3">Primary Assessor</th><th class="py-3 px-3">Review Date</th><th class="py-3 px-3">Expiry Date</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/60 font-medium">
+                                    <tr class="hover:bg-slate-800/40 transition"><td class="py-3 px-3 font-bold text-emerald-400">🌱 Environmental</td><td class="py-3 px-3 font-semibold text-white">Zero Waste &amp; Kitchen Operations</td><td class="py-3 px-3 font-mono font-bold text-slate-200">15%</td><td class="py-3 px-3 text-[11px] text-slate-400">Kitchen scale logs, composting receipts</td><td class="py-3 px-3 text-slate-300">AI Engine / Green Kitchen Auditor</td><td class="py-3 px-3 font-mono text-[11px] text-slate-300">2026-10-01</td><td class="py-3 px-3 font-mono text-[11px] text-amber-400">2027-03-30</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition"><td class="py-3 px-3 font-bold text-emerald-400">🌱 Environmental</td><td class="py-3 px-3 font-semibold text-white">Eco-Stewardship &amp; Climate Education</td><td class="py-3 px-3 font-mono font-bold text-slate-200">15%</td><td class="py-3 px-3 text-[11px] text-slate-400">Attendance rosters, geo-tagged photos</td><td class="py-3 px-3 text-slate-300">Program Coordinator</td><td class="py-3 px-3 font-mono text-[11px] text-slate-300">2026-09-25</td><td class="py-3 px-3 font-mono text-[11px] text-amber-400">2027-09-25</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition"><td class="py-3 px-3 font-bold text-blue-400">👥 Social</td><td class="py-3 px-3 font-semibold text-white">LaPaQ Micronutrient &amp; WHO Growth</td><td class="py-3 px-3 font-mono font-bold text-slate-200">25%</td><td class="py-3 px-3 text-[11px] text-slate-400">LaPaQ meal logs, WHO z-score growth records</td><td class="py-3 px-3 text-slate-300">Registered Dietitian / Nutrition Engine</td><td class="py-3 px-3 font-mono text-[11px] text-slate-300">2026-10-15</td><td class="py-3 px-3 font-mono text-[11px] text-amber-400">2027-01-13</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition"><td class="py-3 px-3 font-bold text-blue-400">👥 Social</td><td class="py-3 px-3 font-semibold text-white">Child Safeguarding &amp; Physical Play</td><td class="py-3 px-3 font-mono font-bold text-slate-200">20%</td><td class="py-3 px-3 text-[11px] text-slate-400">Physical fitness logs, safety checklists</td><td class="py-3 px-3 text-slate-300">Center Supervisor / Lead Educator</td><td class="py-3 px-3 font-mono text-[11px] text-slate-300">2026-08-10</td><td class="py-3 px-3 font-mono text-[11px] text-amber-400">2027-02-06</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition"><td class="py-3 px-3 font-bold text-purple-400">🏛️ Governance</td><td class="py-3 px-3 font-semibold text-white">PDPA &amp; Child Data Privacy</td><td class="py-3 px-3 font-mono font-bold text-slate-200">15%</td><td class="py-3 px-3 text-[11px] text-slate-400">Encrypted ledger hashes, parent consents</td><td class="py-3 px-3 text-slate-300">Data Protection Officer (DPO)</td><td class="py-3 px-3 font-mono text-[11px] text-slate-300">2026-06-01</td><td class="py-3 px-3 font-mono text-[11px] text-amber-400">2027-06-01</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition"><td class="py-3 px-3 font-bold text-purple-400">🏛️ Governance</td><td class="py-3 px-3 font-semibold text-white">Supply Chain &amp; Financial Transparency</td><td class="py-3 px-3 font-mono font-bold text-slate-200">10%</td><td class="py-3 px-3 text-[11px] text-slate-400">Procurement logs, token minting audits</td><td class="py-3 px-3 text-slate-300">Independent ESG Auditor</td><td class="py-3 px-3 font-mono text-[11px] text-slate-300">2026-08-20</td><td class="py-3 px-3 font-mono text-[11px] text-amber-400">2027-08-20</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Pillars + SDG -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-lg shrink-0">🏆</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">3 Pillars Governance &amp; SDG Impact Matrix</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Institutional ESG scorecard + 7 active UN SDG contributions · click SDG cards for details</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-7 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3">
+                                    <div><h2 class="text-sm font-bold text-white uppercase tracking-wider">ChildESG™ 3 Pillars Breakdown</h2><p class="text-xs text-slate-400">Institutional ESG Scorecard audit covering 40+ indicators</p></div>
+                                    <button onclick="openEsgBreakdownModal()" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-2.5 py-1 rounded-lg transition cursor-pointer flex items-center space-x-1.5"><span>Score: 82 / 100</span><span class="text-[10px]">🔍</span></button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="p-3.5 bg-emerald-950/20 border border-emerald-500/30 rounded-xl space-y-2"><div class="flex justify-between items-center"><span class="text-xs font-bold text-emerald-300">🌱 Environmental (E)</span><span class="text-xs font-black text-emerald-400">78 / 100</span></div><div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full" style="width: 78%"></div></div><p class="text-[10px] text-slate-400">Climate literacy, green kitchen habits &amp; biodiversity awareness.</p></div>
+                                    <div class="p-3.5 bg-blue-950/20 border border-blue-500/30 rounded-xl space-y-2"><div class="flex justify-between items-center"><span class="text-xs font-bold text-blue-300">👥 Social (S)</span><span class="text-xs font-black text-blue-400">86 / 100</span></div><div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-blue-500 h-full" style="width: 86%"></div></div><p class="text-[10px] text-slate-400">Child safeguarding, WHO growth tracking &amp; community engagement.</p></div>
+                                    <div class="p-3.5 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-2"><div class="flex justify-between items-center"><span class="text-xs font-bold text-purple-300">🏛️ Governance (G)</span><span class="text-xs font-black text-purple-400">81 / 100</span></div><div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-purple-500 h-full" style="width: 81%"></div></div><p class="text-[10px] text-slate-400">Data privacy, PDPA compliance, audit trails &amp; transparency.</p></div>
+                                </div>
+                                <div class="h-60 pt-2"><canvas id="chart-esg-pillars"></canvas></div>
+                            </div>
+                            <div class="lg:col-span-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3"><div><h2 class="text-sm font-bold text-white uppercase tracking-wider">Interactive SDG Impact Matrix</h2><p class="text-xs text-slate-400">Verified UN SDG contributions · <span class="text-indigo-400">Click any card to pin &amp; view full report</span></p></div><span class="text-xs font-mono text-indigo-400">7 Active Goals</span></div>
+                                <div class="grid grid-cols-2 gap-2.5 max-h-[310px] overflow-y-auto custom-scrollbar pr-1">
+                                    <div data-sdg="2" onclick="handleSdgClick(event, '2')" onmouseenter="handleSdgHover(event, '2')" onmouseleave="handleSdgLeave()" class="p-3 bg-slate-950/80 border border-amber-500/30 rounded-xl space-y-1 hover:border-amber-500 transition cursor-pointer"><div class="flex justify-between items-center"><span class="text-lg">🥗</span><span class="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full">SDG 2</span></div><p class="text-xs font-bold text-white">Zero Hunger</p><p class="text-[10px] text-slate-400">142 evidence records • LaPaQ RNI Fortification</p></div>
+                                    <div data-sdg="3" onclick="handleSdgClick(event, '3')" onmouseenter="handleSdgHover(event, '3')" onmouseleave="handleSdgLeave()" class="p-3 bg-slate-950/80 border border-emerald-500/30 rounded-xl space-y-1 hover:border-emerald-500 transition cursor-pointer"><div class="flex justify-between items-center"><span class="text-lg">💚</span><span class="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">SDG 3</span></div><p class="text-xs font-bold text-white">Good Health &amp; Well-being</p><p class="text-[10px] text-slate-400">220 cohort checkups • Physical Play</p></div>
+                                    <div data-sdg="4" onclick="handleSdgClick(event, '4')" onmouseenter="handleSdgHover(event, '4')" onmouseleave="handleSdgLeave()" class="p-3 bg-slate-950/80 border border-red-500/30 rounded-xl space-y-1 hover:border-red-500 transition cursor-pointer"><div class="flex justify-between items-center"><span class="text-lg">📚</span><span class="text-[10px] font-mono font-bold bg-red-500/20 text-red-300 px-2 py-0.5 rounded-full">SDG 4</span></div><p class="text-xs font-bold text-white">Quality Education</p><p class="text-[10px] text-slate-400">18 Workshops • ESG Junior Bootcamps</p></div>
+                                    <div data-sdg="10" onclick="handleSdgClick(event, '10')" onmouseenter="handleSdgHover(event, '10')" onmouseleave="handleSdgLeave()" class="p-3 bg-slate-950/80 border border-pink-500/30 rounded-xl space-y-1 hover:border-pink-500 transition cursor-pointer"><div class="flex justify-between items-center"><span class="text-lg">🤝</span><span class="text-[10px] font-mono font-bold bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full">SDG 10</span></div><p class="text-xs font-bold text-white">Reduced Inequalities</p><p class="text-[10px] text-slate-400">4 Community Centers • KEMAS Early Access</p></div>
+                                    <div data-sdg="12" onclick="handleSdgClick(event, '12')" onmouseenter="handleSdgHover(event, '12')" onmouseleave="handleSdgLeave()" class="p-3 bg-slate-950/80 border border-yellow-500/30 rounded-xl space-y-1 hover:border-yellow-500 transition cursor-pointer"><div class="flex justify-between items-center"><span class="text-lg">♻️</span><span class="text-[10px] font-mono font-bold bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full">SDG 12</span></div><p class="text-xs font-bold text-white">Responsible Consumption</p><p class="text-[10px] text-slate-400">1.42t Waste Diverted • Sustainable Cooking</p></div>
+                                    <div data-sdg="13" onclick="handleSdgClick(event, '13')" onmouseenter="handleSdgHover(event, '13')" onmouseleave="handleSdgLeave()" class="p-3 bg-slate-950/80 border border-green-500/30 rounded-xl space-y-1 hover:border-green-500 transition cursor-pointer"><div class="flex justify-between items-center"><span class="text-lg">🌱</span><span class="text-[10px] font-mono font-bold bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full">SDG 13</span></div><p class="text-xs font-bold text-white">Climate Action</p><p class="text-[10px] text-slate-400">MNS Eco-Warrior Tree Planting Logs</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ VIEW: LAPAQ ============ -->
+    <section id="view-lapaq" class="space-y-4">
+
+        <div id="map-hover-tooltip" class="fixed hidden z-50 pointer-events-none bg-slate-900/95 border border-indigo-500/50 shadow-2xl rounded-xl p-3 text-xs space-y-1 text-slate-100 backdrop-blur-md max-w-xs transition-opacity duration-150">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+                <span id="tooltip-state-name" class="font-extrabold text-indigo-300">State Name</span>
+                <span id="tooltip-badge" class="text-[9px] font-mono font-bold bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded">Active Hub</span>
+            </div>
+            <div class="grid grid-cols-2 gap-x-3 gap-y-1 pt-1 font-mono text-[10px]">
+                <div>Courses: <strong id="tooltip-courses" class="text-slate-200">0</strong></div>
+                <div>Sample: <strong id="tooltip-pax" class="text-emerald-400">0 Pax</strong></div>
+                <div>Stunting: <strong id="tooltip-stunting" class="text-amber-400">0%</strong></div>
+                <div>Obesity: <strong id="tooltip-obesity" class="text-rose-400">0%</strong></div>
+            </div>
+            <p class="text-[9px] text-slate-400 italic pt-1 border-t border-slate-800/60">Click map pin or region to view detailed WHO Growth Analysis</p>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900/80 border border-slate-800/80 rounded-2xl p-6">
+            <div><span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">Geographical LaPaQ Analytics</span><h2 class="text-lg font-black text-white tracking-tight mt-1">Malaysian State Geo Mapping: Stunting &amp; Obesity Analysis</h2><p class="text-xs text-slate-400 mt-0.5">Real-time health classification &amp; growth deficit analysis computed directly from Kemaih deployment history courses.</p></div>
+            <div class="flex items-center space-x-2 font-mono text-xs"><span class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300">Active State Hubs: <strong class="text-emerald-400">4 States (KL, Selangor, Perak, Pahang)</strong></span></div>
+        </div>
+
+        <!-- Collapsible: State Hub Selector -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-lg shrink-0">🗺️</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Active State Hub Selector</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Click a state to filter all charts and analysis</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                            <button onclick="selectGeoState('all')" id="geo-btn-all" class="p-3 bg-indigo-600 text-white rounded-2xl border border-indigo-400/30 text-left transition space-y-1 shadow-lg shadow-indigo-600/20"><span class="text-[10px] font-extrabold uppercase tracking-wider opacity-80">All Active States</span><p class="text-sm font-black">Entire Malaysia</p><p class="text-[10px] opacity-90 font-mono">220 Participants</p></button>
+                            <button onclick="selectGeoState('kl')" id="geo-btn-kl" class="p-3 bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-2xl border border-slate-800/80 text-left transition space-y-1"><span class="text-[10px] font-extrabold uppercase text-indigo-400 tracking-wider">W.P. Kuala Lumpur</span><p class="text-sm font-black text-white">KL HQ Hub</p><p class="text-[10px] text-slate-400 font-mono">70 Participants</p></button>
+                            <button onclick="selectGeoState('selangor')" id="geo-btn-selangor" class="p-3 bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-2xl border border-slate-800/80 text-left transition space-y-1"><span class="text-[10px] font-extrabold uppercase text-emerald-400 tracking-wider">Selangor</span><p class="text-sm font-black text-white">PJ &amp; Shah Alam</p><p class="text-[10px] text-slate-400 font-mono">60 Participants</p></button>
+                            <button onclick="selectGeoState('perak')" id="geo-btn-perak" class="p-3 bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-2xl border border-slate-800/80 text-left transition space-y-1"><span class="text-[10px] font-extrabold uppercase text-amber-400 tracking-wider">Perak</span><p class="text-sm font-black text-white">Ipoh Hub</p><p class="text-[10px] text-slate-400 font-mono">40 Participants</p></button>
+                            <button onclick="selectGeoState('pahang')" id="geo-btn-pahang" class="p-3 bg-slate-950/60 hover:bg-slate-800 text-slate-300 rounded-2xl border border-slate-800/80 text-left transition space-y-1"><span class="text-[10px] font-extrabold uppercase text-rose-400 tracking-wider">Pahang</span><p class="text-sm font-black text-white">Kuantan Hub</p><p class="text-[10px] text-slate-400 font-mono">50 Participants</p></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: WHO Charts (pies + bar) -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-lg shrink-0">📈</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">WHO Rate Classification Charts</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Obesity &amp; stunting distribution by state and gender</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">WHO Z-Score</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><h3 id="card-obesity-state-title" class="text-xs font-bold text-white uppercase tracking-wider">Obesity Cases by State</h3><span id="card-obesity-state-badge" class="text-[10px] font-mono font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded">18 Cases</span></div>
+                                <div class="h-52"><canvas id="chart-obesity-state-pie"></canvas></div>
+                                <p id="card-obesity-state-note" class="text-[10px] text-slate-400 leading-snug">Distribution of confirmed child obesity cases (Age 7–12) across active Kemaih state hubs. Click any slice to focus.</p>
+                            </div>
+                            <div class="lg:col-span-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><h3 id="card-obesity-gender-title" class="text-xs font-bold text-white uppercase tracking-wider">Obesity Gender Split</h3><span id="card-obesity-gender-badge" class="text-[10px] font-mono font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">All States</span></div>
+                                <div class="h-52"><canvas id="chart-obesity-gender-pie"></canvas></div>
+                                <p id="card-obesity-gender-note" class="text-[10px] text-slate-400 leading-snug">Boys: 66.7% • Girls: 33.3% of confirmed obesity cases.</p>
+                            </div>
+                            <div class="lg:col-span-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><h3 id="card-stunting-state-title" class="text-xs font-bold text-white uppercase tracking-wider">Stunting Cases by State</h3><span id="card-stunting-state-badge" class="text-[10px] font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">19 Cases</span></div>
+                                <div class="h-52"><canvas id="chart-stunting-state-pie"></canvas></div>
+                                <p id="card-stunting-state-note" class="text-[10px] text-slate-400 leading-snug">Distribution of confirmed child stunting cases (Age 3–6) across active Kemaih state hubs. Click any slice to focus.</p>
+                            </div>
+                            <div class="lg:col-span-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><h3 id="card-stunting-gender-title" class="text-xs font-bold text-white uppercase tracking-wider">Stunting Gender Split</h3><span id="card-stunting-gender-badge" class="text-[10px] font-mono font-bold text-teal-400 bg-teal-500/10 border border-teal-500/20 px-2 py-0.5 rounded">All States</span></div>
+                                <div class="h-52"><canvas id="chart-stunting-gender-pie"></canvas></div>
+                                <p id="card-stunting-gender-note" class="text-[10px] text-slate-400 leading-snug">Girls: 71.4% • Boys: 28.6% of confirmed stunting cases.</p>
+                            </div>
+                            <div class="lg:col-span-12 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><div><h3 class="text-xs font-bold text-white uppercase tracking-wider">Obesity vs Stunting Rate by State (%)</h3><p class="text-[10px] text-slate-400">WHO classification comparison across 4 active Kemaih hubs — click a column to focus</p></div><span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">WHO Z-Score</span></div>
+                                <div class="h-64"><canvas id="chart-state-obesity-stunting-bar"></canvas></div>
+                                <div class="grid grid-cols-2 gap-2 text-[10px] font-mono text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-800"><div>Peak Obesity: <strong class="text-rose-400">Selangor &amp; Pahang 20.0%</strong></div><div>Peak Stunting: <strong class="text-amber-400">Pahang 32.0%</strong></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Map + State Analysis -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-lg shrink-0">📍</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Geographical Execution &amp; Risk Map</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Peninsular Malaysia hotspots &amp; interactive WHO growth analysis</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-7 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-4 relative overflow-hidden">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3"><div><h3 class="text-sm font-bold text-white uppercase tracking-wider">Execution &amp; Risk Map</h3><p class="text-xs text-slate-400">Peninsular Malaysia hotspots &amp; interactive nodes</p></div><span id="geo-selected-badge" class="text-xs font-mono font-bold bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-lg border border-indigo-500/30">Viewing: All Active States</span></div>
+                                <div id="map-container-box" class="relative w-full h-[380px] bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center p-3 overflow-hidden">
+                                    <svg class="absolute inset-0 w-full h-full opacity-10 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="grid-lapaq" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid-lapaq)" /></svg>
+                                    <svg id="peninsular-svg-map" class="w-full h-full max-w-sm drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]" viewBox="0 0 500 650" xmlns="http://www.w3.org/2000/svg">
+                                        <g stroke="#334155" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M 160 30 L 180 25 L 185 45 L 165 50 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'perlis')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 165 50 L 185 45 L 225 55 L 210 115 L 175 110 L 160 80 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'kedah')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 150 100 L 165 95 L 168 112 L 152 115 Z" fill="#334155" class="map-state-path" onmouseenter="handleMapHover(event, 'penang')" onmouseleave="handleMapLeave()" />
+                                            <path id="svg-state-perak" onclick="selectGeoState('perak')" d="M 175 110 L 210 115 L 245 170 L 230 260 L 185 240 L 170 170 Z" fill="#1e1b4b" stroke="#6366f1" stroke-width="2.5" class="map-state-path" onmouseenter="handleMapHover(event, 'perak')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 225 55 L 290 80 L 285 180 L 245 170 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'kelantan')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 290 80 L 350 140 L 330 230 L 285 180 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'terengganu')" onmouseleave="handleMapLeave()" />
+                                            <path id="svg-state-pahang" onclick="selectGeoState('pahang')" d="M 245 170 L 285 180 L 330 230 L 350 330 L 290 380 L 240 330 L 230 260 Z" fill="#31101d" stroke="#f43f5e" stroke-width="2.5" class="map-state-path" onmouseenter="handleMapHover(event, 'pahang')" onmouseleave="handleMapLeave()" />
+                                            <path id="svg-state-selangor" onclick="selectGeoState('selangor')" d="M 185 240 L 230 260 L 240 330 L 215 365 L 180 300 Z" fill="#022c22" stroke="#10b981" stroke-width="2.5" class="map-state-path" onmouseenter="handleMapHover(event, 'selangor')" onmouseleave="handleMapLeave()" />
+                                            <circle id="svg-state-kl" onclick="selectGeoState('kl')" cx="215" cy="315" r="10" fill="#4f46e5" stroke="#818cf8" stroke-width="2" class="map-state-path" onmouseenter="handleMapHover(event, 'kl')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 215 365 L 240 330 L 270 370 L 245 410 L 220 390 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'negerisembilan')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 245 410 L 265 400 L 275 425 L 250 435 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'negerisembilan')" onmouseleave="handleMapLeave()" />
+                                            <path d="M 270 370 L 350 330 L 380 430 L 320 490 L 275 425 L 265 400 Z" fill="#1e293b" class="map-state-path" onmouseenter="handleMapHover(event, 'johor')" onmouseleave="handleMapLeave()" />
+                                        </g>
+                                    </svg>
+                                    <div onclick="selectGeoState('perak')" onmouseenter="handleMapHover(event, 'perak')" onmouseleave="handleMapLeave()" class="map-pin-node absolute top-[28%] left-[36%] cursor-pointer group z-20 transition-all"><div class="relative flex items-center justify-center"><span class="animate-ping absolute inline-flex h-7 w-7 rounded-full bg-amber-400 opacity-50"></span><div class="w-8 h-8 rounded-full bg-amber-500/30 border-2 border-amber-400 flex items-center justify-center text-amber-300 font-black text-[10px] shadow-lg group-hover:scale-125 transition">PRK</div></div></div>
+                                    <div onclick="selectGeoState('selangor')" onmouseenter="handleMapHover(event, 'selangor')" onmouseleave="handleMapLeave()" class="map-pin-node absolute top-[48%] left-[32%] cursor-pointer group z-20 transition-all"><div class="relative flex items-center justify-center"><span class="animate-ping absolute inline-flex h-9 w-9 rounded-full bg-emerald-400 opacity-60"></span><div class="w-9 h-9 rounded-full bg-emerald-500/40 border-2 border-emerald-400 flex items-center justify-center text-emerald-200 font-black text-[10px] shadow-xl group-hover:scale-125 transition">SGR</div></div></div>
+                                    <div onclick="selectGeoState('kl')" onmouseenter="handleMapHover(event, 'kl')" onmouseleave="handleMapLeave()" class="map-pin-node absolute top-[52%] left-[45%] cursor-pointer group z-20 transition-all"><div class="relative flex items-center justify-center"><span class="animate-ping absolute inline-flex h-7 w-7 rounded-full bg-indigo-400 opacity-50"></span><div class="w-8 h-8 rounded-full bg-indigo-500/30 border-2 border-indigo-400 flex items-center justify-center text-indigo-300 font-black text-[10px] shadow-lg group-hover:scale-125 transition">KUL</div></div></div>
+                                    <div onclick="selectGeoState('pahang')" onmouseenter="handleMapHover(event, 'pahang')" onmouseleave="handleMapLeave()" class="map-pin-node absolute top-[42%] left-[62%] cursor-pointer group z-20 transition-all"><div class="relative flex items-center justify-center"><span class="animate-ping absolute inline-flex h-10 w-10 rounded-full bg-rose-500 opacity-75"></span><div class="w-9 h-9 rounded-full bg-rose-600/40 border-2 border-rose-400 flex items-center justify-center text-rose-200 font-black text-[10px] shadow-2xl group-hover:scale-125 transition">PHG</div></div></div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3.5">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3"><h3 id="geo-card-title" class="text-sm font-bold text-white uppercase tracking-wider">State Analysis: All Active States</h3><span id="geo-courses-count" class="text-xs text-indigo-400 font-mono font-bold bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">12 Total Courses</span></div>
+                                <div class="p-3 bg-amber-950/20 border border-amber-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-xs font-bold text-amber-400 uppercase">WHO Stunting Rate (Age 3-6)</span><span id="geo-stunting-badge" class="text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">17.3% Overall</span></div><p id="geo-stunting-detail" class="text-xl font-black text-white">19 / 110 Children</p><p id="geo-stunting-gender" class="text-[10px] text-slate-300">Girls: 13 cases (24%) • Boys: 6 cases (11%)</p></div>
+                                <div class="p-3 bg-rose-950/20 border border-rose-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-xs font-bold text-rose-400 uppercase">WHO Obesity Rate (Age 7-12)</span><span id="geo-obesity-badge" class="text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded">20.0% Peak (Selangor &amp; Pahang)</span></div><p id="geo-obesity-detail" class="text-xl font-black text-white">36 / 220 Children</p><p id="geo-obesity-gender" class="text-[10px] text-slate-300">Boys: 24 cases (22%) • Girls: 12 cases (11%)</p></div>
+                                <div class="p-3 bg-indigo-950/20 border border-indigo-500/30 rounded-xl space-y-1"><span class="text-xs font-bold text-indigo-400 uppercase block">State Micronutrient Shortage Risk</span><div class="grid grid-cols-2 gap-2 text-[10px] font-mono text-slate-300 pt-0.5"><div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800">Calcium Deficit: <strong id="geo-calcium-val" class="text-rose-400">12% RNI</strong></div><div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800">Vit C Deficit: <strong id="geo-vitc-val" class="text-amber-400">38% RNI</strong></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: State Heatmap -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-lg shrink-0">🔥</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">State Deployment &amp; WHO Rate Heatmap</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">4 verified state hubs · stunting, obesity &amp; calcium deficit by state</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">4 Hubs Verified</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-950/80 text-[10px] font-extrabold uppercase text-slate-400 border-b border-slate-800"><tr><th class="py-2.5 px-3">State &amp; Primary Hub</th><th class="py-2.5 px-3">Kemaih Courses Conducted</th><th class="py-2.5 px-3">Audited Sample</th><th class="py-2.5 px-3">Stunting Rate (3–6 Yrs)</th><th class="py-2.5 px-3">Obesity Rate (7–12 Yrs)</th><th class="py-2.5 px-3">Calcium Intake Deficit</th><th class="py-2.5 px-3">Primary Risk Level</th></tr></thead>
+                                <tbody class="divide-y divide-slate-800/60 font-medium text-[11px]">
+                                    <tr class="hover:bg-slate-800/40 transition cursor-pointer" onclick="selectGeoState('kl')" onmouseenter="handleMapHover(event, 'kl')" onmouseleave="handleMapLeave()"><td class="py-2.5 px-3 font-bold text-indigo-400">W.P. Kuala Lumpur (HQ Hub)</td><td class="py-2.5 px-3 text-slate-300">4 Courses (Bootcamp, Fortification, Seminar, Leadership)</td><td class="py-2.5 px-3 font-mono font-bold text-slate-200">70 Pax</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">11.4% (8 cases)</td><td class="py-2.5 px-3 font-mono text-indigo-400 font-bold">11.4% (8 cases)</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">14% RNI (High)</td><td class="py-2.5 px-3"><span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Moderate Risk</span></td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition cursor-pointer" onclick="selectGeoState('selangor')" onmouseenter="handleMapHover(event, 'selangor')" onmouseleave="handleMapLeave()"><td class="py-2.5 px-3 font-bold text-emerald-400">Selangor (PJ &amp; Shah Alam)</td><td class="py-2.5 px-3 text-slate-300">4 Courses (Zero Waste, SEJAHTERA, Baseline, Screening)</td><td class="py-2.5 px-3 font-mono font-bold text-slate-200">60 Pax</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">13.3% (8 cases)</td><td class="py-2.5 px-3 font-mono text-rose-400 font-black flex items-center space-x-1"><span>20.0% (12 cases)</span><span class="text-[9px] bg-rose-500/20 text-rose-300 px-1 py-0.2 rounded">Peak</span></td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">12% RNI (Critical)</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Obesity Peak Alert</span></td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition cursor-pointer" onclick="selectGeoState('perak')" onmouseenter="handleMapHover(event, 'perak')" onmouseleave="handleMapLeave()"><td class="py-2.5 px-3 font-bold text-amber-400">Perak (Ipoh Regional Hub)</td><td class="py-2.5 px-3 text-slate-300">2 Courses (Junior Play, Community Hygiene)</td><td class="py-2.5 px-3 font-mono font-bold text-slate-200">40 Pax</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">15.0% (6 cases)</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">15.0% (6 cases)</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">10% RNI (Critical)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Warning Level</span></td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition cursor-pointer" onclick="selectGeoState('pahang')" onmouseenter="handleMapHover(event, 'pahang')" onmouseleave="handleMapLeave()"><td class="py-2.5 px-3 font-bold text-rose-400">Pahang (Kuantan Community Hub)</td><td class="py-2.5 px-3 text-slate-300">2 Courses (Eco-Warrior Tree Planting, Fortification)</td><td class="py-2.5 px-3 font-mono font-bold text-slate-200">50 Pax</td><td class="py-2.5 px-3 font-mono text-rose-400 font-black flex items-center space-x-1"><span>32.0% (16 cases)</span><span class="text-[9px] bg-rose-500/20 text-rose-300 px-1 py-0.2 rounded">Peak</span></td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">20.0% (10 cases)</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">18% RNI (Elevated)</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Stunting Peak Alert</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Quick Actions -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-lg shrink-0">⚡</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Quick Actions &amp; Marketplaces</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Menu analysis · Nutritionist directory</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <button onclick="openMenuAnalysisModal()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white p-4 rounded-2xl shadow-lg shadow-emerald-600/20 border border-emerald-400/30 flex items-center justify-between group transition"><div class="flex items-center space-x-3 text-left"><span class="text-2xl p-2 bg-slate-950/40 rounded-xl">🥗</span><div><h4 class="text-sm font-extrabold text-white">Menu &amp; Dietary Analysis Module</h4><p class="text-[11px] text-emerald-100 opacity-90">Nutrient Adequacy Scorecard, SEJAHTERA Cycle &amp; Cost Calculator</p></div></div><span class="text-lg font-bold group-hover:translate-x-1 transition">→</span></button>
+                            <button onclick="openNutritionistModal()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-4 rounded-2xl shadow-lg shadow-indigo-600/20 border border-blue-400/30 flex items-center justify-between group transition"><div class="flex items-center space-x-3 text-left"><span class="text-2xl p-2 bg-slate-950/40 rounded-xl">👩‍⚕️</span><div><h4 class="text-sm font-extrabold text-white">Nutritionist Services Marketplace</h4><p class="text-[11px] text-blue-100 opacity-90">Pediatric Dietitians Directory &amp; Consultation Booking</p></div></div><span class="text-lg font-bold group-hover:translate-x-1 transition">→</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Growth + RNI Charts -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-lg shrink-0">📊</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Growth Trajectory &amp; RNI Compliance</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Cohort vs WHO median · 11 tracked micronutrients</p>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-6 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3"><h2 class="text-sm font-bold text-white uppercase tracking-wider">Cohort Growth Trajectory vs WHO Median</h2><span class="text-xs font-mono text-emerald-400">LaPaQ Monitored</span></div>
+                                <div class="h-64"><canvas id="chart-lapaq-trajectory"></canvas></div>
+                                <p class="text-[11px] text-slate-400 italic bg-slate-900 p-2.5 rounded-xl border border-slate-800">💡 <strong class="text-indigo-300">Target Action Plan:</strong> Targeted LaPaQ micronutrient fortification is active across school hubs to directly offset Calcium and Vitamin C deficits.</p>
+                            </div>
+                            <div class="lg:col-span-6 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3"><div><h2 class="text-sm font-bold text-white uppercase tracking-wider">Overall RNI Micronutrient Compliance</h2><p class="text-[10px] text-slate-400">Kemaih Cohort — N=220 children</p></div><span class="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">Live Dataset</span></div>
+                                <div class="h-64"><canvas id="chart-rni-radar"></canvas></div>
+                                <div class="grid grid-cols-2 gap-2 text-[10px] font-mono text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-800"><div>Calcium (All): <strong class="text-rose-400">15.9% RNI (Critical)</strong></div><div>Potassium (All): <strong class="text-rose-400">7.9% RNI (Critical)</strong></div><div>Vit C (All): <strong class="text-amber-400">40.3% RNI (Warning)</strong></div><div>Fiber (All): <strong class="text-amber-400">15.5% RNI (Warning)</strong></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Nutrient Adequacy Summary -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-lg shrink-0">🥗</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Cohort Nutrient Adequacy Summary</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">11 nutrients across 220 children · hover KPI cards to highlight rows</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">N=220</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80 space-y-3">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pb-1">
+                            <div><h3 class="text-xs font-bold text-white uppercase tracking-wider">Nutrient Breakdown</h3><p class="text-xs text-slate-400">Comprehensive breakdown across all 11 tracked nutrients</p></div>
+                            <div class="flex items-center space-x-2 text-[10px] font-mono"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">2 Cohorts Merged</span><span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded">Avg % of RNI</span></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 pb-2">
+                            <div class="nutrient-kpi-card p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl" onmouseenter="highlightNutrients('critical', true)" onmouseleave="highlightNutrients(null, false)"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-rose-400 uppercase">Critical Gaps</span><span class="text-lg">🚨</span></div><p class="text-2xl font-black text-white">3</p><p class="text-[10px] text-rose-300">nutrients below 25% RNI</p><p class="text-[9px] text-rose-200/70 mt-1 italic">Hover to highlight Fiber, Calcium, Potassium</p></div>
+                            <div class="nutrient-kpi-card p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl" onmouseenter="highlightNutrients('warning', true)" onmouseleave="highlightNutrients(null, false)"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-amber-400 uppercase">Warnings</span><span class="text-lg">⚠️</span></div><p class="text-2xl font-black text-white">4</p><p class="text-[10px] text-amber-300">nutrients between 25–50% RNI</p><p class="text-[9px] text-amber-200/70 mt-1 italic">Hover to highlight Energy, Carbs, Sodium, Vit C</p></div>
+                            <div class="nutrient-kpi-card p-3 bg-indigo-950/30 border border-indigo-500/30 rounded-xl" onmouseenter="highlightNutrients('adequate', true)" onmouseleave="highlightNutrients(null, false)"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-indigo-400 uppercase">Adequate</span><span class="text-lg">🟢</span></div><p class="text-2xl font-black text-white">1</p><p class="text-[10px] text-indigo-300">nutrient at/above 100% RNI</p><p class="text-[9px] text-indigo-200/70 mt-1 italic">Hover to highlight Protein</p></div>
+                            <div class="nutrient-kpi-card p-3 bg-slate-950 border border-slate-700 rounded-xl" onmouseenter="highlightNutrients('all', true)" onmouseleave="highlightNutrients(null, false)"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-slate-400 uppercase">Data Note</span><span class="text-lg">📋</span></div><p class="text-2xl font-black text-white">220</p><p class="text-[10px] text-slate-400">unique children sampled</p><p class="text-[9px] text-slate-300/70 mt-1 italic">Hover to highlight all rows</p></div>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-950/80 text-[10px] font-extrabold uppercase text-slate-400 border-b border-slate-800"><tr><th class="py-2.5 px-3">Nutrient</th><th class="py-2.5 px-3">Avg % of RNI</th><th class="py-2.5 px-3">Below RNI (N=220)</th><th class="py-2.5 px-3">Adequacy Status</th><th class="py-2.5 px-3">Clinical Note</th></tr></thead>
+                                <tbody class="divide-y divide-slate-800/60 font-medium text-[11px]">
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Energy" data-category="warning"><td class="py-2.5 px-3 font-bold text-slate-200">⚡ Energy</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">30.5%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟡 Warning</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Universal caloric deficit — flagged for meal portion review</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Carbohydrates" data-category="warning"><td class="py-2.5 px-3 font-bold text-slate-200">🍚 Carbohydrates</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">27.9%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟡 Warning</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Staple rice/noodle portions under WHO guideline</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Protein" data-category="adequate"><td class="py-2.5 px-3 font-bold text-slate-200">🥩 Protein</td><td class="py-2.5 px-3 font-mono text-emerald-400 font-bold">111.6%</td><td class="py-2.5 px-3 font-mono text-slate-300">140 / 220 (63%)</td><td class="py-2.5 px-3"><span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟢 Adequate</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Strong protein coverage — only nutrient meeting RNI</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Fiber" data-category="critical"><td class="py-2.5 px-3 font-bold text-slate-200">🥦 Fiber</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">15.5%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Fruit/vegetable consumption critically low across all hubs</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Sugar" data-category="healthy"><td class="py-2.5 px-3 font-bold text-slate-200">🍬 Sugar</td><td class="py-2.5 px-3 font-mono text-emerald-400 font-bold">11.8%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">✅ Healthy</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Within WHO free-sugar &lt;10% guideline — positive signal</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Sodium" data-category="warning"><td class="py-2.5 px-3 font-bold text-slate-200">🧂 Sodium</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">39.7%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟡 Moderate</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Within limits but monitoring recommended</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Calcium" data-category="critical"><td class="py-2.5 px-3 font-bold text-slate-200">🥛 Calcium</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">15.9%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Most severe gap — drives stunting &amp; bone development risk</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Iron" data-category="moderate"><td class="py-2.5 px-3 font-bold text-slate-200">🩸 Iron</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">70.3%</td><td class="py-2.5 px-3 font-mono text-slate-300">102 / 220 (46%)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟡 Mixed</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Bimodal distribution — 118 children exceeding 100% RNI</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Potassium" data-category="critical"><td class="py-2.5 px-3 font-bold text-slate-200">🍌 Potassium</td><td class="py-2.5 px-3 font-mono text-rose-400 font-bold">7.9%</td><td class="py-2.5 px-3 font-mono text-slate-300">220 / 220 (100%)</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Lowest of all nutrients — severe fruit/legume shortfall</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Vitamin A" data-category="moderate"><td class="py-2.5 px-3 font-bold text-slate-200">🥕 Vitamin A</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">68.6%</td><td class="py-2.5 px-3 font-mono text-slate-300">205 / 220 (93%)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟡 Moderate</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Only 15 children exceed 100% — leafy greens still needed</td></tr>
+                                    <tr class="hover:bg-slate-800/40 transition" data-nutrient="Vitamin C" data-category="warning"><td class="py-2.5 px-3 font-bold text-slate-200">🍊 Vitamin C</td><td class="py-2.5 px-3 font-mono text-amber-400 font-bold">40.3%</td><td class="py-2.5 px-3 font-mono text-slate-300">209 / 220 (95%)</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟠 Warning</span></td><td class="py-2.5 px-3 text-slate-400 text-[10px]">Only 11 children exceed 100% — fortified citrus needed</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-3.5 bg-gradient-to-r from-rose-950/30 via-indigo-950/30 to-emerald-950/30 border border-slate-700 rounded-xl"><div class="flex items-start space-x-3"><span class="text-2xl">📊</span><div class="space-y-1"><p class="text-xs font-bold text-white">Data Insights Summary - (up to today) (N=220)</p><p class="text-[11px] text-slate-300 leading-relaxed">The cohort demonstrates <strong class="text-emerald-400">strong protein intake (111.6% RNI)</strong> but faces <strong class="text-rose-400">severe micronutrient gaps in calcium (15.9%), potassium (7.9%), fiber (15.5%), energy (30.5%) and carbohydrates (27.9%)</strong>. Vitamin A (68.6%), Vitamin C (40.3%), and Iron (70.3%) show partial compliance with wide variance. <strong class="text-amber-400">Calcium and Potassium represent the highest clinical priority</strong> — both showing 100% cohort non-compliance and directly correlating with the stunting rates identified in the state heatmap above.</p></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Health Risk Projection & Counterfactual -->
+        <div class="collapsible-panel bg-slate-900/80 border border-rose-500/40 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-lg shrink-0">⚠️</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Health Risk Projection &amp; Counterfactual</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">12-Month · 5-Year · Adult outcomes · intervention pathway</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] font-mono bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">7 Domains</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80 space-y-4">
+
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-rose-950/50 via-slate-950/40 to-indigo-950/50 border border-rose-500/40 rounded-2xl p-5">
+                            <div><span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">Predictive Model · N=220</span><h2 class="text-base font-black text-white tracking-tight mt-1">Health Risk Projection: If This Diet Pattern Continues</h2><p class="text-xs text-slate-400 mt-0.5 max-w-3xl">Forecast derived from the cohort's 2025 nutrient-intake profile, benchmarked against WHO / Malaysian Dietary Guidelines. Projections assume no change to current SEJAHTERA menu, meal portions, or fortification levels.</p></div>
+                            <div class="flex items-center space-x-2 font-mono text-xs shrink-0"><span class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300">Model Basis: <strong class="text-rose-400">7 Deficits × 3 Horizons</strong></span></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-slate-950/60 border border-rose-500/30 rounded-2xl p-4 space-y-2"><div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">12-Month Projection</span><span class="text-lg">📉</span></div><div class="flex items-baseline space-x-2"><span class="text-2xl font-black text-white">+7–10%</span></div><p class="text-[10px] text-slate-300 leading-snug">Additional stunting risk — current <strong class="text-amber-400">15.0%</strong> → projected <strong class="text-rose-400">22–25%</strong> at next screening cycle.</p></div>
+                            <div class="bg-slate-950/60 border border-amber-500/30 rounded-2xl p-4 space-y-2"><div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">12-Month Projection</span><span class="text-lg">🩸</span></div><div class="flex items-baseline space-x-2"><span class="text-2xl font-black text-white">~102</span></div><p class="text-[10px] text-slate-300 leading-snug">Children projected to develop iron-deficiency anemia (46% below RNI at current intake).</p></div>
+                            <div class="bg-slate-950/60 border border-indigo-500/30 rounded-2xl p-4 space-y-2"><div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-indigo-400">5-Year Projection</span><span class="text-lg">🦴</span></div><div class="flex items-baseline space-x-2"><span class="text-2xl font-black text-white">−10%</span></div><p class="text-[10px] text-slate-300 leading-snug">Peak bone mass deficit — calcium at 15.9% during the growth window permanently caps adult bone density.</p></div>
+                            <div class="bg-slate-950/60 border border-purple-500/30 rounded-2xl p-4 space-y-2"><div class="flex justify-between items-center"><span class="text-[10px] font-bold uppercase tracking-wider text-purple-400">Adult Projection</span><span class="text-lg">❤️</span></div><div class="flex items-baseline space-x-2"><span class="text-2xl font-black text-white">+40%</span></div><p class="text-[10px] text-slate-300 leading-snug">Hypertension risk — the 5:1 Na:K ratio from potassium deficit (7.9%) far exceeds WHO's 1:1 target.</p></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-7 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
+                                    <div><h3 class="text-xs font-bold text-white uppercase tracking-wider">Projected Height-for-Age Trajectory (0–18 Years)</h3><p class="text-[10px] text-slate-400">Current diet vs. early intervention vs. WHO median — hover a line to focus</p></div>
+                                    <div class="flex items-center space-x-1.5">
+                                        <button id="btn-height-male" onclick="toggleHeightGender('male')" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-indigo-600 text-white shadow transition">♂ Male</button>
+                                        <button id="btn-height-female" onclick="toggleHeightGender('female')" class="px-2.5 py-1 text-[10px] font-bold rounded-lg text-slate-400 hover:text-white transition">♀ Female</button>
+                                    </div>
+                                </div>
+                                <div class="h-72"><canvas id="chart-predicted-height"></canvas></div>
+                                <div class="grid grid-cols-3 gap-2 text-[10px] font-mono">
+                                    <div class="legend-item bg-slate-900 p-2 rounded-lg border border-rose-500/30" onmouseenter="highlightHeightSeries(1)" onmouseleave="highlightHeightSeries(null)"><span class="text-rose-400">■</span> Current Diet</div>
+                                    <div class="legend-item bg-slate-900 p-2 rounded-lg border border-emerald-500/30" onmouseenter="highlightHeightSeries(2)" onmouseleave="highlightHeightSeries(null)"><span class="text-emerald-400">■</span> Intervention @ 6mo</div>
+                                    <div class="legend-item bg-slate-900 p-2 rounded-lg border border-indigo-500/30" onmouseenter="highlightHeightSeries(0)" onmouseleave="highlightHeightSeries(null)"><span class="text-indigo-400">■</span> WHO Median (<span id="who-label">Male</span> <span id="who-value">171 cm</span>)</div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-5 bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><div><h3 class="text-xs font-bold text-white uppercase tracking-wider">Adult Complication Risk Multipliers</h3><p class="text-[10px] text-slate-400">Relative risk vs. well-nourished peers (1.0× = baseline)</p></div><span class="text-[10px] font-mono font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded">vs WHO</span></div>
+                                <div class="h-72"><canvas id="chart-adult-risk-multipliers"></canvas></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
+                                <div><h3 class="text-xs font-bold text-white uppercase tracking-wider">Health Domain Risk Matrix</h3><p class="text-[10px] text-slate-400">Projected outcomes if nutrient deficits persist at 2025 levels</p></div>
+                                <span class="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded font-bold">7 Domains At Risk</span>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full text-left text-xs text-slate-300">
+                                    <thead class="bg-slate-900/80 text-[10px] font-extrabold uppercase text-slate-400 border-b border-slate-800"><tr><th class="py-2.5 px-3">Health Domain</th><th class="py-2.5 px-3">Driver</th><th class="py-2.5 px-3">12-Month</th><th class="py-2.5 px-3">5-Year</th><th class="py-2.5 px-3">Adult Outcome</th><th class="py-2.5 px-3">Severity</th></tr></thead>
+                                    <tbody class="divide-y divide-slate-800/60 font-medium text-[11px]">
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-rose-400">📏 Growth &amp; Stature</td><td class="py-2.5 px-3 text-slate-300">Calcium 15.9% • Energy 30.5% • Carbs 27.9%</td><td class="py-2.5 px-3 text-amber-300">Stunting 15% → <strong>22–25%</strong></td><td class="py-2.5 px-3 text-rose-300">Adult height <strong>−4 to −8 cm</strong></td><td class="py-2.5 px-3 text-slate-300">Reduced productivity ~10–15%</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td></tr>
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-rose-400">🦴 Bone &amp; Skeletal</td><td class="py-2.5 px-3 text-slate-300">Calcium 15.9% (100% below RNI)</td><td class="py-2.5 px-3 text-amber-300">Subclinical BMD decline</td><td class="py-2.5 px-3 text-rose-300">Peak bone mass <strong>−10 to −15%</strong></td><td class="py-2.5 px-3 text-slate-300">Osteoporosis +35% • fracture +25% (by 60s)</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td></tr>
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-amber-400">🛡️ Immune &amp; Infection</td><td class="py-2.5 px-3 text-slate-300">Vit C 40.3% • Vit A 68.6%</td><td class="py-2.5 px-3 text-amber-300">Respiratory <strong>+25–35%</strong> • diarrhea <strong>+30%</strong></td><td class="py-2.5 px-3 text-amber-300">Growth faltering • school absence +15–20%</td><td class="py-2.5 px-3 text-slate-300">Chronic immune dysregulation • autoimmune +15%</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟠 Warning</span></td></tr>
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-rose-400">🧠 Cognitive &amp; Learning</td><td class="py-2.5 px-3 text-slate-300">Iron 70.3% • Energy 30.5%</td><td class="py-2.5 px-3 text-rose-300"><strong>IQ −3 to −5 pts</strong> • attention deficit</td><td class="py-2.5 px-3 text-rose-300">If untreated: <strong>IQ −5 to −8 pts</strong></td><td class="py-2.5 px-3 text-slate-300">Lifetime earnings −8–12%</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td></tr>
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-rose-400">❤️ Metabolic &amp; Cardiovascular</td><td class="py-2.5 px-3 text-slate-300">Potassium 7.9% • Fiber 15.5% • Na:K 5:1</td><td class="py-2.5 px-3 text-amber-300">Na:K adverse ratio • gut dysbiosis</td><td class="py-2.5 px-3 text-rose-300">Early insulin resistance</td><td class="py-2.5 px-3 text-slate-300">Hypertension +40% • T2D +25–30%</td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td></tr>
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-amber-400">🦷 Dental &amp; Oral</td><td class="py-2.5 px-3 text-slate-300">Calcium 15.9% • Vit C 40.3%</td><td class="py-2.5 px-3 text-amber-300">Caries risk <strong>+2–3×</strong></td><td class="py-2.5 px-3 text-amber-300">Enamel hypoplasia</td><td class="py-2.5 px-3 text-slate-300">Chronic dental disease</td><td class="py-2.5 px-3"><span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🟠 Warning</span></td></tr>
+                                        <tr class="hover:bg-slate-800/40 transition"><td class="py-2.5 px-3 font-bold text-rose-400">⚖️ Double Burden</td><td class="py-2.5 px-3 text-slate-300">Fiber 15.5% • Potassium 7.9%</td><td class="py-2.5 px-3 text-rose-300">Selangor obesity <strong>21% → 25%</strong></td><td class="py-2.5 px-3 text-rose-300">Adolescent metabolic syndrome</td><td class="py-2.5 px-3 text-slate-300">Combined obesity + deficiency = <strong>highest mortality</strong></td><td class="py-2.5 px-3"><span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🔴 Critical</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-rose-950/40 via-amber-950/30 to-rose-950/40 border border-amber-500/40 rounded-2xl p-5 space-y-2">
+                            <div class="flex items-start space-x-3"><span class="text-2xl">⚖️</span><div class="space-y-1"><p class="text-xs font-bold text-amber-300 uppercase tracking-wider">The Double Burden Paradox</p><p class="text-[11px] text-slate-300 leading-relaxed">The data reveals a critical paradox: <strong class="text-rose-400">energy at 30.5% RNI</strong> coexists with <strong class="text-amber-400">Selangor's 21% childhood obesity rate</strong>. This pattern — called <em>hidden hunger</em> or the <em>double burden of malnutrition</em> — emerges when children receive micronutrient-poor, high-refined-carbohydrate meals. The body is simultaneously undernourished (calcium, potassium, fiber, iron) and metabolically stressed (Na:K ratio at 5:1, four times worse than WHO's 1:1 target). <strong class="text-white">If this diet continues, the cohort will produce adults who are shorter, weaker-boned, more chronically infected, lower-earning, and 25–40% more likely to develop hypertension, T2D, or osteoporosis — all of which are preventable within the 12–24 month window.</strong></p></div></div>
+                        </div>
+
+                        <div class="bg-slate-950/60 border border-emerald-500/30 rounded-2xl p-5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-800/80 pb-2"><div><h3 class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Counterfactual: What If We Intervene Now?</h3><p class="text-[10px] text-slate-400">Modelled outcome improvement per nutrient corrected to 60% RNI</p></div><span class="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Reversible</span></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                <div class="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-400 uppercase">Calcium → 60% RNI</span><span class="text-xs font-mono text-emerald-300">Milk + Fortified</span></div><p class="text-xs font-black text-white">Stunting −50%</p><p class="text-[10px] text-slate-400">Recovers 3–4 cm adult height; bone density near-normal</p></div>
+                                <div class="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-400 uppercase">Fiber → 50% RNI</span><span class="text-xs font-mono text-emerald-300">Fruit + Legumes</span></div><p class="text-xs font-black text-white">T2D Risk −20%</p><p class="text-[10px] text-slate-400">Gut microbiome recovery within 8 weeks</p></div>
+                                <div class="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-400 uppercase">Potassium → 30% RNI</span><span class="text-xs font-mono text-emerald-300">Bananas + Greens</span></div><p class="text-xs font-black text-white">HTN Risk −30%</p><p class="text-[10px] text-slate-400">Na:K ratio improves from 5:1 → 3:1</p></div>
+                                <div class="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-400 uppercase">Iron → 100% RNI</span><span class="text-xs font-mono text-emerald-300">Fortified Cereals</span></div><p class="text-xs font-black text-white">IQ Preserved</p><p class="text-[10px] text-slate-400">Prevents 5–8 point loss per child • 102 anemia cases avoided</p></div>
+                                <div class="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-400 uppercase">Vitamin C → 100% RNI</span><span class="text-xs font-mono text-emerald-300">Fresh Citrus</span></div><p class="text-xs font-black text-white">Immune −35%</p><p class="text-[10px] text-slate-400">Respiratory infections drop to WHO-baseline</p></div>
+                                <div class="p-3 bg-slate-900 border border-emerald-500/30 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-400 uppercase">Full Correction (all ≥60%)</span><span class="text-xs font-mono text-emerald-300">Integrated Program</span></div><p class="text-xs font-black text-white">Deficits Closed</p><p class="text-[10px] text-slate-400">Height deficit → −1 to −2 cm; complication risks → WHO baseline</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ VIEW: ROSTER ============ -->
+    <section id="view-roster" class="space-y-6 hidden">
+
+        <!-- Collapsible: Class Attendance & Health Summary (collapsed by default) -->
+        <div id="class-summary-panel" class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" id="class-summary-toggle" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="false" aria-controls="class-summary-body">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-lg shrink-0">🏫</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Class Attendance &amp; Health Summary</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Kids attended, health flags &amp; verification per Kemaih course</p>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="inline-flex text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap"><strong id="class-summary-count" class="mr-1">0</strong> Classes</span>
+                    <span class="hidden sm:inline-flex text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap"><strong id="class-summary-total" class="mr-1">0</strong> Kids</span>
+                    <span class="hidden md:inline-flex text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">Stunting <strong id="class-stunt-total" class="mx-0.5">0</strong> · <span id="class-stunt-pct">0.0</span>%</span>
+                    <span class="hidden lg:inline-flex text-[10px] font-mono bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">Obesity <strong id="class-obese-total" class="mx-0.5">0</strong> · <span id="class-obese-pct">0.0</span>%</span>
+                </div>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="class-summary-body" class="collapsible-body" style="grid-template-rows: 0fr;">
+                <div id="class-summary-inner" class="collapsible-inner" inert>
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80 space-y-3">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Cohort Overview · Health Flag Allocation</p>
+                            <button onclick="regenerateClassHealth()" class="text-[10px] font-extrabold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg transition">🎲 Re-roll Health</button>
+                        </div>
+                        <div id="class-attendance-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"></div>
+                        <p class="text-[10px] text-slate-400 italic bg-slate-950 p-2.5 rounded-xl border border-slate-800">💡 Health flags are randomly allocated per child using Selangor's observed WHO rates — <strong class="text-amber-400">13.3% stunting</strong> · <strong class="text-rose-400">21.0% obesity</strong> — across the 220-child roster. Flags are mutually exclusive. Click a card to pin its detail; click again or press Esc to close.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collapsible: Roster Table -->
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-lg shrink-0">👥</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Active Programs &amp; Participant Roster</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Real-time attendance, star ratings &amp; SDG evidence verification</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">220 Records</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80 space-y-3">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                            <p class="text-xs text-slate-400">Live attendance · peer ratings · SDG evidence verification table</p>
+                            <div class="flex items-center space-x-3">
+                                <div class="flex items-center space-x-1.5 bg-slate-950 border border-slate-700/80 rounded-xl px-2.5 py-1 text-xs"><label for="roster-page-size" class="text-[10px] font-bold text-slate-400 uppercase">Per Page:</label><select id="roster-page-size" onchange="changePageSize(this.value)" class="bg-transparent text-slate-200 text-xs font-semibold focus:outline-none cursor-pointer"><option value="20" class="bg-slate-900 text-slate-200">20</option><option value="50" class="bg-slate-900 text-slate-200">50</option><option value="100" class="bg-slate-900 text-slate-200">100</option></select></div>
+                                <input type="text" id="roster-search" onkeyup="filterRosterTable()" placeholder="Search participants or courses..." class="bg-slate-950 border border-slate-700/80 text-xs text-slate-200 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-950/80 text-[10px] font-extrabold uppercase text-slate-400 border-b border-slate-800"><tr><th class="py-3 px-4">Participant &amp; Token ID</th><th class="py-3 px-4">Kemaih Course Name</th><th class="py-3 px-4">Date</th><th class="py-3 px-4">Organization Partner</th><th class="py-3 px-4">Attendance</th><th class="py-3 px-4">Peer Rating</th><th class="py-3 px-4">SDG Evidence</th><th class="py-3 px-4">Token Points Approval</th><th class="py-3 px-4 text-right">Actions</th></tr></thead>
+                                <tbody id="roster-table-body" class="divide-y divide-slate-800/60 font-medium"></tbody>
+                            </table>
+                        </div>
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-3 border-t border-slate-800/80 text-xs text-slate-400">
+                            <div id="roster-pagination-info" class="font-mono text-[11px]">Showing <strong id="roster-start" class="text-slate-200">1</strong> - <strong id="roster-end" class="text-slate-200">20</strong> of <strong id="roster-total" class="text-slate-200">220</strong> participants</div>
+                            <div class="flex items-center space-x-1.5 font-bold"><button onclick="changeRosterPage(-1)" id="btn-prev-page" class="px-3 py-1.5 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition">← Prev</button><span id="roster-page-indicator" class="px-3 py-1.5 bg-slate-900 border border-slate-800 text-slate-200 rounded-xl font-mono text-[11px]">Page 1 of 11</span><button onclick="changeRosterPage(1)" id="btn-next-page" class="px-3 py-1.5 bg-slate-950 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition">Next →</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ VIEW: AUDIT ============ -->
+    <section id="view-audit" class="space-y-6 hidden">
+        <div class="collapsible-panel bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden">
+            <button type="button" class="collapsible-header w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-800/40 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset" aria-expanded="true">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-lg shrink-0">🛡️</div>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider truncate">Immutable Ledger Audit Trail Stream</h2>
+                    <p class="text-xs text-slate-400 mt-0.5 truncate">Cryptographically hashed growth &amp; token minting logs</p>
+                </div>
+                <span class="hidden sm:inline-flex text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-bold whitespace-nowrap">SHA-256 Validated</span>
+                <svg class="collapsible-chevron w-5 h-5 text-slate-400 shrink-0" style="transform: rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="collapsible-body">
+                <div class="collapsible-inner">
+                    <div class="px-5 pb-5 pt-4 border-t border-slate-800/80">
+                        <div id="audit-log-container" class="space-y-2.5 font-mono text-xs max-h-[380px] overflow-y-auto custom-scrollbar pr-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</div>
+
+<!-- ================= MODALS ================= -->
+<div id="modal-menu-analysis" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <button onclick="closeMenuAnalysisModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3"><div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-emerald-500/30">🥗</div><div><h3 class="text-base font-bold text-white">Menu & Dietary Analysis Module</h3><p class="text-xs text-slate-400">Nutrient Adequacy Scorecard, Weekly SEJAHTERA Menu Configurator & Cost Optimization</p></div></div>
+    <div class="space-y-3"><h4 class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">1. Nutrient Adequacy Scorecard (Malaysian Dietary Guidelines)</h4><div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs"><div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1"><span class="text-slate-400 font-semibold">Macronutrient Balance</span><p class="text-lg font-black text-white">92% Match</p><p class="text-[10px] text-emerald-400">Optimal Protein-to-Carb Ratio</p></div><div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1"><span class="text-slate-400 font-semibold">RNI Target Compliance</span><p class="text-lg font-black text-amber-400">78% Compliant</p><p class="text-[10px] text-amber-400">Calcium & Vit C Deficit Alerts</p></div><div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1"><span class="text-slate-400 font-semibold">Fortification Status</span><p class="text-lg font-black text-emerald-400">Active (SEJAHTERA)</p><p class="text-[10px] text-slate-400">Daily Milk & Green Leafy Boost</p></div></div></div>
+    <div class="space-y-3 pt-2">
+        <div class="flex justify-between items-center gap-2 flex-wrap">
+<h4 class="text-xs font-extrabold text-indigo-400 uppercase tracking-wider">2. RMT Standard Menu Library</h4>            <div class="flex items-center space-x-2">
+<span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-bold">20 MoE Standard Menus</span>
+    <button type="button" onclick="openNewMenuModal()" class="text-[10px] font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg transition shadow">＋ Create New Menu</button>
+            </div>
+        </div>
+        <input type="text" id="rmt-menu-search" oninput="filterRmtMenus()" placeholder="🔍 Search 20 RMT menus (Nasi, Bihun, Ayam, Bubur...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <div id="rmt-menu-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 text-xs">
+            <div class="col-span-full text-center text-slate-500 text-[10px] italic py-2">Loading 20 RMT menus...</div>
+        </div>
+                <div class="bg-slate-950 border border-emerald-500/30 rounded-xl p-3 space-y-2 mt-3">
+            <div class="flex justify-between items-center flex-wrap gap-1">
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">📊 RMT Average vs Kemaih Cohort Average (% of RNI)</p>
+                <span class="text-[9px] font-mono text-slate-500">Per single meal serving · 7–12 yrs</span>
+            </div>
+            <div id="rmt-comparison-table" class="overflow-x-auto custom-scrollbar">
+                <div class="text-slate-500 text-[10px] italic text-center py-2">Loading comparison…</div>
+            </div>
+            <div class="flex flex-wrap gap-x-3 gap-y-1 pt-1 border-t border-slate-800/60 text-[9px] font-mono text-slate-500">
+                <span>🟢 ≥100% RNI</span>
+                <span>🔵 50–99%</span>
+                <span>🟡 25–49%</span>
+                <span>🔴 &lt;25%</span>
+                <span class="text-slate-600">· RMT avg from 20 MoE menus · Cohort = Kemaih N=220</span>
+            </div>
+        </div>
+        <div class="pt-3 space-y-2 border-t border-slate-800/70">
+            <div class="flex justify-between items-center">
+                <h5 class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider">Custom Menu Library (SEJAHTERA)</h5>
+        
+                <span id="custom-menu-count" class="text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">0 Menus</span>
+            </div>
+            <p id="custom-menu-empty" class="text-[10px] text-slate-500 italic bg-slate-950 border border-dashed border-slate-800 rounded-xl p-3 text-center">No custom menus yet — click <strong class="text-emerald-400">＋ Create New Menu</strong> to build one with ingredients, measurements and micronutrient counts.</p>
+            <div id="custom-menu-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
+    </div>
+    <div class="space-y-3 pt-2"><h4 class="text-xs font-extrabold text-amber-400 uppercase tracking-wider">3. Food Cost Optimization & Catering Scale Calculator</h4><div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3 text-xs"><div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Catering Scale (Per Child / Day)</label><input type="text" value="RM 4.50" readonly class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-emerald-400 font-mono font-bold"></div><div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Total Active Children</label><input type="text" value="220 Children (Kemaih Roster)" readonly class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-white font-mono font-bold"></div><div><label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Monthly Bulk Sourcing Savings</label><input type="text" value="RM 2,970.00 Saved (-15%)" readonly class="w-full bg-slate-900 border border-slate-800 p-2 rounded-lg text-amber-400 font-mono font-bold"></div></div><p class="text-[11px] text-slate-400 italic">✨ Bulk ingredient sourcing optimization reduces overall kitchen catering expenses while meeting Malaysian Dietary Guidelines RNI targets.</p></div></div>
+
+    <div class="space-y-3 pt-2 border-t border-slate-800/70">
+        <div class="flex justify-between items-center gap-2 flex-wrap">
+            <h4 class="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">4. Food Waste Tracking (SEJAHTERA Cycle)</h4>
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="openWasteLogModal()" class="text-[10px] font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg transition shadow">＋ Log Today's Waste</button>
+                <button type="button" onclick="openWasteHistoryModal()" class="text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg transition">📜 History</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 text-xs">
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-0.5">
+                <p class="text-[9px] font-bold uppercase text-slate-400">Plates Served Today</p>
+                <p id="waste-stat-plates" class="text-lg font-black text-white">220</p>
+                <p id="waste-stat-plates-sub" class="text-[9px] font-mono text-emerald-400">Kemaih roster</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-0.5">
+                <p class="text-[9px] font-bold uppercase text-slate-400">Leftovers Today</p>
+                <p id="waste-stat-leftovers" class="text-lg font-black text-rose-400">8.4 kg</p>
+                <p id="waste-stat-leftovers-sub" class="text-[9px] font-mono text-slate-400">—</p>
+            </div>
+            <div class="bg-slate-950 border border-amber-500/40 rounded-xl p-2.5 space-y-0.5">
+                <p class="text-[9px] font-bold uppercase text-amber-400">Waste Cost Today (RM)</p>
+                <p id="waste-stat-cost" class="text-lg font-black text-amber-400">RM 71.40</p>
+                <p id="waste-stat-cost-sub" class="text-[9px] font-mono text-amber-300">@ RM 8.50/kg</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-0.5">
+                <p class="text-[9px] font-bold uppercase text-slate-400">Diverted (Composted)</p>
+                <p id="waste-stat-diverted" class="text-lg font-black text-emerald-400">7.5 kg</p>
+                <p id="waste-stat-diverted-sub" class="text-[9px] font-mono text-emerald-400">89.3% diversion</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2.5 space-y-0.5">
+                <p class="text-[9px] font-bold uppercase text-slate-400">CO₂e Saved Cycle</p>
+                <p id="waste-stat-co2" class="text-lg font-black text-indigo-400">7.5 t</p>
+                <p id="waste-stat-co2-sub" class="text-[9px] font-mono text-indigo-400">-24% vs 2025</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+            <div class="flex justify-between items-center mb-2">
+                <p class="text-[10px] font-bold uppercase text-slate-400">Last 7 Days · Leftovers vs Diverted (kg)</p>
+                <span class="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">Live Ledger</span>
+            </div>
+            <div class="h-40"><canvas id="chart-waste-trend"></canvas></div>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+            <div class="flex justify-between items-center">
+                <p class="text-[10px] font-bold uppercase text-slate-400">SDG 12.3 · Halve per-capita food waste by 2030</p>
+                <span id="waste-stat-sdg-pct" class="text-[10px] font-mono font-bold text-yellow-400">72%</span>
+            </div>
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="waste-stat-sdg-bar" class="h-full rounded-full bg-yellow-500 transition-all" style="width: 72%"></div>
+            </div>
+            <p class="text-[10px] text-slate-400 italic">Current diversion rate <strong id="waste-stat-sdg-note" class="text-emerald-400">89.3%</strong> · On track to hit 2030 target at current trajectory.</p>
+        </div>
+
+        <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-3 space-y-2">
+            <div class="flex justify-between items-center flex-wrap gap-1">
+                <p class="text-[10px] font-bold uppercase text-amber-400 tracking-wider">💰 Cost of Waste (RM)</p>
+                <span class="text-[9px] font-mono text-slate-500">Rate: RM <span id="waste-cost-rate-label">8.50</span> / kg leftovers</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div class="bg-slate-900 rounded-lg p-2 border border-slate-800">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Today</p>
+                    <p id="waste-cost-today" class="text-sm font-black text-amber-400">RM 71.40</p>
+                </div>
+                <div class="bg-slate-900 rounded-lg p-2 border border-slate-800">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Last 7 Days</p>
+                    <p id="waste-cost-7d" class="text-sm font-black text-rose-400">RM 510.00</p>
+                </div>
+                <div class="bg-slate-900 rounded-lg p-2 border border-slate-800">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Monthly Projection</p>
+                    <p id="waste-cost-month" class="text-sm font-black text-indigo-400">RM 2,185.71</p>
+                </div>
+                <div class="bg-slate-900 rounded-lg p-2 border border-slate-800">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Per Plate</p>
+                    <p id="waste-cost-per-plate" class="text-sm font-black text-emerald-400">RM 0.32</p>
+                </div>
+            </div>
+            <p class="text-[10px] text-slate-400 italic">Leftovers valued at procurement cost (RM 8.50/kg). Monthly projection = 7-day rolling average × 30 days. Diverted waste = recoverable loss via composting.</p>
+        </div>
+    </div>
+
+    <div class="pt-2 flex justify-end"><button onclick="closeMenuAnalysisModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Close Module</button></div>
+</div>
+</div>
+
+<div id="modal-new-menu" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[60] flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar">
+        <button onclick="closeNewMenuModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+
+        <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+            <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-emerald-500/30">🍽️</div>
+            <div>
+                <h3 class="text-base font-bold text-white">Create New Menu</h3>
+                <p class="text-xs text-slate-400">Menu name · ingredients · measurement · micronutrient count → SEJAHTERA cycle</p>
+            </div>
+        </div>
+
+        <!-- ⚡ Sample menu loader -->
+        <div class="space-y-2 pb-3 mb-1 border-b border-slate-800">
+            <div class="flex justify-between items-center">
+                <span class="text-[10px] font-extrabold text-indigo-400 uppercase tracking-wider">⚡ Quick Load Sample Menu</span>
+                <span class="text-[9px] font-mono text-slate-500">Auto-fills ingredients + 11 micronutrient values</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                <button type="button" onclick="loadSampleMenu('nasi-lemak')" class="text-left px-2.5 py-2 bg-slate-950 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 rounded-xl transition group">
+                    <div class="text-base leading-none">🍚</div>
+                    <div class="text-[10px] font-bold text-white mt-1 group-hover:text-emerald-400 transition">Nasi Lemak</div>
+                    <div class="text-[8px] font-mono text-emerald-400">568 kcal · Ca 62%</div>
+                </button>
+                <button type="button" onclick="loadSampleMenu('chicken-porridge')" class="text-left px-2.5 py-2 bg-slate-950 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 rounded-xl transition group">
+                    <div class="text-base leading-none">🍲</div>
+                    <div class="text-[10px] font-bold text-white mt-1 group-hover:text-emerald-400 transition">Chicken Porridge</div>
+                    <div class="text-[8px] font-mono text-emerald-400">532 kcal · Vit C 144%</div>
+                </button>
+                <button type="button" onclick="loadSampleMenu('beehoon')" class="text-left px-2.5 py-2 bg-slate-950 hover:bg-rose-950/30 border border-slate-800 hover:border-rose-500/50 rounded-xl transition group">
+                    <div class="text-base leading-none">🍜</div>
+                    <div class="text-[10px] font-bold text-white mt-1 group-hover:text-rose-400 transition">Bee Hoon Sup</div>
+                    <div class="text-[8px] font-mono text-rose-400">394 kcal · Ca 10%</div>
+                </button>
+                <button type="button" onclick="loadSampleMenu('ikan-kembung')" class="text-left px-2.5 py-2 bg-slate-950 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/50 rounded-xl transition group">
+                    <div class="text-base leading-none">🐟</div>
+                    <div class="text-[10px] font-bold text-white mt-1 group-hover:text-emerald-400 transition">Ikan Kembung</div>
+                    <div class="text-[8px] font-mono text-emerald-400">556 kcal · Ca 62%</div>
+                </button>
+            </div>
+        </div>
+
+
+
+        <form onsubmit="handleSaveMenu(event)" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="sm:col-span-2">
+                    <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">1. Menu Name</label>
+                    <input type="text" id="new-menu-name" required placeholder="e.g. Nasi Lemak Sejahtera (Fortified)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white font-semibold focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Day Slot</label>
+                    <select id="new-menu-day" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white font-semibold focus:outline-none focus:border-emerald-500">
+                        <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Unassigned</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <label class="text-slate-400 font-bold uppercase text-[10px]">2 &amp; 3. Ingredients &amp; Measurement</label>
+                    <button type="button" onclick="addIngredientRow()" class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 rounded-lg transition">＋ Add Ingredient</button>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar pb-1">
+                    <div class="min-w-[520px] space-y-1.5">
+                        <div class="grid grid-cols-12 gap-1.5 text-[9px] font-bold uppercase text-slate-500 px-1">
+                            <span class="col-span-4">Ingredient</span>
+                            <span class="col-span-2">Qty</span>
+                            <span class="col-span-2">Unit</span>
+                            <span class="col-span-3">Key Micro</span>
+                            <span class="col-span-1"></span>
+                        </div>
+                        <div id="ingredient-rows" class="space-y-1.5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <label class="text-slate-400 font-bold uppercase text-[10px]">4. Micronutrient Count (per serving)</label>
+                    <span class="text-[9px] font-mono text-slate-500">% of daily RNI · 7–12 yrs</span>
+                </div>
+                <div id="menu-nutrient-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2"></div>
+            </div>
+
+            <div class="pt-2 flex justify-end space-x-2 border-t border-slate-800">
+                <button type="button" onclick="closeNewMenuModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Cancel</button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/20">Save Menu to SEJAHTERA Cycle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal-waste-log" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[60] flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+        <button onclick="closeWasteLogModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+        <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+            <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-emerald-500/30">♻️</div>
+            <div>
+                <h3 class="text-base font-bold text-white">Log Today's Food Waste</h3>
+                <p class="text-xs text-slate-400">SEJAHTERA cycle · Kemaih roster</p>
+            </div>
+        </div>
+        <form onsubmit="handleWasteLogSubmit(event)" class="space-y-3 text-xs">
+            <div>
+                <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Date</label>
+                <input type="date" id="waste-log-date" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold">
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Plates Served</label>
+                    <input type="number" id="waste-log-plates" required min="0" placeholder="220" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold font-mono">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Leftovers (kg)</label>
+                    <input type="number" id="waste-log-leftovers" required min="0" step="0.1" placeholder="8.4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold font-mono">
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Diverted (kg)</label>
+                    <input type="number" id="waste-log-diverted" required min="0" step="0.1" placeholder="7.5" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold font-mono">
+                </div>
+            </div>
+
+            <div class="bg-slate-950 border border-amber-500/30 rounded-xl p-2.5 flex justify-between items-center gap-2">
+                <div>
+                    <p class="text-[9px] font-bold uppercase text-amber-400">Waste Cost Rate</p>
+                    <p class="text-[9px] text-slate-500 font-mono">Procurement cost per kg</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-mono font-bold text-amber-300">RM <span id="waste-log-rate">8.50</span> / kg</p>
+                    <p id="waste-log-cost-preview" class="text-[10px] font-mono text-slate-400">Estimated: RM 0.00</p>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Notes (optional)</label>
+                <textarea id="waste-log-notes" rows="2" placeholder="e.g. surplus rice, extra vegetables from kitchen..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold"></textarea>
+            </div>
+            <div class="pt-2 flex justify-end space-x-2">
+                <button type="button" onclick="closeWasteLogModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Cancel</button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/20">Save Waste Log</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal-waste-history" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[60] flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <button onclick="closeWasteHistoryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+        <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+            <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-emerald-500/30">📜</div>
+            <div>
+                <h3 class="text-base font-bold text-white">Food Waste Log History</h3>
+                <p class="text-xs text-slate-400">Last 7 days · SEJAHTERA cycle · Kemaih roster</p>
+            </div>
+        </div>
+        <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-950/80 text-[10px] font-extrabold uppercase text-slate-400 border-b border-slate-800">
+                    <tr>
+                        <th class="py-2.5 px-3">Date</th>
+                        <th class="py-2.5 px-3">Plates</th>
+                        <th class="py-2.5 px-3">Leftovers</th>
+                        <th class="py-2.5 px-3">Diverted</th>
+                        <th class="py-2.5 px-3">Diversion %</th>
+                        <th class="py-2.5 px-3">Cost (RM)</th>
+                    </tr>
+                </thead>
+                <tbody id="waste-history-tbody" class="divide-y divide-slate-800/60 font-medium text-[11px]"></tbody>
+            </table>
+        </div>
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-[10px] text-slate-400 flex items-center justify-between flex-wrap gap-2">
+            <span>Ledger-verified • SHA-256 • 0x89F...34A2</span>
+            <span id="waste-history-total">7 records · RM 0.00 total</span>
+        </div>
+        <div class="flex justify-end pt-2 border-t border-slate-800">
+            <button onclick="closeWasteHistoryModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Close History</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-nutritionist" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <button onclick="closeNutritionistModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3"><div class="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-blue-500/30">👩‍⚕️</div><div><h3 class="text-base font-bold text-white">Nutritionist Services Marketplace Directory</h3><p class="text-xs text-slate-400">Certified Pediatric Dietitians, Public Health Nutritionists & Consultation Booking Hub</p></div></div>
+    <div class="space-y-3"><h4 class="text-xs font-extrabold text-indigo-400 uppercase tracking-wider">Certified Pediatric Dietitian & Public Health Nutritionists</h4><div class="space-y-3 text-xs">
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"><div class="space-y-1"><div class="flex items-center space-x-2"><span class="font-extrabold text-white text-sm">Dr. Rina Zulkifli</span><span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-500/30">Available</span></div><p class="text-slate-400 text-[11px]">Consultant Pediatric Dietitian (MND, PhD Clinical Nutrition)</p><div class="flex flex-wrap gap-1.5 pt-1"><span class="bg-slate-900 text-indigo-300 text-[9px] px-2 py-0.5 rounded border border-slate-800 font-mono">Stunting & Malnutrition</span><span class="bg-slate-900 text-indigo-300 text-[9px] px-2 py-0.5 rounded border border-slate-800 font-mono">Child Growth Z-Scores</span></div></div><button onclick="openBookingModal('Dr. Rina Zulkifli')" class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow">Book Consultation</button></div>
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"><div class="space-y-1"><div class="flex items-center space-x-2"><span class="font-extrabold text-white text-sm">Encik Muhammad Syahiran</span><span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-500/30">Available</span></div><p class="text-slate-400 text-[11px]">Senior Public Health Nutritionist (BSc Nutrition & Dietetics UKM)</p><div class="flex flex-wrap gap-1.5 pt-1"><span class="bg-slate-900 text-indigo-300 text-[9px] px-2 py-0.5 rounded border border-slate-800 font-mono">School Meal Audit</span><span class="bg-slate-900 text-indigo-300 text-[9px] px-2 py-0.5 rounded border border-slate-800 font-mono">Child Obesity Intervention</span></div></div><button onclick="openBookingModal('Encik Muhammad Syahiran')" class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow">Book Consultation</button></div>
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"><div class="space-y-1"><div class="flex items-center space-x-2"><span class="font-extrabold text-white text-sm">Puan Sarah Nabilah</span><span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded border border-emerald-500/30">Available</span></div><p class="text-slate-400 text-[11px]">Pediatric Nutritional Consultant & RNI Specialist</p><div class="flex flex-wrap gap-1.5 pt-1"><span class="bg-slate-900 text-indigo-300 text-[9px] px-2 py-0.5 rounded border border-slate-800 font-mono">Micronutrient Fortification</span><span class="bg-slate-900 text-indigo-300 text-[9px] px-2 py-0.5 rounded border border-slate-800 font-mono">Individual Case Referrals</span></div></div><button onclick="openBookingModal('Puan Sarah Nabilah')" class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition shadow">Book Consultation</button></div>
+    </div></div>
+    <div class="pt-2 flex justify-end"><button onclick="closeNutritionistModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Close Directory</button></div>
+</div>
+</div>
+
+<div id="modal-booking" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+        <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3"><div class="w-10 h-10 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-indigo-500/30">📅</div><div><h3 class="text-base font-bold text-white">Schedule Dietitian Consultation</h3><p class="text-xs text-slate-400">Diet audits, growth z-score consultations & child case referrals</p></div></div>
+    <form onsubmit="handleBookingSubmit(event)" class="space-y-3 text-xs">
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Selected Specialist</label><input type="text" id="booking-expert-name" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-indigo-400 font-extrabold outline-none cursor-not-allowed"></div>
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Consultation & Audit Type</label><select class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-indigo-500 font-semibold"><option>Diet Audit & SEJAHTERA Menu Review</option><option>Growth Z-Score Malnutrition Assessment</option><option>Individual Child Case Referral</option></select></div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Preferred Date</label><input type="date" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-indigo-500 font-semibold"></div><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Center / Hub</label><select class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-indigo-500 font-semibold"><option>Kemaih HQ Hub (KL)</option><option>Petaling Jaya Center</option><option>Shah Alam Center</option><option>Ipoh Regional Center</option><option>Kuantan Community Hub</option></select></div></div>
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Case Notes / Specific Deficit Concern</label><textarea rows="2" placeholder="Describe cohort concerns..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-indigo-500 font-semibold"></textarea></div>
+        <div class="pt-2 flex justify-end space-x-2"><button type="button" onclick="closeBookingModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Cancel</button><button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold shadow-lg shadow-indigo-600/20">Confirm Booking Request</button></div>
+    </form>
+</div>
+</div>
+
+<div id="modal-history" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl relative">
+        <button onclick="closeHistoryModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3"><div class="w-10 h-10 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-indigo-500/30">📜</div><div><h3 class="text-base font-bold text-white">Kemaih Initiative Deployment History</h3><p class="text-xs text-slate-400">Archived program execution logs and ledger registration history</p></div></div>
+    <div class="space-y-3 max-h-[350px] overflow-y-auto custom-scrollbar pr-1 text-xs">
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">AI Nutrition & Health Junior Bootcamp (Kuala Lumpur)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-10-15 • 48 Participants • Kemaih Headquarters</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Zero Waste Kids Workshop (Petaling Jaya)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-10-12 • 35 Participants • Petaling Jaya Center</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Program SEJAHTERA School Meal Trial (Shah Alam)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-09-01 • 50 Participants • Shah Alam Center</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Junior Active Physical Play & Fitness (Ipoh)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-08-01 • 30 Participants • Ipoh Regional Center</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">LaPaQ Micronutrient Fortification Workshop (Kuala Lumpur)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-07-01 • 42 Participants • Kemaih Headquarters</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Eco-Warrior Tree Planting & Biodiversity (Kuantan)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-06-01 • 28 Participants • Kuantan Community Hub</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">ChildESG Baseline Health Assessment (Petaling Jaya)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-05-01 • 40 Participants • Petaling Jaya Center</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Early Childhood Nutrition Screening (Shah Alam)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-04-01 • 38 Participants • Shah Alam Center</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Sustainable Food Systems Seminar (Kuala Lumpur)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-03-01 • 45 Participants • Kemaih Headquarters</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Community Wellness & Hygiene Drive (Ipoh)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-02-01 • 32 Participants • Ipoh Regional Center</p></div>
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl space-y-1"><div class="flex justify-between items-center"><span class="font-bold text-white">Kemaih Youth Leadership & Fitness Orientation (Kuala Lumpur)</span><span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Completed</span></div><p class="text-slate-400 text-[11px]">Executed on 2026-01-01 • 50 Participants • Kemaih Headquarters</p></div>
+    </div>
+    <div class="pt-2 flex justify-end"><button onclick="closeHistoryModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Close History</button></div>
+</div>
+</div>
+
+<div id="modal-new-program" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
+        <button onclick="closeNewProgramModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+    <div class="flex items-center space-x-3 border-b border-slate-800 pb-3"><div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center text-xl font-extrabold border border-emerald-500/30">✨</div><div><h3 class="text-base font-bold text-white">Create New Kemaih Activity</h3><p class="text-xs text-slate-400">Publish a new course activity for Kemaih Sdn Bhd</p></div></div>
+    <form onsubmit="handleCreateProgramSubmit(event)" class="space-y-3 text-xs">
+        <div>
+            <label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Name</label>
+            <input type="text" id="prog-custom-name" required placeholder="e.g. Nutrition Awareness Week 2026" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold">
+        </div>
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Kemaih Course Name</label><select id="prog-name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none focus:border-emerald-500 font-semibold"><option>AI Nutrition & Health Junior Bootcamp</option><option>LaPaQ Micronutrient Fortification Workshop</option><option>Zero Waste Kids Workshop</option><option>Program SEJAHTERA School Meal Trial</option><option>Junior Active Physical Play & Fitness</option><option>Eco-Warrior Tree Planting & Biodiversity</option><option>ChildESG Baseline Health Assessment</option><option>Early Childhood Nutrition Screening</option><option>Sustainable Food Systems Seminar</option><option>Community Wellness & Hygiene Drive</option><option>Kemaih Youth Leadership & Fitness Orientation</option></select></div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Target Age Cohort</label><select id="prog-cohort" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"><option>Age 3–6</option><option>Age 7–12</option><option>All Ages</option></select></div><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Target SDG Goal</label><select id="prog-sdg" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"><option>SDG 2, 3</option><option>SDG 3, 4</option><option>SDG 12, 13</option></select></div></div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Location / Hub</label><select id="prog-location" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"><option>Kuala Lumpur</option><option>Petaling Jaya</option><option>Shah Alam</option><option>Ipoh</option><option>Kuantan</option></select></div><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Execution Date</label><input type="date" id="prog-date" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"></div></div>
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Owner Organization</label><input type="text" value="Kemaih Sdn Bhd" readonly class="w-full bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 text-emerald-400 font-extrabold outline-none cursor-not-allowed"></div>
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Program Objective / Description</label><textarea id="prog-desc" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"></textarea></div>
+        <div class="pt-2 flex justify-end space-x-2"><button type="button" onclick="closeNewProgramModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Cancel</button><button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/20">Publish Activity</button></div>
+    </form>
+</div>
+</div>
+
+<div id="modal-auth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+        <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+    <div class="text-center space-y-1"><div class="w-10 h-10 bg-indigo-600/20 text-indigo-400 rounded-xl flex items-center justify-center mx-auto text-xl font-extrabold border border-indigo-500/30">🏫</div><h3 class="text-lg font-bold text-white pt-1">Partner Organization Portal</h3><p class="text-xs text-slate-400">Exclusive gateway for certified schools, NGOs & partners</p></div>
+    <div class="space-y-2.5">
+        <button onclick="loginWithGoogle()" type="button" class="w-full bg-slate-950 hover:bg-slate-800 text-white font-bold py-2.5 px-4 border border-slate-700/80 rounded-xl text-xs flex items-center justify-center space-x-2.5 transition shadow-sm">
+            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            <span>Continue with Google</span>
+        </button>
+        <button onclick="loginWithFacebook()" type="button" class="w-full bg-[#1877F2] hover:bg-[#166FE5] text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2.5 transition shadow-sm">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Continue with Facebook</span>
+        </button>
+    </div>
+    <div class="flex items-center my-3"><div class="flex-1 border-t border-slate-800"></div><span class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">or work email</span><div class="flex-1 border-t border-slate-800"></div></div>
+    <div class="flex border-b border-slate-800 text-xs font-bold"><button onclick="setAuthMode('login')" id="mode-btn-login" class="flex-1 pb-2 border-b-2 border-indigo-500 text-indigo-400">Sign In</button><button onclick="setAuthMode('register')" id="mode-btn-register" class="flex-1 pb-2 border-b-2 border-transparent text-slate-400 hover:text-slate-200">Register</button></div>
+    <form onsubmit="handleAuthSubmit(event)" class="space-y-3 text-xs">
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Official Work Email</label><input type="email" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"></div>
+        <div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Password</label><input type="password" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"></div>
+        <div id="register-fields" class="hidden space-y-3 pt-1 border-t border-slate-800"><div><label class="block text-slate-400 font-bold uppercase text-[10px] mb-1">Organization Name</label><input type="text" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-white outline-none font-semibold"></div></div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-xl shadow-lg shadow-indigo-600/20 transition mt-2">Submit & Continue</button>
+    </form>
+</div>
+</div>
+
+<div id="modal-wizard" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3"><div class="flex items-center space-x-2"><span class="text-xl">🏆</span><h3 class="text-sm font-bold text-white">Partner Certification Level Upgrade</h3></div><button onclick="closeWizardModal()" class="text-slate-400 hover:text-white font-bold">✕</button></div>
+    <p class="text-xs text-slate-300">Select an institutional assessment tier:</p>
+    <div class="space-y-2.5 text-xs">
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center hover:border-indigo-500 transition cursor-pointer" onclick="selectTier('Level 1: Baseline Assessment', 'RM699.00')"><div><div class="font-bold text-white">Level 1: Baseline Assessment</div><div class="text-[10px] text-slate-400">4-6 Pages • Initial Gap Analysis</div></div><span class="text-indigo-400 font-extrabold text-sm">RM699</span></div>
+        <div class="p-3 bg-slate-950 border border-indigo-500/50 rounded-xl flex justify-between items-center hover:border-indigo-500 transition cursor-pointer" onclick="selectTier('Level 2: Executive Assessment', 'RM2,699.00')"><div><div class="font-bold text-white flex items-center"><span>Level 2: Executive Report</span><span class="ml-2 text-[9px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-bold">Recommended</span></div><div class="text-[10px] text-slate-400">≈15 Pages • Detailed Risk Heatmap</div></div><span class="text-indigo-400 font-extrabold text-sm">RM2,699</span></div>
+    </div>
+    <div class="pt-2 flex justify-end"><button onclick="closeWizardModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Cancel</button></div>
+</div>
+</div>
+
+<!-- ================= SDG IMPACT MATRIX HOVER TOOLTIP ================= --><!-- ================= MENU DAY NUTRITION TOOLTIP ================= -->
+
+<div id="menu-day-tooltip"
+     class="fixed z-[85] pointer-events-none opacity-0 transition-opacity duration-150"
+     style="background: rgba(15,23,42,0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(99,102,241,0.45); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);"></div>
+
+
+<div id="sdg-impact-tooltip"
+     class="fixed z-[80] pointer-events-none opacity-0 transition-opacity duration-150"
+     style="width: 360px; background: rgba(15,23,42,0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(99,102,241,0.4); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);"></div>
+
+<!-- ================= CLASS HEALTH CARD TOOLTIP ================= -->
+<div id="class-health-tooltip"
+     class="fixed z-[85] pointer-events-none opacity-0 transition-opacity duration-150"
+     style="background: rgba(15,23,42,0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(99,102,241,0.45); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.7);"></div>
+
+<!-- ================= SDG FULL REPORT MODAL ================= -->
+<div id="modal-sdg-report" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[90] flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar">
+        <button onclick="closeSdgReportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+        <div id="sdg-report-content"></div>
+    </div>
+</div>
+
+<!-- ================= ESG SCORE BREAKDOWN MODAL ================= -->
+<div id="modal-esg-breakdown" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-5xl w-full p-6 space-y-5 shadow-2xl relative max-h-[92vh] overflow-y-auto custom-scrollbar">
+        <button onclick="closeEsgBreakdownModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold p-1">✕</button>
+
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 via-indigo-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl font-black text-white shadow-lg">📊</div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">ESG Score Breakdown — Kemaih Sdn Bhd</h3>
+                    <p class="text-xs text-slate-400">Weighted sub-criteria contribution analysis · FY2026 · Silver Tier</p>
+                </div>
+            </div>
+            <div class="text-right pr-8">
+                <p class="text-3xl font-black text-white leading-none">82<span class="text-sm font-bold text-slate-400">/100</span></p>
+                <span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">SILVER TIER</span>
+            </div>
+        </div>
+
+        <div class="bg-slate-950 border border-indigo-500/30 rounded-xl p-3 font-mono text-xs">
+            <p class="text-slate-400 text-[10px] uppercase font-bold mb-1 tracking-wider">Weighted Score Formula</p>
+            <p class="text-white leading-relaxed">
+                <span class="text-emerald-400 font-bold">E</span> 78 × 0.30 = <strong>23.40</strong>
+                <span class="text-slate-500 mx-2">+</span>
+                <span class="text-blue-400 font-bold">S</span> 86 × 0.45 = <strong>38.70</strong>
+                <span class="text-slate-500 mx-2">+</span>
+                <span class="text-purple-400 font-bold">G</span> 81 × 0.25 = <strong>20.25</strong>
+                <span class="text-slate-500 mx-2">=</span>
+                <strong class="text-emerald-400">82.35</strong>
+                <span class="text-slate-500 text-[10px]">→ rounds to <strong class="text-white">82/100</strong></span>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-4 space-y-3">
+                <div class="flex justify-between items-start"><div><p class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">🌱 Environmental</p><p class="text-2xl font-black text-white mt-1">78<span class="text-xs text-slate-400">/100</span></p></div><div class="text-right"><p class="text-[10px] font-bold text-slate-400 uppercase">Weight</p><p class="text-sm font-black text-white font-mono">30%</p></div></div>
+                <div class="flex items-center justify-between text-xs bg-slate-950/60 rounded-lg p-2 border border-slate-800"><span class="text-slate-400">Contribution</span><span class="font-mono font-bold text-emerald-400">23.40 pts</span></div>
+                <div class="space-y-1.5 text-[11px]">
+                    <div class="flex justify-between gap-2"><span class="text-slate-400 leading-tight">Zero Waste & Kitchen Ops</span><span class="font-mono font-bold text-white whitespace-nowrap">82 <span class="text-slate-500">× 15%</span></span></div>
+                    <div class="flex justify-between gap-2"><span class="text-slate-400 leading-tight">Eco-Stewardship & Climate Ed</span><span class="font-mono font-bold text-white whitespace-nowrap">74 <span class="text-slate-500">× 15%</span></span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 space-y-1 text-[10px]">
+                    <p class="text-emerald-400 font-bold">▲ Strength</p>
+                    <p class="text-slate-300 leading-snug">94% kitchen audit score · 1,420 kg waste diverted · 1,240 trees planted</p>
+                    <p class="text-rose-400 font-bold pt-1">▼ Gap</p>
+                    <p class="text-slate-300 leading-snug">Climate education sub-target 45% · CO₂e offset flat at 3.4t</p>
+                </div>
+            </div>
+            <div class="bg-blue-950/20 border border-blue-500/30 rounded-xl p-4 space-y-3">
+                <div class="flex justify-between items-start"><div><p class="text-[10px] font-extrabold uppercase tracking-wider text-blue-400">👥 Social</p><p class="text-2xl font-black text-white mt-1">86<span class="text-xs text-slate-400">/100</span></p></div><div class="text-right"><p class="text-[10px] font-bold text-slate-400 uppercase">Weight</p><p class="text-sm font-black text-white font-mono">45%</p></div></div>
+                <div class="flex items-center justify-between text-xs bg-slate-950/60 rounded-lg p-2 border border-slate-800"><span class="text-slate-400">Contribution</span><span class="font-mono font-bold text-blue-400">38.70 pts</span></div>
+                <div class="space-y-1.5 text-[11px]">
+                    <div class="flex justify-between gap-2"><span class="text-slate-400 leading-tight">LaPaQ Micro & WHO Growth</span><span class="font-mono font-bold text-white whitespace-nowrap">88 <span class="text-slate-500">× 25%</span></span></div>
+                    <div class="flex justify-between gap-2"><span class="text-slate-400 leading-tight">Child Safeguarding & Play</span><span class="font-mono font-bold text-white whitespace-nowrap">83 <span class="text-slate-500">× 20%</span></span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 space-y-1 text-[10px]">
+                    <p class="text-emerald-400 font-bold">▲ Strength</p>
+                    <p class="text-slate-300 leading-snug">100% cohort screened (N=220) · 660 WHO z-score logs · 840 play hours</p>
+                    <p class="text-rose-400 font-bold pt-1">▼ Gap</p>
+                    <p class="text-slate-300 leading-snug">Stunting still 15% (target &lt;10%) · Selangor obesity 21% peak</p>
+                </div>
+            </div>
+            <div class="bg-purple-950/20 border border-purple-500/30 rounded-xl p-4 space-y-3">
+                <div class="flex justify-between items-start"><div><p class="text-[10px] font-extrabold uppercase tracking-wider text-purple-400">🏛️ Governance</p><p class="text-2xl font-black text-white mt-1">81<span class="text-xs text-slate-400">/100</span></p></div><div class="text-right"><p class="text-[10px] font-bold text-slate-400 uppercase">Weight</p><p class="text-sm font-black text-white font-mono">25%</p></div></div>
+                <div class="flex items-center justify-between text-xs bg-slate-950/60 rounded-lg p-2 border border-slate-800"><span class="text-slate-400">Contribution</span><span class="font-mono font-bold text-purple-400">20.25 pts</span></div>
+                <div class="space-y-1.5 text-[11px]">
+                    <div class="flex justify-between gap-2"><span class="text-slate-400 leading-tight">PDPA & Child Data Privacy</span><span class="font-mono font-bold text-white whitespace-nowrap">85 <span class="text-slate-500">× 15%</span></span></div>
+                    <div class="flex justify-between gap-2"><span class="text-slate-400 leading-tight">Supply Chain & Financial</span><span class="font-mono font-bold text-white whitespace-nowrap">75 <span class="text-slate-500">× 10%</span></span></div>
+                </div>
+                <div class="pt-2 border-t border-slate-800 space-y-1 text-[10px]">
+                    <p class="text-emerald-400 font-bold">▲ Strength</p>
+                    <p class="text-slate-300 leading-snug">SHA-256 ledger integrity · DPO in place · 100% parent consent</p>
+                    <p class="text-rose-400 font-bold pt-1">▼ Gap</p>
+                    <p class="text-slate-300 leading-snug">Supply chain audits behind schedule · token minting oversight</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+            <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-3">Weighted Score Computation</p>
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="text-[10px] font-extrabold uppercase text-slate-500 border-b border-slate-800">
+                        <th class="text-left py-2 px-2">Pillar</th><th class="text-center py-2 px-2">Score</th><th class="text-center py-2 px-2">Weight</th><th class="text-right py-2 px-2">Contribution</th>
+                    </tr>
+                </thead>
+                <tbody class="font-mono">
+                    <tr class="border-b border-slate-800/60"><td class="py-2 px-2 text-emerald-400 font-bold font-sans">🌱 Environmental</td><td class="text-center py-2 px-2 text-white">78</td><td class="text-center py-2 px-2 text-slate-400">30%</td><td class="text-right py-2 px-2 text-emerald-400 font-bold">23.40</td></tr>
+                    <tr class="border-b border-slate-800/60"><td class="py-2 px-2 text-blue-400 font-bold font-sans">👥 Social</td><td class="text-center py-2 px-2 text-white">86</td><td class="text-center py-2 px-2 text-slate-400">45%</td><td class="text-right py-2 px-2 text-blue-400 font-bold">38.70</td></tr>
+                    <tr class="border-b border-slate-800/60"><td class="py-2 px-2 text-purple-400 font-bold font-sans">🏛️ Governance</td><td class="text-center py-2 px-2 text-white">81</td><td class="text-center py-2 px-2 text-slate-400">25%</td><td class="text-right py-2 px-2 text-purple-400 font-bold">20.25</td></tr>
+                    <tr class="bg-slate-900"><td class="py-2.5 px-2 text-white font-bold font-sans">Total Weighted Score</td><td class="text-center py-2.5 px-2 text-slate-400">—</td><td class="text-center py-2.5 px-2 text-slate-400">100%</td><td class="text-right py-2.5 px-2 text-white font-black text-sm">82.35 → <span class="text-emerald-400">82</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-3 space-y-1.5"><p class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">🌱 Fastest Path to +3 pts</p><p class="text-[11px] text-slate-300 leading-snug">Lift Eco-Stewardship (74→82) by hitting the climate literacy sub-target with 4 extra workshops.</p></div>
+            <div class="bg-blue-950/20 border border-blue-500/30 rounded-xl p-3 space-y-1.5"><p class="text-[10px] font-extrabold uppercase tracking-wider text-blue-400">👥 Fastest Path to +2 pts</p><p class="text-[11px] text-slate-300 leading-snug">Raise Child Safeguarding (83→88) by closing Selangor's 21% obesity peak with a SEJAHTERA menu audit.</p></div>
+            <div class="bg-purple-950/20 border border-purple-500/30 rounded-xl p-3 space-y-1.5"><p class="text-[10px] font-extrabold uppercase tracking-wider text-purple-400">🏛️ Fastest Path to +3 pts</p><p class="text-[11px] text-slate-300 leading-snug">Lift Supply Chain (75→85) by completing Q4 procurement audit & token minting attestation.</p></div>
+        </div>
+
+        <div class="bg-gradient-to-r from-amber-950/40 via-slate-900/60 to-emerald-950/40 border border-amber-500/40 rounded-xl p-4 flex items-start space-x-3">
+            <span class="text-2xl">🏆</span>
+            <div class="space-y-0.5"><p class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Path to Gold Tier (≥ 90 / 100)</p><p class="text-[11px] text-slate-300 leading-snug">Closing all three recommended gaps raises the weighted score to <strong class="text-white">90.05</strong> — sufficient for Gold Tier under the current methodology.</p></div>
+        </div>
+
+        <div class="flex justify-end pt-2 border-t border-slate-800">
+            <button onclick="closeEsgBreakdownModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">Close Breakdown</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= SCRIPTS ================= -->
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
