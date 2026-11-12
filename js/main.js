@@ -1,3 +1,4 @@
+/* v3 */
 // js/main.js — entry point. Wires every module together.
 
 /* ── Charts ─────────────────────────────────────────────────── */
@@ -126,7 +127,7 @@ import {
     closeHistoryModal
 } from './modules/modals.js';
 
-// 🔧 Pricing module (7 exports — setPricingCurrency added for 3-tier version)
+// Pricing module (7 exports)
 import {
     initPricing,
     renderPricingPage,
@@ -341,7 +342,7 @@ Object.assign(window, {
     deleteCustomMenu,
     renderCustomMenus,
 
-    // Menu-day tooltip (legacy, harmless no-op now)
+    // Menu-day tooltip
     pinMenuDay,
     unpinMenuDay,
 
@@ -397,10 +398,10 @@ Object.assign(window, {
     // Nutrient table
     highlightNutrients,
 
-    // Charts (exposed so waste.js / other modules can lazy-init)
+    // Charts
     initWasteTrendChart,
 
-    // 🔧 Pricing handlers (5 + currency = 6 total)
+    // Pricing handlers
     setPricingCurrency,
     setPricingTerm,
     selectPricingPlan,
@@ -435,7 +436,6 @@ const REQUIRED_HANDLERS = [
     'highlightNutrients',
     'toggleHeightGender', 'highlightHeightSeries',
     'filterRosterTable', 'changePageSize', 'changeRosterPage',
-    // 🔧 Pricing handlers (5 total — will bump diagnostic to 61)
     'setPricingCurrency', 'setPricingTerm', 'selectPricingPlan', 'updatePricingInput', 'handleSubscribeClick',
 ];
 
