@@ -1,7 +1,7 @@
 // js/modules/waste.js — food-waste tracking + menu-analysis modal entry.
 
-import { wasteLogs } from '../../data/waste.js';         // 🔧 FIX: '../data/' → '../../data/'
-import { WASTE_COST_PER_KG } from '../../config.js';      // 🔧 FIX: '../config.js' → '../../config.js'
+import { wasteLogs } from '../../data/waste.js';            // ← FIX: two ../
+import { WASTE_COST_PER_KG } from '../../config.js';         // ← FIX: two ../
 import { initWasteTrendChart } from '../charts/waste.js';
 
 /* ── Menu Analysis modal (contains the waste section) ──────── */
