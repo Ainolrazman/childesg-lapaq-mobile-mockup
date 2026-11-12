@@ -127,6 +127,16 @@ import {
     closeHistoryModal
 } from './modules/modals.js';
 
+// 🔧 ADDED: Pricing module
+import {
+    initPricing,
+    renderPricingPage,
+    setPricingTerm,
+    selectPricingPlan,
+    updatePricingInput,
+    handleSubscribeClick
+} from './modules/pricing.js';
+
 /* ── Inline-only helpers (dashboard-local, kept here) ────────── */
 
 // 🔧 FIX: geoStateData inlined to remove the /data/geo.js dependency.
@@ -399,7 +409,13 @@ Object.assign(window, {
     highlightNutrients,
 
     // Charts (exposed so waste.js / other modules can lazy-init)
-    initWasteTrendChart
+    initWasteTrendChart,
+
+    // 🔧 ADDED: Pricing handlers
+    setPricingTerm,
+    selectPricingPlan,
+    updatePricingInput,
+    handleSubscribeClick,
 });
 
 /* ── Diagnostics: verify every inline handler resolves ──────── */
@@ -428,7 +444,9 @@ const REQUIRED_HANDLERS = [
     'openBookingModal', 'closeBookingModal', 'handleBookingSubmit',
     'highlightNutrients',
     'toggleHeightGender', 'highlightHeightSeries',
-    'filterRosterTable', 'changePageSize', 'changeRosterPage'
+    'filterRosterTable', 'changePageSize', 'changeRosterPage',
+    // 🔧 ADDED: Pricing handlers
+    'setPricingTerm', 'selectPricingPlan', 'updatePricingInput', 'handleSubscribeClick',
 ];
 
 /* ── Chart resize sweep (fixes 0×0 in hidden tabs) ──────────── */
@@ -472,6 +490,9 @@ function boot() {
     renderCustomMenus();
     updateWasteStats();
     initMenuDayCards();   // no-op now (SEJAHTERA cards were removed) — safe to leave
+
+    // 🔧 ADDED: render pricing page (safe to call even if #view-pricing is hidden)
+    initPricing();
 
     // 4. Async loads
     initRmtMenus();
