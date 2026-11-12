@@ -64,9 +64,15 @@ function calculateCost(planId, months, kids, locations, currency) {
         minRequired = p.minTotal;
         total = Math.max(kids * p.perChild, minRequired);
     }
+    
+    // Total for the term (monthly, quarterly, or annually)
+    const termTotal = total;
+    
+    // Normalized to monthly and annual for the calculator
     const monthlyTotal = months === 12 ? total / 12 : (months === 3 ? total / 3 : total);
     const annualTotal  = monthlyTotal * 12;
-    return { total, monthlyTotal, annualTotal, minRequired, minMet: total >= minRequired, perChild: p.perChild };
+    
+    return { termTotal, monthlyTotal, annualTotal, minRequired, minMet: total >= minRequired, perChild: p.perChild };
 }
 
 /* ── Render: currency bar ─────────────────────────────────── */
@@ -105,6 +111,10 @@ function renderPlanCards() {
     const months   = pricingState.selectedTerm;
     const currency = pricingState.currency;
 
+    // Suffix based on selected term
+    const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
+    const termSuffix = termSuffixMap[months] || 'term';
+
     container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4';
 
     container.innerHTML = b2b2cPlans.map(plan => {
@@ -112,15 +122,14 @@ function renderPlanCards() {
         const accent       = accentClasses(plan.accent, 'text');
         const accentBorder = accentClasses(plan.accent, 'border');
 
-        // Calculate term price and monthly equivalent
+        // Get the exact cost per child for the selected term
         const perChildTerm = plan.pricing[currency][months].perChild;
+        
+        // Calculate the monthly equivalent (e.g. RM 18 / 3 = RM 6/mo)
         const perChildMonthly = perChildTerm / months;
         
         const termPriceStr = fmtPrice(perChildTerm, currency, { compact: true });
         const monthlyPriceStr = fmtPrice(perChildMonthly, currency, { compact: true });
-        
-        const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
-        const termSuffix = termSuffixMap[months] || 'term';
 
         const savings      = plan.savings[months];
         const savingsBadge = savings > 0
@@ -152,7 +161,7 @@ function renderPlanCards() {
                 </div>
                 <div class="pt-1">
                     <div class="flex items-baseline gap-1 flex-wrap">
-                        <span class="text-2xl font-black ${accent}">${termPriceStr}</span>
+                        <span class="text-3xl font-black ${accent}">${termPriceStr}</span>
                         <span class="text-[11px] text-slate-400 font-mono">/child/${termSuffix}</span>
                         ${savingsBadge}
                     </div>
@@ -196,7 +205,10 @@ function renderCalculator() {
         : `<span class="text-amber-400 font-bold">⚠ Minimum not met</span>`;
     const locDisabled  = (plan.id !== 'chain' && plan.id !== 'enterprise') ? 'disabled' : '';
     const termLabel    = b2b2cTerms.find(t => t.months === months)?.label;
-    const termSuffix   = months === 12 ? '/yr' : (months === 3 ? '/qtr' : '/mo');
+    
+    // Suffix based on selected term
+    const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
+    const termSuffix = termSuffixMap[months] || 'term';
 
     container.innerHTML = `
         <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-4">
@@ -227,20 +239,20 @@ function renderCalculator() {
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-3 border-t border-slate-800 text-xs">
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Per Child</p>
+                    <p class="text-[9px] uppercase font-bold text-slate-500">Per Child (Term)</p>
                     <p class="text-sm font-black text-white mt-1">${fmtPrice(cost.perChild, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">${termSuffix}</p>
+                    <p class="text-[9px] text-slate-500 font-mono">/${termSuffix}</p>
                     ${months !== 1 ? `<p class="text-[9px] text-slate-500 font-mono mt-0.5">≈ ${fmtPrice(cost.perChild / months, currency, { compact: true })}/mo</p>` : ''}
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Monthly</p>
+                    <p class="text-[9px] uppercase font-bold text-slate-500">Monthly Equivalent</p>
                     <p class="text-sm font-black ${accent} mt-1">${fmtPrice(cost.monthlyTotal, currency, { compact: true })}</p>
                     <p class="text-[9px] text-slate-500 font-mono">per month</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold ${accent}">Annual Total</p>
-                    <p class="text-lg font-black text-white mt-1">${fmtPrice(cost.annualTotal, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">per year</p>
+                    <p class="text-[9px] uppercase font-bold ${accent}">Total Per Term</p>
+                    <p class="text-lg font-black text-white mt-1">${fmtPrice(cost.termTotal, currency, { compact: true })}</p>
+                    <p class="text-[9px] text-slate-500 font-mono">due today</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
                     <p class="text-[9px] uppercase font-bold text-slate-500">Minimum</p>
@@ -393,8 +405,8 @@ export function handleSubscribeClick(planId) {
         `Term: ${term.label}\n` +
         `Children: ${pricingState.childCount}\n` +
         `Locations: ${pricingState.locationCount}\n` +
-        `Monthly: ${fmtPrice(cost.monthlyTotal, pricingState.currency)}\n` +
-        `Annual: ${fmtPrice(cost.annualTotal, pricingState.currency)}\n\n` +
+        `Total due today: ${fmtPrice(cost.termTotal, pricingState.currency)}\n` +
+        `Monthly Equivalent: ${fmtPrice(cost.monthlyTotal, pricingState.currency)}\n\n` +
         `(Mockup — no real checkout yet.)`
     );
 }
