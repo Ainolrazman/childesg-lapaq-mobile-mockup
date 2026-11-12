@@ -1,415 +1,277 @@
-// js/modules/pricing.js — B2B2C partner pricing, 3 tiers × 3 currencies.
+// data/pricing-b2b2c.js — B2B2C institution pricing, 3 tiers × 3 currencies.
 
-import {
-    currencies,
-    b2b2cPlans,
-    b2b2cTerms,
-    parentBenefit,
-    billingRules,
-    featureMatrix
-} from '../../data/pricing-b2b2c.js';
+export const currencies = [
+    { code: 'MYR', label: 'MYR', symbol: 'RM',  flag: '🇲🇾', name: 'Malaysian Ringgit' },
+    { code: 'USD', label: 'USD', symbol: '$',   flag: '🇺🇸', name: 'US Dollar' },
+    { code: 'IDR', label: 'IDR', symbol: 'IDR', flag: '🇮🇩', name: 'Indonesian Rupiah' }
+];
 
-/* ── Module state ─────────────────────────────────────────── */
-const pricingState = {
-    currency: 'MYR',
-    selectedTerm: 1, // Defaulting to Monthly so you see the breakdown clearly
-    selectedPlan: 'standard',
-    childCount: 220,
-    locationCount: 1
+export const b2b2cPlans = [
+    {
+        id: 'standard',
+        name: 'Standard',
+        tagline: 'Single location · up to 500 kids',
+        eligibility: 'Single-location institution',
+        accent: 'emerald',
+        icon: '🏫',
+        badge: 'Most popular',
+        limits: { maxKids: 500, maxLocations: 1, adminSeats: 3, auditRetentionDays: 30 },
+        pricing: {
+            MYR: {
+                1:  { perChild: 8.00,   minTotal: 200 },
+                3:  { perChild: 18.00,  minTotal: 420 },
+                12: { perChild: 50.00,  minTotal: 1000 }
+            },
+            USD: {
+                1:  { perChild: 2.00,   minTotal: 40 },
+                3:  { perChild: 4.50,   minTotal: 90 },
+                12: { perChild: 12.00,  minTotal: 210 }
+            },
+            IDR: {
+                1:  { perChild: 26000,  minTotal: 650000 },
+                3:  { perChild: 59000,  minTotal: 1400000 },
+                12: { perChild: 165000, minTotal: 3300000 }
+            }
+        },
+        effectiveAnnual: {
+            MYR: { 1: 96,     3: 72,     12: 50 },
+            USD: { 1: 24,     3: 18,     12: 12 },
+            IDR: { 1: 312000, 3: 236000, 12: 165000 }
+        },
+        savings: { 1: 0, 3: 25, 12: 48 },
+        highlights: [
+            'All analytics + feature matrix',
+            'Parents get Plus access free',
+            'SHA-256 audit ledger',
+            'Up to 500 children, 1 location'
+        ]
+    },
+    {
+        id: 'chain',
+        name: 'Chain',
+        tagline: '5+ locations · 100–1,999 kids',
+        eligibility: 'Multi-location groups',
+        accent: 'indigo',
+        icon: '🏢',
+        badge: 'Scale tier',
+        limits: { maxKids: 1999, maxLocations: '5+', adminSeats: '10+', auditRetentionDays: 90 },
+        pricing: {
+            MYR: {
+                1:  { perChild: 7.00,   minPerLocation: 175 },
+                3:  { perChild: 16.00,  minPerLocation: 380 },
+                12: { perChild: 45.00,  minPerLocation: 1000 }
+            },
+            USD: {
+                1:  { perChild: 1.75,   minPerLocation: 37 },
+                3:  { perChild: 4.00,   minPerLocation: 80 },
+                12: { perChild: 10.50,  minPerLocation: 210 }
+            },
+            IDR: {
+                1:  { perChild: 23000,  minPerLocation: 600000 },
+                3:  { perChild: 53000,  minPerLocation: 1300000 },
+                12: { perChild: 148000, minPerLocation: 3300000 }
+            }
+        },
+        effectiveAnnual: {
+            MYR: { 1: 84,     3: 64,     12: 45 },
+            USD: { 1: 21,     3: 16,     12: 10.50 },
+            IDR: { 1: 276000, 3: 212000, 12: 148000 }
+        },
+        savings: { 1: 0, 3: 24, 12: 46 },
+        highlights: [
+            'Multi-location dashboard',
+            'Cross-location analytics',
+            'Cross-location menu library',
+            '90-day audit retention'
+        ]
+    },
+    {
+        id: 'enterprise',
+        name: 'Enterprise',
+        tagline: '500+ kids · GLC / Government',
+        eligibility: 'GLC · Government agency',
+        accent: 'purple',
+        icon: '🏛️',
+        badge: 'Full control',
+        limits: { maxKids: 'Unlimited', maxLocations: 'Unlimited', adminSeats: 'Unlimited', auditRetentionDays: 'Unlimited' },
+        pricing: {
+            MYR: {
+                1:  { perChild: 6.50,   minTotal: 3250 },
+                3:  { perChild: 15.00,  minTotal: 7500 },
+                12: { perChild: 40.00,  minTotal: 20000 }
+            },
+            USD: {
+                1:  { perChild: 1.50,   minTotal: 690 },
+                3:  { perChild: 3.50,   minTotal: 1600 },
+                12: { perChild: 9.00,   minTotal: 4300 }
+            },
+            IDR: {
+                1:  { perChild: 21000,  minTotal: 10700000 },
+                3:  { perChild: 49000,  minTotal: 24750000 },
+                12: { perChild: 132000, minTotal: 66000000 }
+            }
+        },
+        effectiveAnnual: {
+            MYR: { 1: 78,     3: 60,     12: 40 },
+            USD: { 1: 18,     3: 14,     12: 9 },
+            IDR: { 1: 252000, 3: 196000, 12: 132000 }
+        },
+        savings: { 1: 0, 3: 22, 12: 49 },
+        highlights: [
+            'Everything in Chain',
+            'National state filter',
+            'Custom branding + own logo',
+            'API access + SSO (roadmap)'
+        ]
+    }
+];
+
+export const b2b2cTerms = [
+    { 
+        months: 1,  
+        label: 'Monthly Payment',  
+        notice: 'Auto-renews · 14-day cancellation notice' 
+    },
+    { 
+        months: 3,  
+        label: 'Quarterly Payment', 
+        notice: 'Auto-renews · 30-day cancellation notice · mid-tier trial option' 
+    },
+    { 
+        months: 12, 
+        label: 'Yearly Payment',   
+        notice: 'Auto-renews · 60-day pre-renewal check-in call · cancel before day 30 for 50% refund', 
+        recommended: true 
+    }
+];
+
+export const parentBenefit = {
+    headline: 'Your parents get Plus-tier access — free',
+    valuePerChild: { MYR: 79, USD: 18, IDR: 260000 },
+    description: 'Every subscribed child receives the full Plus tier equivalent at no cost to the parent. This is included in your partner subscription.',
+    features: [
+        { name: 'Child profiles',           value: '4' },
+        { name: 'Meal history',              value: '30 days + custom' },
+        { name: 'All 9 RNI bars',            value: '✓' },
+        { name: 'Personalized meal plan',    value: '✓' },
+        { name: 'AI nutrition coach',        value: '✓' },
+        { name: 'Weekly PDF report',         value: '✓' },
+        { name: 'Token multiplier',          value: '1.5×' },
+        { name: 'Ads removed',               value: '✓' },
+        { name: 'Priority nutritionist',     value: '24–48h' },
+        { name: 'Partner-badged rewards',    value: '✓' },
+        { name: 'Bilingual BM / EN',         value: '✓' }
+    ]
 };
 
-/* ── Formatters ───────────────────────────────────────────── */
-function fmtPrice(amount, currency, { compact = false } = {}) {
-    if (currency === 'MYR') {
-        const formatted = compact && amount % 1 === 0
-            ? amount.toLocaleString('en-MY')
-            : amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        return `RM ${formatted}`;
+export const billingRules = [
+    { term: '1M', rule: 'Auto-renews · 14-day cancellation notice · available to partners with <30 children or new partners testing' },
+    { term: '3M', rule: 'Auto-renews · 30-day cancellation notice · mid-tier trial option' },
+    { term: '1Y', rule: 'Auto-renews by default · 60-day pre-renewal check-in call · cancel before day 30 for 50% refund' },
+    { term: '⌁',  rule: 'Upgrade 1M ↔ 1Y anytime (pro-rated) · downgrade at renewal only' },
+    { term: '🔒', rule: 'Annual pricing locked: once signed, price cannot increase until renewal' },
+    { term: '🎁', rule: '7-day free trial available on all tiers — full feature parity, no card required' }
+];
+
+export const featureMatrix = [
+    {
+        group: '1. Portal · Identity & Access',
+        rows: [
+            { id: '1.1', label: 'Custom organization branding',      standard: true,  chain: true,  enterprise: '✓ + own logo' },
+            { id: '1.2', label: 'SHA-256 audit ledger hash display', standard: true,  chain: true,  enterprise: true },
+            { id: '1.3', label: 'WHO Standard RNI Engine badge',     standard: true,  chain: true,  enterprise: true },
+            { id: '1.4', label: 'Mobile PWA link',                   standard: true,  chain: true,  enterprise: true },
+            { id: '1.5', label: 'LaPaQ parent portal login',         standard: true,  chain: true,  enterprise: true },
+            { id: '1.6', label: 'View Report · ESG export',          standard: true,  chain: true,  enterprise: true }
+        ]
+    },
+    {
+        group: '2. Live Filters & Navigation',
+        rows: [
+            { id: '2.1', label: 'State / Region filter',        standard: 'own',    chain: 'own',    enterprise: 'national' },
+            { id: '2.2', label: 'Child Cohort / Age filter',    standard: true,     chain: true,     enterprise: true },
+            { id: '2.3', label: 'Partner Organization filter',  standard: true,     chain: true,     enterprise: 'multi' },
+            { id: '2.4', label: 'Time Horizon (1M/6M/YTD)',     standard: true,     chain: true,     enterprise: '+ custom' }
+        ]
+    },
+    {
+        group: '3. Program & Activity Builder',
+        rows: [
+            { id: '3.3', label: 'Create New Program modal',   standard: true,  chain: true,  enterprise: true },
+            { id: '3.4', label: 'SDG binding per program',     standard: true,  chain: true,  enterprise: true },
+            { id: '3.6', label: 'Multi-location management',   standard: '1',   chain: true,  enterprise: true },
+            { id: '3.7', label: 'Cross-location duplication',  standard: false, chain: true,  enterprise: true },
+            { id: '3.8', label: 'Program templates library',   standard: false, chain: true,  enterprise: true }
+        ]
+    },
+    {
+        group: '4. ESG & Impact Dashboard',
+        rows: [
+            { id: '4.1', label: '5 KPI cards + methodology',  standard: true, chain: true, enterprise: true },
+            { id: '4.5', label: 'Weighted Score Breakdown',    standard: true, chain: true, enterprise: true },
+            { id: '4.7', label: 'SDG Full Report modal',       standard: true, chain: true, enterprise: true },
+            { id: '4.8', label: 'Full PDF Report export',      standard: true, chain: true, enterprise: true }
+        ]
+    },
+    {
+        group: '5. LaPaQ Nutrition & Growth',
+        rows: [
+            { id: '5.1',  label: 'State Hub Selector',         standard: 'own', chain: '3–5', enterprise: 'national' },
+            { id: '5.14', label: 'Health Risk Projection',     standard: true,  chain: true,  enterprise: true },
+            { id: '5.19', label: 'Counterfactual section',     standard: true,  chain: true,  enterprise: true },
+            { id: '5.20', label: 'Inter-location comparison',  standard: false, chain: true,  enterprise: true },
+            { id: '5.21', label: 'Custom cohort segmentation', standard: false, chain: true,  enterprise: true },
+            { id: '5.22', label: 'API data access',            standard: false, chain: false, enterprise: true }
+        ]
+    },
+    {
+        group: '6. Roster & Class Management',
+        rows: [
+            { id: '6.4',  label: 'Participant Roster + pagination', standard: true,  chain: true,  enterprise: true },
+            { id: '6.7',  label: 'Approve Token Points',            standard: true,  chain: true,  enterprise: true },
+            { id: '6.9',  label: 'Bulk import from CSV',            standard: true,  chain: true,  enterprise: true },
+            { id: '6.10', label: 'Bulk operations',                 standard: true,  chain: true,  enterprise: true },
+            { id: '6.11', label: 'Cross-location roster',           standard: false, chain: true,  enterprise: true },
+            { id: '6.12', label: 'Roster API sync',                 standard: false, chain: false, enterprise: true }
+        ]
+    },
+    {
+        group: '7. Audit & Ledger Trail',
+        rows: [
+            { id: '7.1', label: 'Immutable SHA-256 log stream',  standard: true,  chain: true,  enterprise: true },
+            { id: '7.6', label: 'Audit trail retention',          standard: '30d', chain: '90d', enterprise: '∞' },
+            { id: '7.7', label: 'Audit trail export',             standard: false, chain: true,  enterprise: true },
+            { id: '7.8', label: 'Temporary auditor access',       standard: false, chain: false, enterprise: true }
+        ]
+    },
+    {
+        group: '8. Menu & Dietary Analysis',
+        rows: [
+            { id: '8.2',  label: 'Weekly SEJAHTERA Menu (5-day)', standard: true,  chain: true,  enterprise: true },
+            { id: '8.6',  label: 'Custom Menu Library',            standard: true,  chain: true,  enterprise: true },
+            { id: '8.8',  label: 'Food Cost Optimization',         standard: true,  chain: true,  enterprise: true },
+            { id: '8.10', label: 'Cross-location menu library',    standard: false, chain: true,  enterprise: true },
+            { id: '8.11', label: 'Menu template library',          standard: false, chain: false, enterprise: true }
+        ]
+    },
+    {
+        group: '9. Food Waste Tracking (SDG 12.3)',
+        rows: [
+            { id: '9.1', label: 'Daily waste log + calculator',    standard: true,  chain: true,  enterprise: true },
+            { id: '9.4', label: 'SDG 12.3 progress bar',           standard: true,  chain: true,  enterprise: true },
+            { id: '9.7', label: 'Multi-location waste comparison', standard: false, chain: true,  enterprise: true },
+            { id: '9.8', label: 'Composting receipts upload',      standard: false, chain: true,  enterprise: true },
+            { id: '9.9', label: 'CO₂e calculator',                 standard: 'display', chain: 'custom', enterprise: 'API' }
+        ]
+    },
+    {
+        group: '10. Nutritionist Marketplace',
+        rows: [
+            { id: '10.1', label: 'Nutritionist directory',          standard: true,  chain: true,  enterprise: true },
+            { id: '10.3', label: 'Booking flow',                     standard: true,  chain: true,  enterprise: true },
+            { id: '10.5', label: 'Booking commission',               standard: '15-25%', chain: '15-25%', enterprise: '10-15%' },
+            { id: '10.6', label: 'Dedicated nutritionist assigned',  standard: false, chain: true,  enterprise: true },
+            { id: '10.7', label: 'In-person clinic referral',        standard: false, chain: false, enterprise: true }
+        ]
     }
-    if (currency === 'USD') {
-        const formatted = compact && amount % 1 === 0
-            ? amount.toLocaleString('en-US')
-            : amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        return `$${formatted}`;
-    }
-    if (currency === 'IDR') {
-        return `IDR ${Math.round(amount).toLocaleString('en-US')}`;
-    }
-    return amount.toString();
-}
-
-/* ── Accent classes ──────────────────────────────────────── */
-function accentClasses(accent, kind = 'text') {
-    const map = {
-        emerald: { text: 'text-emerald-400', border: 'border-emerald-500/40', bg: 'bg-emerald-950/30' },
-        indigo:  { text: 'text-indigo-400',  border: 'border-indigo-500/40',  bg: 'bg-indigo-950/30' },
-        purple:  { text: 'text-purple-400',  border: 'border-purple-500/40',  bg: 'bg-purple-950/30' }
-    };
-    return map[accent]?.[kind] || 'text-slate-300';
-}
-
-/* ── Cost calculation ─────────────────────────────────────── */
-function calculateCost(planId, months, kids, locations, currency) {
-    const plan = b2b2cPlans.find(p => p.id === planId);
-    if (!plan) return null;
-    if (!plan.pricing || !plan.pricing[currency]) return null;
-    const p = plan.pricing[currency][months];
-    if (!p) return null;
-    let total, minRequired;
-    if (planId === 'chain') {
-        const locs = Math.max(1, locations || 1);
-        minRequired = p.minPerLocation * locs;
-        total = Math.max(kids * p.perChild, minRequired);
-    } else {
-        minRequired = p.minTotal;
-        total = Math.max(kids * p.perChild, minRequired);
-    }
-    
-    const termTotal = total;
-    const monthlyTotal = months === 12 ? total / 12 : (months === 3 ? total / 3 : total);
-    const annualTotal  = monthlyTotal * 12;
-    
-    return { termTotal, monthlyTotal, annualTotal, minRequired, minMet: total >= minRequired, perChild: p.perChild };
-}
-
-/* ── Render: currency bar ─────────────────────────────────── */
-function renderCurrencyBar() {
-    const container = document.getElementById('pricing-currency-bar');
-    if (!container) return;
-    container.innerHTML = currencies.map(c => {
-        const active = pricingState.currency === c.code;
-        return `
-            <button type="button" onclick="setPricingCurrency('${c.code}')"
-                    class="flex-1 py-2 px-3 text-[11px] font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 ${active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">
-                <span>${c.flag}</span>
-                <span>${c.label}</span>
-            </button>`;
-    }).join('');
-}
-
-/* ── Render: term bar ─────────────────────────────────────── */
-function renderTermBar() {
-    const container = document.getElementById('pricing-term-bar');
-    if (!container) return;
-    container.innerHTML = b2b2cTerms.map(t => {
-        const active = pricingState.selectedTerm === t.months;
-        return `
-            <button type="button" onclick="setPricingTerm(${t.months})"
-                    class="flex-1 py-2 text-[11px] font-extrabold rounded-xl transition ${active ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">
-                ${t.label}${t.recommended ? ' ★' : ''}
-            </button>`;
-    }).join('');
-}
-
-/* ── Render: plan cards ───────────────────────────────────── */
-function renderPlanCards() {
-    const container = document.getElementById('pricing-plans-grid');
-    if (!container) return;
-    const months   = pricingState.selectedTerm;
-    const currency = pricingState.currency;
-
-    const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
-    const termSuffix = termSuffixMap[months] || 'term';
-
-    container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4';
-
-    container.innerHTML = b2b2cPlans.map(plan => {
-        const isSelected   = pricingState.selectedPlan === plan.id;
-        const accent       = accentClasses(plan.accent, 'text');
-        const accentBorder = accentClasses(plan.accent, 'border');
-
-        // Get the exact term cost
-        const perChildTerm = plan.pricing[currency][months].perChild;
-        
-        // Calculate the true Monthly equivalent (Term cost / Months)
-        const perChildMonthly = perChildTerm / months;
-        
-        const monthlyPriceStr = fmtPrice(perChildMonthly, currency, { compact: true });
-        const termPriceStr = fmtPrice(perChildTerm, currency, { compact: true });
-
-        const savings      = plan.savings[months];
-        const savingsBadge = savings > 0
-            ? `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Save ${savings}%</span>`
-            : '';
-
-        const badgeHtml = plan.badge
-            ? `<span class="text-[9px] font-extrabold uppercase tracking-wider ${accent} bg-slate-950 border ${accentBorder} px-2 py-0.5 rounded-full">${plan.badge}</span>`
-            : '';
-
-        const highlightsHtml = plan.highlights.map(h =>
-            `<li class="flex items-start gap-2 text-[11px] text-slate-300"><span class="${accent} mt-0.5">✓</span><span>${h}</span></li>`
-        ).join('');
-
-        const selectedRing = isSelected ? `ring-2 ring-offset-2 ring-offset-slate-900 ${accentBorder}` : 'border-slate-800';
-
-        return `
-            <div class="pricing-plan-card bg-slate-950/70 border ${selectedRing} rounded-2xl p-5 space-y-3 cursor-pointer transition hover:border-slate-700"
-                 data-plan-id="${plan.id}" onclick="selectPricingPlan('${plan.id}')">
-                <div class="flex justify-between items-start">
-                    <div class="flex items-center gap-2">
-                        <span class="text-2xl">${plan.icon}</span>
-                        <div>
-                            <p class="text-sm font-black text-white">${plan.name}</p>
-                            <p class="text-[10px] text-slate-400">${plan.tagline}</p>
-                        </div>
-                    </div>
-                    ${badgeHtml}
-                </div>
-                <div class="pt-1">
-                    <div class="flex items-baseline gap-1 flex-wrap">
-                        <!-- Big Number is ALWAYS Monthly -->
-                        <span class="text-3xl font-black ${accent}">${monthlyPriceStr}</span>
-                        <span class="text-[11px] text-slate-400 font-mono">/child/mo</span>
-                        ${savingsBadge}
-                    </div>
-                    <!-- Subtext shows the actual billing term -->
-                    <div class="text-[10px] text-slate-400 font-mono mt-1">
-                        Billed ${termPriceStr} per child / ${termSuffix}
-                    </div>
-                </div>
-                <div class="pt-2 border-t border-slate-800/80">
-                    <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">Eligibility</p>
-                    <p class="text-[11px] text-slate-300">${plan.eligibility}</p>
-                </div>
-                <ul class="space-y-1.5 pt-1">${highlightsHtml}</ul>
-                <div class="grid grid-cols-2 gap-2 text-[9px] font-mono text-slate-400 pt-2 border-t border-slate-800/80">
-                    <div>Kids: <strong class="text-white">${plan.limits.maxKids}</strong></div>
-                    <div>Locations: <strong class="text-white">${plan.limits.maxLocations}</strong></div>
-                    <div>Admin: <strong class="text-white">${plan.limits.adminSeats}</strong></div>
-                    <div>Audit: <strong class="text-white">${plan.limits.auditRetentionDays}d</strong></div>
-                </div>
-                <button type="button"
-                        onclick="event.stopPropagation(); handleSubscribeClick('${plan.id}');"
-                        class="w-full mt-2 py-2 rounded-xl text-xs font-extrabold transition ${isSelected ? `${accentClasses(plan.accent, 'bg')} ${accent} border ${accentBorder}` : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
-                    Choose Plan
-                </button>
-            </div>`;
-    }).join('');
-}
-
-/* ── Render: calculator ───────────────────────────────────── */
-function renderCalculator() {
-    const container = document.getElementById('pricing-calculator');
-    if (!container) return;
-    const plan     = b2b2cPlans.find(p => p.id === pricingState.selectedPlan);
-    const currency = pricingState.currency;
-    const months   = pricingState.selectedTerm;
-    if (!plan) return;
-    const cost = calculateCost(plan.id, months, pricingState.childCount, pricingState.locationCount, currency);
-    if (!cost) return;
-
-    const accent       = accentClasses(plan.accent, 'text');
-    const accentBorder = accentClasses(plan.accent, 'border');
-    const minMetHtml   = cost.minMet
-        ? `<span class="text-emerald-400 font-bold">✓ Minimum met</span>`
-        : `<span class="text-amber-400 font-bold">⚠ Minimum not met</span>`;
-    const locDisabled  = (plan.id !== 'chain' && plan.id !== 'enterprise') ? 'disabled' : '';
-    const termLabel    = b2b2cTerms.find(t => t.months === months)?.label;
-    
-    const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
-    const termSuffix = termSuffixMap[months] || 'term';
-
-    container.innerHTML = `
-        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
-                <div>
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">🧮 Cost Calculator</h3>
-                    <p class="text-[10px] text-slate-400">${plan.name} · ${termLabel} · ${currency}</p>
-                </div>
-                <span class="text-xs font-mono font-bold ${accent} bg-slate-900 border ${accentBorder} px-2.5 py-1 rounded-lg">${plan.icon} ${plan.name}</span>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Total Children</label>
-                    <input type="number" min="1" value="${pricingState.childCount}" oninput="updatePricingInput('childCount', this.value)"
-                           class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Locations</label>
-                    <input type="number" min="1" value="${pricingState.locationCount}" oninput="updatePricingInput('locationCount', this.value)" ${locDisabled}
-                           class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-mono font-bold focus:outline-none focus:border-emerald-500 disabled:opacity-40">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Term</label>
-                    <select onchange="setPricingTerm(parseInt(this.value, 10))" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-semibold focus:outline-none focus:border-emerald-500">
-                        ${b2b2cTerms.map(t => `<option value="${t.months}" ${months === t.months ? 'selected' : ''}>${t.label}${t.recommended ? ' (best value)' : ''}</option>`).join('')}
-                    </select>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-3 border-t border-slate-800 text-xs">
-                <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Per Child / Month</p>
-                    <p class="text-sm font-black text-white mt-1">${fmtPrice(cost.perChild / months, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">/mo</p>
-                </div>
-                <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Monthly Total (Cohort)</p>
-                    <p class="text-sm font-black ${accent} mt-1">${fmtPrice(cost.monthlyTotal, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">per month</p>
-                </div>
-                <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold ${accent}">Total Due Today</p>
-                    <p class="text-lg font-black text-white mt-1">${fmtPrice(cost.termTotal, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">billed ${termSuffix}</p>
-                </div>
-                <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Minimum</p>
-                    <p class="text-sm font-black text-white mt-1">${fmtPrice(cost.minRequired, currency, { compact: true })}</p>
-                    <p class="text-[9px] font-mono">${minMetHtml}</p>
-                </div>
-            </div>
-        </div>`;
-}
-
-/* ── Render: parent benefit ───────────────────────────────── */
-function renderParentBenefit() {
-    const container = document.getElementById('pricing-parent-benefit');
-    if (!container) return;
-    const kids          = pricingState.childCount;
-    const currency      = pricingState.currency;
-    const valuePerChild = parentBenefit.valuePerChild[currency];
-    const annualValue   = kids * valuePerChild;
-
-    container.innerHTML = `
-        <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/30 border border-emerald-500/40 rounded-2xl p-5 space-y-3">
-            <div class="flex items-start gap-3">
-                <span class="text-3xl">🎁</span>
-                <div class="flex-1">
-                    <h3 class="text-sm font-black text-white">${parentBenefit.headline}</h3>
-                    <p class="text-[11px] text-slate-300 mt-1">${parentBenefit.description}</p>
-                </div>
-                <div class="text-right shrink-0">
-                    <p class="text-[10px] uppercase font-bold text-emerald-400">Value to your parents</p>
-                    <p class="text-2xl font-black text-emerald-400">${fmtPrice(annualValue, currency, { compact: true })}</p>
-                    <p class="text-[10px] font-mono text-slate-400">${kids} × ${fmtPrice(valuePerChild, currency, { compact: true })}/year</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 pt-2 border-t border-emerald-500/20 text-[10px]">
-                ${parentBenefit.features.map(f => `
-                    <div class="bg-slate-950/60 border border-slate-800 rounded-lg px-2.5 py-1.5">
-                        <p class="text-[9px] text-slate-400">${f.name}</p>
-                        <p class="font-bold text-emerald-400 font-mono">${f.value}</p>
-                    </div>`).join('')}
-            </div>
-        </div>`;
-}
-
-/* ── Render: feature matrix ───────────────────────────────── */
-function renderFeatureMatrix() {
-    const container = document.getElementById('pricing-feature-matrix');
-    if (!container) return;
-    const cell = (v) => {
-        if (v === true)  return `<span class="text-emerald-400 font-bold">✓</span>`;
-        if (v === false) return `<span class="text-slate-600">×</span>`;
-        return `<span class="text-[10px] font-mono text-slate-300">${v}</span>`;
-    };
-
-    container.innerHTML = featureMatrix.map((group, gi) => `
-        <details class="group bg-slate-950/70 border border-slate-800 rounded-xl overflow-hidden" ${gi < 2 ? 'open' : ''}>
-            <summary class="cursor-pointer px-4 py-3 flex items-center justify-between hover:bg-slate-900/60 transition select-none">
-                <span class="text-xs font-bold text-white">${group.group}</span>
-                <div class="flex items-center gap-2">
-                    <span class="text-[10px] font-mono text-slate-500">${group.rows.length} features</span>
-                    <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                </div>
-            </summary>
-            <div class="border-t border-slate-800 overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-900/80 text-[9px] font-extrabold uppercase text-slate-400 border-b border-slate-800">
-                        <tr>
-                            <th class="py-2 px-3">#</th>
-                            <th class="py-2 px-3">Feature</th>
-                            <th class="py-2 px-3 text-center text-emerald-400">Standard</th>
-                            <th class="py-2 px-3 text-center text-indigo-400">Chain</th>
-                            <th class="py-2 px-3 text-center text-purple-400">Enterprise</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/60 font-medium text-[11px]">
-                        ${group.rows.map(r => `
-                            <tr class="hover:bg-slate-900/40">
-                                <td class="py-1.5 px-3 font-mono text-slate-500 text-[10px]">${r.id}</td>
-                                <td class="py-1.5 px-3 text-slate-200">${r.label}</td>
-                                <td class="py-1.5 px-3 text-center">${cell(r.standard)}</td>
-                                <td class="py-1.5 px-3 text-center">${cell(r.chain)}</td>
-                                <td class="py-1.5 px-3 text-center">${cell(r.enterprise)}</td>
-                            </tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>
-        </details>`).join('');
-}
-
-/* ── Render: billing rules ────────────────────────────────── */
-function renderBillingRules() {
-    const container = document.getElementById('pricing-billing-rules');
-    if (!container) return;
-    container.innerHTML = `
-        <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-2">
-            <h3 class="text-xs font-bold text-white uppercase tracking-wider">📋 Billing Rules (Institution / Organization)</h3>
-            <div class="space-y-1.5">
-                ${billingRules.map(r => `
-                    <div class="flex items-start gap-2 text-[11px]">
-                        <span class="shrink-0 text-[9px] font-mono font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">${r.term}</span>
-                        <span class="text-slate-300">${r.rule}</span>
-                    </div>`).join('')}
-            </div>
-        </div>`;
-}
-
-/* ── Public render entry ──────────────────────────────────── */
-export function renderPricingPage() {
-    renderCurrencyBar();
-    renderTermBar();
-    renderPlanCards();
-    renderCalculator();
-    renderParentBenefit();
-    renderFeatureMatrix();
-    renderBillingRules();
-}
-
-/* ── Public handlers ──────────────────────────────────────── */
-export function setPricingCurrency(code) {
-    if (!currencies.some(c => c.code === code)) return;
-    pricingState.currency = code;
-    renderPricingPage();
-}
-
-export function setPricingTerm(months) {
-    pricingState.selectedTerm = months;
-    renderPricingPage();
-}
-
-export function selectPricingPlan(planId) {
-    pricingState.selectedPlan = planId;
-    renderPricingPage();
-}
-
-export function updatePricingInput(field, value) {
-    const num = parseInt(value, 10);
-    if (isNaN(num) || num < 1) return;
-    pricingState[field] = num;
-    renderPricingPage();
-}
-
-export function handleSubscribeClick(planId) {
-    const plan = b2b2cPlans.find(p => p.id === planId);
-    if (!plan) return;
-    const term = b2b2cTerms.find(t => t.months === pricingState.selectedTerm);
-    const cost = calculateCost(planId, pricingState.selectedTerm, pricingState.childCount, pricingState.locationCount, pricingState.currency);
-    if (!cost) return;
-    alert(
-        `💳 Choose ${plan.name}?\n\n` +
-        `Currency: ${pricingState.currency}\n` +
-        `Term: ${term.label}\n` +
-        `Children: ${pricingState.childCount}\n` +
-        `Locations: ${pricingState.locationCount}\n` +
-        `Total due today: ${fmtPrice(cost.termTotal, pricingState.currency)}\n` +
-        `Monthly Equivalent: ${fmtPrice(cost.monthlyTotal, pricingState.currency)}\n\n` +
-        `(Mockup — no real checkout yet.)`
-    );
-}
-
-/* ── Init ─────────────────────────────────────────────────── */
-export function initPricing() {
-    renderPricingPage();
-}
+];
