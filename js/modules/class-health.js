@@ -1,11 +1,34 @@
 // js/modules/class-health.js — class attendance cards + health tooltip.
 
 import { state } from '../state.js';
-import { participantRoster } from '../data/roster.js';
-import { courseIconMap } from '../data/programs.js';
-import { SELANGOR_OBESITY_RATE, SELANGOR_STUNTING_RATE } from '../config.js';
-import { shuffleArray } from '../utils/random.js';
+import { participantRoster } from '../../data/roster.js';                                // ← FIX: two ../
+import { SELANGOR_OBESITY_RATE, SELANGOR_STUNTING_RATE } from '../../config.js';         // ← FIX: two ../
 
+/* ── Inlined helpers (removes 2 potential 404 dependencies) ── */
+
+const courseIconMap = {
+    'AI Nutrition & Health Junior Bootcamp': '🤖',
+    'Zero Waste Kids Workshop': '♻️',
+    'Program SEJAHTERA School Meal Trial': '🌱',
+    'Junior Active Physical Play & Fitness': '🏃‍♂️',
+    'LaPaQ Micronutrient Fortification Workshop': '🥗',
+    'Eco-Warrior Tree Planting & Biodiversity': '🌳',
+    'ChildESG Baseline Health Assessment': '📋',
+    'Early Childhood Nutrition Screening': '🔬',
+    'Sustainable Food Systems Seminar': '🌍',
+    'Community Wellness & Hygiene Drive': '🧼',
+    'Kemaih Youth Leadership & Fitness Orientation': '🏆'
+};
+
+function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+/* ── Module state ─────────────────────────────────────────── */
 let classHealthRows = [];
 let classHealthAllocation = {};
 let classHealthPinnedIndex = null;
