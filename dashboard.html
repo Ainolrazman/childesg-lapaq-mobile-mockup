@@ -892,8 +892,7 @@
             </div>
         </div>
     </section>
-
-    <!-- 🔧 ADDED: VIEW: PRICING -->
+<!-- 🔧 ADDED: VIEW: PRICING -->
     <section id="view-pricing" class="space-y-4 hidden">
 
         <!-- Header -->
@@ -901,20 +900,34 @@
             <div>
                 <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">B2B2C Partner Subscription</span>
                 <h2 class="text-lg font-black text-white tracking-tight mt-1">Institutional Pricing · ChildESG™ &amp; LaPaQ</h2>
-                <p class="text-xs text-slate-400 mt-0.5">Per-child pricing for partner organizations. Includes free Plus-tier access for every subscribed parent.</p>
+                <p class="text-xs text-slate-400 mt-0.5">Per-child pricing in MYR · USD · IDR. Includes free Plus-tier access for every subscribed parent.</p>
             </div>
             <div class="flex items-center space-x-2 font-mono text-xs">
                 <span class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-slate-300">Partner: <strong class="text-emerald-400">Kemaih Sdn Bhd</strong></span>
             </div>
         </div>
 
+        <!-- Currency selector -->
+        <div class="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-3">
+            <div class="flex justify-between items-center mb-2 px-1">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Select Currency</span>
+                <span class="text-[9px] font-mono text-slate-500">Rates: 1 MYR ≈ $0.21 ≈ IDR 3,300</span>
+            </div>
+            <div id="pricing-currency-bar" class="flex gap-2"></div>
+        </div>
+
         <!-- Term selector -->
         <div class="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-3">
+            <div class="flex justify-between items-center mb-2 px-1">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Billing Term</span>
+                <span class="text-[9px] font-mono text-slate-500">Longer terms = bigger savings</span>
+            </div>
             <div id="pricing-term-bar" class="flex gap-2"></div>
         </div>
 
         <!-- Plan cards -->
-        <div id="pricing-plans-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        <!-- 🔧 FIX: 3 tiers not 4, so grid-cols-3 instead of grid-cols-4 -->
+        <div id="pricing-plans-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
 
         <!-- Calculator -->
         <div id="pricing-calculator"></div>
@@ -927,9 +940,11 @@
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                 <div>
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider">📋 Full Feature Matrix</h3>
-                    <p class="text-[10px] text-slate-400">Charts 1–12 from Subscription Fee Model · click any group to expand</p>
+                    <!-- 🔧 FIX: 1–10 not 1–12 -->
+                    <p class="text-[10px] text-slate-400">10 feature groups · click any group to expand</p>
                 </div>
-                <span class="text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded">4 Tiers</span>
+                <!-- 🔧 FIX: 3 Tiers not 4 Tiers -->
+                <span class="text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded">3 Tiers</span>
             </div>
             <div id="pricing-feature-matrix" class="space-y-2"></div>
         </div>
@@ -939,13 +954,9 @@
 
         <!-- Footer note -->
         <div class="bg-slate-900/60 border border-dashed border-slate-700 rounded-2xl p-4 text-center">
-            <p class="text-[11px] text-slate-400 italic">💡 <strong class="text-slate-300">Mockup notice:</strong> This pricing page is a design mockup — no real payment processing. All subscribe/quote buttons show a preview alert. Real checkout requires backend integration (Stripe / Billplz).</p>
+            <p class="text-[11px] text-slate-400 italic">💡 <strong class="text-slate-300">Mockup notice:</strong> This pricing page is a design mockup — no real payment processing. All subscribe/quote buttons show a preview alert. Real checkout requires backend integration (Stripe / Billplz / Midtrans).</p>
         </div>
     </section>
-
-</main>
-</div>
-
 <!-- ================= MODALS ================= -->
 <div id="modal-menu-analysis" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar">
