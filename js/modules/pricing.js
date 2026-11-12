@@ -1,6 +1,7 @@
-// js/modules/pricing.js — B2B2C partner pricing page.
+// js/modules/pricing.js — B2B2C partner pricing, 3 tiers × 3 currencies.
 
 import {
+    currencies,
     b2b2cPlans,
     b2b2cTerms,
     parentBenefit,
@@ -10,35 +11,57 @@ import {
 
 /* ── Module state ─────────────────────────────────────────── */
 const pricingState = {
+    currency: 'MYR',
     selectedTerm: 12,
     selectedPlan: 'standard',
     childCount: 220,
     locationCount: 1
 };
 
-/* ── Helpers ──────────────────────────────────────────────── */
-function fmtRM(n) {
-    return `RM ${n.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+/* ── Formatters ───────────────────────────────────────────── */
+function fmtPrice(amount, currency, { compact = false } = {}) {
+    if (currency === 'MYR') {
+        const formatted = compact && amount % 1 === 0
+            ? amount.toLocaleString('en-MY')
+            : amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return `RM ${formatted}`;
+    }
+    if (currency === 'USD') {
+        const formatted = compact && amount % 1 === 0
+            ? amount.toLocaleString('en-US')
+            : amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return `$${formatted}`;
+    }
+    if (currency === 'IDR') {
+        return `IDR ${Math.round(amount).toLocaleString('en-US')}`;
+    }
+    return amount.toString();
 }
 
+function fmtPricePerChild(effectiveAnnual, currency) {
+    if (currency === 'MYR') return `RM ${effectiveAnnual}`;
+    if (currency === 'USD') return `$${effectiveAnnual}`;
+    if (currency === 'IDR') return `IDR ${effectiveAnnual.toLocaleString('en-US')}`;
+    return effectiveAnnual.toString();
+}
+
+/* ── Accent classes ──────────────────────────────────────── */
 function accentClasses(accent, kind = 'text') {
     const map = {
-        slate:   { text: 'text-slate-300',   border: 'border-slate-700/80',  bg: 'bg-slate-800/40' },
         emerald: { text: 'text-emerald-400', border: 'border-emerald-500/40', bg: 'bg-emerald-950/30' },
         indigo:  { text: 'text-indigo-400',  border: 'border-indigo-500/40',  bg: 'bg-indigo-950/30' },
         purple:  { text: 'text-purple-400',  border: 'border-purple-500/40',  bg: 'bg-purple-950/30' }
     };
-    return map[accent]?.[kind] || map.slate[kind];
+    return map[accent]?.[kind] || 'text-slate-300';
 }
 
 /* ── Cost calculation ─────────────────────────────────────── */
-function calculateCost(planId, months, kids, locations) {
+function calculateCost(planId, months, kids, locations, currency) {
     const plan = b2b2cPlans.find(p => p.id === planId);
     if (!plan) return null;
-    if (planId === 'trial') {
-        return { total: 0, monthlyTotal: 0, annualTotal: 0, minRequired: 0, minMet: true, perChild: 0 };
-    }
-    const p = plan.price[months];
+    if (!plan.pricing || !plan.pricing[currency]) return null;
+    const p = plan.pricing[currency][months];
+    if (!p) return null;
     let total, minRequired;
     if (planId === 'chain') {
         const locs = Math.max(1, locations || 1);
@@ -53,8 +76,23 @@ function calculateCost(planId, months, kids, locations) {
     return { total, monthlyTotal, annualTotal, minRequired, minMet: total >= minRequired, perChild: p.perChild };
 }
 
+/* ── Render: currency bar ─────────────────────────────────── */
+function renderCurrencyBar() {
+    const container = document.getElementById('pricing-currency-bar');
+    if (!container) return;
+    container.innerHTML = currencies.map(c => {
+        const active = pricingState.currency === c.code;
+        return `
+            <button type="button" onclick="setPricingCurrency('${c.code}')"
+                    class="flex-1 py-2 px-3 text-[11px] font-extrabold rounded-xl transition flex items-center justify-center gap-1.5 ${active ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'text-slate-400 hover:text-white hover:bg-slate-800/60'}">
+                <span>${c.flag}</span>
+                <span>${c.label}</span>
+            </button>`;
+    }).join('');
+}
+
 /* ── Render: term bar ─────────────────────────────────────── */
-function renderPricingTermBar() {
+function renderTermBar() {
     const container = document.getElementById('pricing-term-bar');
     if (!container) return;
     container.innerHTML = b2b2cTerms.map(t => {
@@ -71,29 +109,22 @@ function renderPricingTermBar() {
 function renderPlanCards() {
     const container = document.getElementById('pricing-plans-grid');
     if (!container) return;
-    const months = pricingState.selectedTerm;
+    const months   = pricingState.selectedTerm;
+    const currency = pricingState.currency;
+
+    container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4';
 
     container.innerHTML = b2b2cPlans.map(plan => {
-        const isSelected = pricingState.selectedPlan === plan.id;
-        const accent = accentClasses(plan.accent, 'text');
+        const isSelected   = pricingState.selectedPlan === plan.id;
+        const accent       = accentClasses(plan.accent, 'text');
         const accentBorder = accentClasses(plan.accent, 'border');
 
-        let priceLine, perLabel, savingsBadge = '';
-        if (plan.id === 'trial') {
-            priceLine = 'Free';
-            perLabel = '7 days';
-        } else if (months === 12) {
-            priceLine = `RM ${plan.effectiveAnnual[12]}`;
-            perLabel = '/child/year';
-            if (plan.savings[12] > 0) savingsBadge = `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">Save ${plan.savings[12]}%</span>`;
-        } else if (months === 3) {
-            priceLine = `RM ${plan.effectiveAnnual[3]}`;
-            perLabel = '/child/year';
-            if (plan.savings[3] > 0) savingsBadge = `<span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full">Save ${plan.savings[3]}%</span>`;
-        } else {
-            priceLine = `RM ${plan.effectiveAnnual[1]}`;
-            perLabel = '/child/year';
-        }
+        const perChildYear = plan.effectiveAnnual?.[currency]?.[months] ?? 0;
+        const priceLine    = fmtPricePerChild(perChildYear, currency);
+        const savings      = plan.savings[months];
+        const savingsBadge = savings > 0
+            ? `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">Save ${savings}%</span>`
+            : '';
 
         const badgeHtml = plan.badge
             ? `<span class="text-[9px] font-extrabold uppercase tracking-wider ${accent} bg-slate-950 border ${accentBorder} px-2 py-0.5 rounded-full">${plan.badge}</span>`
@@ -103,7 +134,6 @@ function renderPlanCards() {
             `<li class="flex items-start gap-2 text-[11px] text-slate-300"><span class="${accent} mt-0.5">✓</span><span>${h}</span></li>`
         ).join('');
 
-        const ctaLabel = plan.id === 'trial' ? 'Start Free Trial' : plan.id === 'enterprise' ? 'Request Quote' : 'Choose Plan';
         const selectedRing = isSelected ? `ring-2 ring-offset-2 ring-offset-slate-900 ${accentBorder}` : 'border-slate-800';
 
         return `
@@ -120,9 +150,9 @@ function renderPlanCards() {
                     ${badgeHtml}
                 </div>
                 <div class="pt-1">
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-3xl font-black ${accent}">${priceLine}</span>
-                        <span class="text-[11px] text-slate-400 font-mono">${perLabel}</span>
+                    <div class="flex items-baseline gap-1 flex-wrap">
+                        <span class="text-2xl font-black ${accent}">${priceLine}</span>
+                        <span class="text-[11px] text-slate-400 font-mono">/child/year</span>
                     </div>
                     ${savingsBadge}
                 </div>
@@ -140,7 +170,7 @@ function renderPlanCards() {
                 <button type="button"
                         onclick="event.stopPropagation(); handleSubscribeClick('${plan.id}');"
                         class="w-full mt-2 py-2 rounded-xl text-xs font-extrabold transition ${isSelected ? `${accentClasses(plan.accent, 'bg')} ${accent} border ${accentBorder}` : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}">
-                    ${ctaLabel}
+                    Choose Plan
                 </button>
             </div>`;
     }).join('');
@@ -150,21 +180,28 @@ function renderPlanCards() {
 function renderCalculator() {
     const container = document.getElementById('pricing-calculator');
     if (!container) return;
-    const plan = b2b2cPlans.find(p => p.id === pricingState.selectedPlan);
-    const cost = calculateCost(pricingState.selectedPlan, pricingState.selectedTerm, pricingState.childCount, pricingState.locationCount);
-    if (!plan || !cost) return;
+    const plan     = b2b2cPlans.find(p => p.id === pricingState.selectedPlan);
+    const currency = pricingState.currency;
+    const months   = pricingState.selectedTerm;
+    if (!plan) return;
+    const cost = calculateCost(plan.id, months, pricingState.childCount, pricingState.locationCount, currency);
+    if (!cost) return;
 
-    const accent = accentClasses(plan.accent, 'text');
+    const accent       = accentClasses(plan.accent, 'text');
     const accentBorder = accentClasses(plan.accent, 'border');
-    const minMetHtml = cost.minMet ? `<span class="text-emerald-400 font-bold">✓ Minimum met</span>` : `<span class="text-amber-400 font-bold">⚠ Minimum not met</span>`;
-    const locDisabled = (plan.id !== 'chain' && plan.id !== 'enterprise') ? 'disabled' : '';
+    const minMetHtml   = cost.minMet
+        ? `<span class="text-emerald-400 font-bold">✓ Minimum met</span>`
+        : `<span class="text-amber-400 font-bold">⚠ Minimum not met</span>`;
+    const locDisabled  = (plan.id !== 'chain' && plan.id !== 'enterprise') ? 'disabled' : '';
+    const termLabel    = b2b2cTerms.find(t => t.months === months)?.label;
+    const termSuffix   = months === 12 ? '/yr' : (months === 3 ? '/qtr' : '/mo');
 
     container.innerHTML = `
         <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 flex-wrap gap-2">
                 <div>
                     <h3 class="text-sm font-bold text-white uppercase tracking-wider">🧮 Cost Calculator</h3>
-                    <p class="text-[10px] text-slate-400">Live estimate for ${plan.name} · ${b2b2cTerms.find(t => t.months === pricingState.selectedTerm)?.label}</p>
+                    <p class="text-[10px] text-slate-400">${plan.name} · ${termLabel} · ${currency}</p>
                 </div>
                 <span class="text-xs font-mono font-bold ${accent} bg-slate-900 border ${accentBorder} px-2.5 py-1 rounded-lg">${plan.icon} ${plan.name}</span>
             </div>
@@ -182,29 +219,29 @@ function renderCalculator() {
                 <div>
                     <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Term</label>
                     <select onchange="setPricingTerm(parseInt(this.value, 10))" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white font-semibold focus:outline-none focus:border-emerald-500">
-                        ${b2b2cTerms.map(t => `<option value="${t.months}" ${pricingState.selectedTerm === t.months ? 'selected' : ''}>${t.label}${t.recommended ? ' (best value)' : ''}</option>`).join('')}
+                        ${b2b2cTerms.map(t => `<option value="${t.months}" ${months === t.months ? 'selected' : ''}>${t.label}${t.recommended ? ' (best value)' : ''}</option>`).join('')}
                     </select>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-3 border-t border-slate-800 text-xs">
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
                     <p class="text-[9px] uppercase font-bold text-slate-500">Per Child</p>
-                    <p class="text-sm font-black text-white mt-1">${cost.perChild === 0 ? 'Free' : `RM ${cost.perChild.toFixed(2)}`}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">${pricingState.selectedTerm === 12 ? '/yr' : (pricingState.selectedTerm === 3 ? '/qtr' : '/mo')}</p>
+                    <p class="text-sm font-black text-white mt-1">${fmtPrice(cost.perChild, currency, { compact: true })}</p>
+                    <p class="text-[9px] text-slate-500 font-mono">${termSuffix}</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
                     <p class="text-[9px] uppercase font-bold text-slate-500">Monthly</p>
-                    <p class="text-sm font-black ${accent} mt-1">${fmtRM(cost.monthlyTotal)}</p>
+                    <p class="text-sm font-black ${accent} mt-1">${fmtPrice(cost.monthlyTotal, currency, { compact: true })}</p>
                     <p class="text-[9px] text-slate-500 font-mono">per month</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
                     <p class="text-[9px] uppercase font-bold ${accent}">Annual Total</p>
-                    <p class="text-lg font-black text-white mt-1">${fmtRM(cost.annualTotal)}</p>
+                    <p class="text-lg font-black text-white mt-1">${fmtPrice(cost.annualTotal, currency, { compact: true })}</p>
                     <p class="text-[9px] text-slate-500 font-mono">per year</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
                     <p class="text-[9px] uppercase font-bold text-slate-500">Minimum</p>
-                    <p class="text-sm font-black text-white mt-1">${cost.minRequired > 0 ? fmtRM(cost.minRequired) : 'None'}</p>
+                    <p class="text-sm font-black text-white mt-1">${fmtPrice(cost.minRequired, currency, { compact: true })}</p>
                     <p class="text-[9px] font-mono">${minMetHtml}</p>
                 </div>
             </div>
@@ -215,8 +252,10 @@ function renderCalculator() {
 function renderParentBenefit() {
     const container = document.getElementById('pricing-parent-benefit');
     if (!container) return;
-    const kids = pricingState.childCount;
-    const annualValue = kids * parentBenefit.valuePerChild;
+    const kids          = pricingState.childCount;
+    const currency      = pricingState.currency;
+    const valuePerChild = parentBenefit.valuePerChild[currency];
+    const annualValue   = kids * valuePerChild;
 
     container.innerHTML = `
         <div class="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/30 border border-emerald-500/40 rounded-2xl p-5 space-y-3">
@@ -228,8 +267,8 @@ function renderParentBenefit() {
                 </div>
                 <div class="text-right shrink-0">
                     <p class="text-[10px] uppercase font-bold text-emerald-400">Value to your parents</p>
-                    <p class="text-2xl font-black text-emerald-400">${fmtRM(annualValue)}</p>
-                    <p class="text-[10px] font-mono text-slate-400">${kids} × ${fmtRM(parentBenefit.valuePerChild)}/year</p>
+                    <p class="text-2xl font-black text-emerald-400">${fmtPrice(annualValue, currency, { compact: true })}</p>
+                    <p class="text-[10px] font-mono text-slate-400">${kids} × ${fmtPrice(valuePerChild, currency, { compact: true })}/year</p>
                 </div>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 pt-2 border-t border-emerald-500/20 text-[10px]">
@@ -267,7 +306,6 @@ function renderFeatureMatrix() {
                         <tr>
                             <th class="py-2 px-3">#</th>
                             <th class="py-2 px-3">Feature</th>
-                            <th class="py-2 px-3 text-center text-slate-300">Trial</th>
                             <th class="py-2 px-3 text-center text-emerald-400">Standard</th>
                             <th class="py-2 px-3 text-center text-indigo-400">Chain</th>
                             <th class="py-2 px-3 text-center text-purple-400">Enterprise</th>
@@ -278,7 +316,6 @@ function renderFeatureMatrix() {
                             <tr class="hover:bg-slate-900/40">
                                 <td class="py-1.5 px-3 font-mono text-slate-500 text-[10px]">${r.id}</td>
                                 <td class="py-1.5 px-3 text-slate-200">${r.label}</td>
-                                <td class="py-1.5 px-3 text-center">${cell(r.trial)}</td>
                                 <td class="py-1.5 px-3 text-center">${cell(r.standard)}</td>
                                 <td class="py-1.5 px-3 text-center">${cell(r.chain)}</td>
                                 <td class="py-1.5 px-3 text-center">${cell(r.enterprise)}</td>
@@ -308,7 +345,8 @@ function renderBillingRules() {
 
 /* ── Public render entry ──────────────────────────────────── */
 export function renderPricingPage() {
-    renderPricingTermBar();
+    renderCurrencyBar();
+    renderTermBar();
     renderPlanCards();
     renderCalculator();
     renderParentBenefit();
@@ -317,6 +355,12 @@ export function renderPricingPage() {
 }
 
 /* ── Public handlers ──────────────────────────────────────── */
+export function setPricingCurrency(code) {
+    if (!currencies.some(c => c.code === code)) return;
+    pricingState.currency = code;
+    renderPricingPage();
+}
+
 export function setPricingTerm(months) {
     pricingState.selectedTerm = months;
     renderPricingPage();
@@ -338,17 +382,18 @@ export function handleSubscribeClick(planId) {
     const plan = b2b2cPlans.find(p => p.id === planId);
     if (!plan) return;
     const term = b2b2cTerms.find(t => t.months === pricingState.selectedTerm);
-    const cost = calculateCost(planId, pricingState.selectedTerm, pricingState.childCount, pricingState.locationCount);
-
-    let msg;
-    if (planId === 'trial') {
-        msg = `🎁 Start Trial?\n\nPlan: ${plan.name} · 7 days\nChildren: ${pricingState.childCount}\n\n(This is a mockup — no real signup flow yet.)`;
-    } else if (planId === 'enterprise') {
-        msg = `📞 Request Quote?\n\nPlan: ${plan.name} · ${term.label}\nChildren: ${pricingState.childCount}\nLocations: ${pricingState.locationCount}\nEstimated annual: ${fmtRM(cost.annualTotal)}\n\n(This is a mockup — no real sales flow yet.)`;
-    } else {
-        msg = `💳 Choose ${plan.name}?\n\nTerm: ${term.label}\nChildren: ${pricingState.childCount}\nLocations: ${pricingState.locationCount}\nMonthly: ${fmtRM(cost.monthlyTotal)}\nAnnual: ${fmtRM(cost.annualTotal)}\n\n(This is a mockup — no real checkout yet.)`;
-    }
-    alert(msg);
+    const cost = calculateCost(planId, pricingState.selectedTerm, pricingState.childCount, pricingState.locationCount, pricingState.currency);
+    if (!cost) return;
+    alert(
+        `💳 Choose ${plan.name}?\n\n` +
+        `Currency: ${pricingState.currency}\n` +
+        `Term: ${term.label}\n` +
+        `Children: ${pricingState.childCount}\n` +
+        `Locations: ${pricingState.locationCount}\n` +
+        `Monthly: ${fmtPrice(cost.monthlyTotal, pricingState.currency)}\n` +
+        `Annual: ${fmtPrice(cost.annualTotal, pricingState.currency)}\n\n` +
+        `(Mockup — no real checkout yet.)`
+    );
 }
 
 /* ── Init ─────────────────────────────────────────────────── */
