@@ -1,6 +1,6 @@
 // js/modules/sdg.js — SDG impact matrix tooltips + full report modal.
 
-import { sdgImpactData, sdgColorMap } from '../data/sdg.js';
+import { sdgImpactData, sdgColorMap } from '../../data/sdg.js';   // ← FIX: two ../
 
 let sdgTooltipTimeout = null;
 let sdgPinnedKey = null;
