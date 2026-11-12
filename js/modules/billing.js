@@ -1,4 +1,4 @@
-// js/modules/pricing.js — B2B2C partner pricing, 3 tiers × 3 currencies.
+// js/modules/billing.js — B2B2C partner pricing, 3 tiers × 3 currencies.
 
 import {
     currencies,
@@ -117,7 +117,6 @@ function renderPlanCards() {
         const accent       = accentClasses(plan.accent, 'text');
         const accentBorder = accentClasses(plan.accent, 'border');
 
-        // Get exact term price and calculate monthly equivalent on the fly
         const perChildTerm = plan.pricing[currency][months].perChild;
         const perChildMonthly = perChildTerm / months;
         
@@ -154,15 +153,12 @@ function renderPlanCards() {
                 </div>
                 <div class="pt-1">
                     <div class="flex items-baseline gap-1 flex-wrap">
-                        <!-- Big Number is ALWAYS the Monthly Rate -->
                         <span class="text-3xl font-black ${accent}">${monthlyPriceStr}</span>
                         <span class="text-[11px] text-slate-400 font-mono">/child/mo</span>
                         ${savingsBadge}
                     </div>
                     <div class="text-[10px] text-slate-400 font-mono mt-1">
-                        ${months === 1 
-                            ? `Billed ${termPriceStr} monthly` 
-                            : `Billed ${termPriceStr} per child / ${termSuffix}`}
+                        ${months === 1 ? `Billed ${termPriceStr} monthly` : `Billed ${termPriceStr} per child / ${termSuffix}`}
                     </div>
                 </div>
                 <div class="pt-2 border-t border-slate-800/80">
@@ -207,7 +203,6 @@ function renderCalculator() {
     const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
     const termSuffix = termSuffixMap[months] || 'term';
     
-    // Calculate monthly per child
     const monthlyPerChild = cost.perChild / months;
 
     container.innerHTML = `
