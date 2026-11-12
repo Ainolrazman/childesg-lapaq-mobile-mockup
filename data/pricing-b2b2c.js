@@ -127,9 +127,22 @@ export const b2b2cPlans = [
 ];
 
 export const b2b2cTerms = [
-    { months: 1,  label: '1 Month',  notice: 'Auto-renews · 14-day cancellation notice' },
-    { months: 3,  label: '3 Months', notice: 'Auto-renews · 30-day cancellation notice · mid-tier trial option' },
-    { months: 12, label: '1 Year',   notice: 'Auto-renews · 60-day pre-renewal check-in call · cancel before day 30 for 50% refund', recommended: true }
+    { 
+        months: 1,  
+        label: 'Monthly Payment',  
+        notice: 'Auto-renews · 14-day cancellation notice' 
+    },
+    { 
+        months: 3,  
+        label: 'Quarterly Payment', 
+        notice: 'Auto-renews · 30-day cancellation notice · mid-tier trial option' 
+    },
+    { 
+        months: 12, 
+        label: 'Yearly Payment',   
+        notice: 'Auto-renews · 60-day pre-renewal check-in call · cancel before day 30 for 50% refund', 
+        recommended: true 
+    }
 ];
 
 export const parentBenefit = {
