@@ -1,13 +1,15 @@
 // js/modules/navigation.js — top-level tab switching.
 
-import { state } from '../state/store.js';   // ⚠ see note below
+import { state } from '../state/store.js';
 
 export function switchMainTab(tabKey) {
     state.currentTab = tabKey;
 
-    ['new-program', 'esg', 'lapaq', 'roster', 'audit'].forEach(key => {
+    // 🔧 ADDED 'pricing' to this array
+    ['new-program', 'esg', 'lapaq', 'roster', 'audit', 'pricing'].forEach(key => {
         const view = document.getElementById(`view-${key}`);
         const nav  = document.getElementById(`nav-${key}`);
+        if (!view || !nav) return;   // 🔧 guard against missing elements
         if (key === tabKey) {
             view.classList.remove('hidden');
             nav.className = key === 'new-program'
@@ -26,8 +28,6 @@ export function switchMainTab(tabKey) {
     }
 
     // ✅ Resize charts now that the target view is visible.
-    //    Without this, charts created while the tab was display:none
-    //    stay stuck at 0×0 the first time the tab is opened.
     if (typeof window.resizeAllCharts === 'function') {
         window.resizeAllCharts();
     }
