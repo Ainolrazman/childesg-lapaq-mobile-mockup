@@ -1,7 +1,7 @@
-// state.js — mutable application state object.
+// js/state.js — mutable application state object.
 
-import { participantRoster }  from './data/roster.js';
-import { kemaihProgramsList } from './data/programs.js';
+import { participantRoster }  from '../data/roster.js';   // 🔧 FIX: './data/' → '../data/'
+import { kemaihProgramsList } from '../data/programs.js'; // 🔧 FIX: './data/' → '../data/'
 
 export const state = {
     currentTab: 'lapaq',
