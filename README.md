@@ -806,12 +806,4 @@ Internal / proprietary — ChildESG™ · Kemaih Sdn Bhd. All rights reserved.
 
 ---
 
-### Notes on Assumptions (delete this section once verified)
 
-This README was written from your folder listing on 2026-11-12. Verify these assumptions before sharing externally:
-
-1. **`index.htm` vs `index.html`** — I've assumed it may be a typo. If `/` serves correctly on Vercel, it's `index.html`.
-2. **CSS location** — I've assumed `css/` folder contains all 3 stylesheets. Adjust the folder tree if any are at root.
-3. **`js/state.js` vs `js/state/state.js`** — I've assumed two separate files (dashboard vs mobile). If they're the same file, consolidate the docs.
-4. **Mobile PWA deployment** — I've assumed both apps deploy together on the same Vercel project. Adjust if separate.
-5. **Mobile view purposes** — the 9-view purposes in the Mobile PWA section are inferred from filenames. Adjust if any differ.
