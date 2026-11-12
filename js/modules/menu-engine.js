@@ -1,8 +1,13 @@
 // js/modules/menu-engine.js — custom menu builder (SEJAHTERA cycle).
 
-import { RNI_REFERENCE } from '../config.js';
-import { sampleMenuTemplates } from '../data/menu-templates.js';
-import { slug, escHtml } from '../utils/format.js';
+import { RNI_REFERENCE } from '../../config.js';                       // ← FIX: two ../
+import { sampleMenuTemplates } from '../../data/menu-templates.js';    // ← FIX: two ../
+
+/* ── Inlined helpers (removes /js/utils/format.js 404 risk) ── */
+const slug = (k) => k.replace(/\s+/g, '-');
+const escHtml = (s) =>
+    String(s ?? '').replace(/[&<>"']/g, c =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
 /* Module-scoped custom menu store (persists while app is open). */
 const customMenus = [];
