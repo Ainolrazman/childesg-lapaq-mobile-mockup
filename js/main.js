@@ -6,7 +6,6 @@ import {
     initLapaqCharts,
     initLapaqGeoCharts,
     updatePieChartsForState
-    // 🔧 FIX: removed `selectGeoState` — charts/lapaq.js never exported it
 } from './charts/lapaq.js';
 import {
     initPredictiveCharts,
@@ -127,10 +126,11 @@ import {
     closeHistoryModal
 } from './modules/modals.js';
 
-// 🔧 ADDED: Pricing module
+// 🔧 Pricing module (7 exports — setPricingCurrency added for 3-tier version)
 import {
     initPricing,
     renderPricingPage,
+    setPricingCurrency,
     setPricingTerm,
     selectPricingPlan,
     updatePricingInput,
@@ -139,10 +139,6 @@ import {
 
 /* ── Inline-only helpers (dashboard-local, kept here) ────────── */
 
-// 🔧 FIX: geoStateData inlined to remove the /data/geo.js dependency.
-// If you've confirmed /data/geo.js exists on the server, you can restore:
-//   import { geoStateData } from '../data/geo.js';
-// and delete this const block.
 const geoStateData = {
     all: {
         name: 'All Active States (Entire Malaysia)',
@@ -201,7 +197,6 @@ const geoStateData = {
     }
 };
 
-// 🔧 FIX: expose geoStateData for charts/lapaq.js (updatePieChartsForState reads it)
 window.geoStateData = geoStateData;
 
 function handleMapHover(event, stateKey) {
@@ -226,13 +221,10 @@ function handleMapLeave() {
     document.getElementById('map-container-box')?.classList.remove('map-active-hover');
 }
 
-// 🔧 FIX: selectGeoState was previously imported from charts/lapaq.js
-// (which never exported it). Defined locally now.
 function selectGeoState(stateKey) {
     window.__geoState = stateKey;
     const data = geoStateData[stateKey] || geoStateData.all;
 
-    // 1. Update state selector buttons
     ['all', 'kl', 'selangor', 'perak', 'pahang'].forEach(k => {
         const btn = document.getElementById(`geo-btn-${k}`);
         if (btn) {
@@ -242,7 +234,6 @@ function selectGeoState(stateKey) {
         }
     });
 
-    // 2. Highlight SVG paths
     ['kl', 'selangor', 'perak', 'pahang'].forEach(s => {
         const el = document.getElementById(`svg-state-${s}`);
         if (el) {
@@ -253,7 +244,6 @@ function selectGeoState(stateKey) {
         }
     });
 
-    // 3. Update text badges
     const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
     setTxt('geo-selected-badge',   `Viewing: ${data.name}`);
     setTxt('geo-card-title',       data.title);
@@ -267,7 +257,6 @@ function selectGeoState(stateKey) {
     setTxt('geo-calcium-val',      data.calcium);
     setTxt('geo-vitc-val',         data.vitc);
 
-    // 4. Update pies + bar chart
     updatePieChartsForState(stateKey);
 }
 
@@ -411,7 +400,8 @@ Object.assign(window, {
     // Charts (exposed so waste.js / other modules can lazy-init)
     initWasteTrendChart,
 
-    // 🔧 ADDED: Pricing handlers
+    // 🔧 Pricing handlers (5 + currency = 6 total)
+    setPricingCurrency,
     setPricingTerm,
     selectPricingPlan,
     updatePricingInput,
@@ -445,8 +435,8 @@ const REQUIRED_HANDLERS = [
     'highlightNutrients',
     'toggleHeightGender', 'highlightHeightSeries',
     'filterRosterTable', 'changePageSize', 'changeRosterPage',
-    // 🔧 ADDED: Pricing handlers
-    'setPricingTerm', 'selectPricingPlan', 'updatePricingInput', 'handleSubscribeClick',
+    // 🔧 Pricing handlers (5 total — will bump diagnostic to 61)
+    'setPricingCurrency', 'setPricingTerm', 'selectPricingPlan', 'updatePricingInput', 'handleSubscribeClick',
 ];
 
 /* ── Chart resize sweep (fixes 0×0 in hidden tabs) ──────────── */
@@ -454,7 +444,7 @@ function resizeAllCharts() {
     requestAnimationFrame(() => {
         if (!window.Chart || typeof window.Chart.getChart !== 'function') return;
         document.querySelectorAll('canvas').forEach(canvas => {
-            if (canvas.offsetParent === null) return; // still hidden
+            if (canvas.offsetParent === null) return;
             const chart = window.Chart.getChart(canvas);
             if (chart) chart.resize();
         });
@@ -466,7 +456,7 @@ window.resizeAllCharts = resizeAllCharts;
 function boot() {
     console.log('🚀 boot() running');
 
-    // 1. Document-level listeners (event delegation)
+    // 1. Document-level listeners
     initCollapsibleListeners();
     initHeaderListeners();
     initClassHealthListeners();
@@ -474,7 +464,7 @@ function boot() {
     initMenuDayListeners();
     initRmtListeners();
 
-    // 2. Charts — 🔧 FIX: pass selectGeoState as callback so pie/bar clicks focus
+    // 2. Charts
     initEsgCharts();
     initLapaqCharts();
     initLapaqGeoCharts(selectGeoState);
@@ -489,25 +479,25 @@ function boot() {
     buildNutrientGrid();
     renderCustomMenus();
     updateWasteStats();
-    initMenuDayCards();   // no-op now (SEJAHTERA cards were removed) — safe to leave
+    initMenuDayCards();
 
-    // 🔧 ADDED: render pricing page (safe to call even if #view-pricing is hidden)
+    // 4. Pricing page
     initPricing();
 
-    // 4. Async loads
+    // 5. Async loads
     initRmtMenus();
     initSocialSDKs();
 
-    // 5. Waste-log live cost preview
+    // 6. Waste-log cost preview
     const leftoversInput = document.getElementById('waste-log-leftovers');
     if (leftoversInput) {
         leftoversInput.addEventListener('input', updateWasteCostPreview);
     }
 
-    // 6. First resize sweep — fixes charts created while tabs were hidden
+    // 7. Chart resize sweep
     resizeAllCharts();
 
-    // 7. Verify every inline handler is wired
+    // 8. Verify all inline handlers wired
     const missing = REQUIRED_HANDLERS.filter(fn => typeof window[fn] !== 'function');
     if (missing.length) {
         console.warn(`[dashboard] ${missing.length} inline handler(s) missing:`, missing);
@@ -515,7 +505,6 @@ function boot() {
         console.info(`[dashboard] ✓ all ${REQUIRED_HANDLERS.length} inline handlers wired`);
     }
 
-    // 8. Ready flag for external verification scripts
     window.__dashboardReady = true;
 }
 
