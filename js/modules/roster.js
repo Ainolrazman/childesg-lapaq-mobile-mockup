@@ -1,7 +1,7 @@
 // js/modules/roster.js — participant roster table + verification actions.
 
 import { state } from '../state.js';
-import { participantRoster } from '../data/roster.js';
+import { participantRoster } from '../../data/roster.js';   // ← FIX: two ../
 import { renderClassAttendanceSummary } from './class-health.js';
 
 export function renderRosterTable() {
