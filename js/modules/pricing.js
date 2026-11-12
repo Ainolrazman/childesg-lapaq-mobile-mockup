@@ -38,13 +38,6 @@ function fmtPrice(amount, currency, { compact = false } = {}) {
     return amount.toString();
 }
 
-function fmtPricePerChild(effectiveAnnual, currency) {
-    if (currency === 'MYR') return `RM ${effectiveAnnual}`;
-    if (currency === 'USD') return `$${effectiveAnnual}`;
-    if (currency === 'IDR') return `IDR ${effectiveAnnual.toLocaleString('en-US')}`;
-    return effectiveAnnual.toString();
-}
-
 /* ── Accent classes ──────────────────────────────────────── */
 function accentClasses(accent, kind = 'text') {
     const map = {
@@ -71,9 +64,11 @@ function calculateCost(planId, months, kids, locations, currency) {
         minRequired = p.minTotal;
         total = Math.max(kids * p.perChild, minRequired);
     }
+    
+    const termTotal = total;
     const monthlyTotal = months === 12 ? total / 12 : (months === 3 ? total / 3 : total);
-    const annualTotal  = monthlyTotal * 12;
-    return { total, monthlyTotal, annualTotal, minRequired, minMet: total >= minRequired, perChild: p.perChild };
+    
+    return { termTotal, monthlyTotal, minRequired, minMet: total >= minRequired, perChild: p.perChild };
 }
 
 /* ── Render: currency bar ─────────────────────────────────── */
@@ -112,6 +107,9 @@ function renderPlanCards() {
     const months   = pricingState.selectedTerm;
     const currency = pricingState.currency;
 
+    const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
+    const termSuffix = termSuffixMap[months] || 'term';
+
     container.className = 'grid grid-cols-1 md:grid-cols-3 gap-4';
 
     container.innerHTML = b2b2cPlans.map(plan => {
@@ -119,11 +117,16 @@ function renderPlanCards() {
         const accent       = accentClasses(plan.accent, 'text');
         const accentBorder = accentClasses(plan.accent, 'border');
 
-        const perChildYear = plan.effectiveAnnual?.[currency]?.[months] ?? 0;
-        const priceLine    = fmtPricePerChild(perChildYear, currency);
+        // Get exact term price and calculate monthly equivalent on the fly
+        const perChildTerm = plan.pricing[currency][months].perChild;
+        const perChildMonthly = perChildTerm / months;
+        
+        const monthlyPriceStr = fmtPrice(perChildMonthly, currency, { compact: true });
+        const termPriceStr = fmtPrice(perChildTerm, currency, { compact: true });
+
         const savings      = plan.savings[months];
         const savingsBadge = savings > 0
-            ? `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">Save ${savings}%</span>`
+            ? `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full ml-2">Save ${savings}%</span>`
             : '';
 
         const badgeHtml = plan.badge
@@ -151,10 +154,16 @@ function renderPlanCards() {
                 </div>
                 <div class="pt-1">
                     <div class="flex items-baseline gap-1 flex-wrap">
-                        <span class="text-2xl font-black ${accent}">${priceLine}</span>
-                        <span class="text-[11px] text-slate-400 font-mono">/child/year</span>
+                        <!-- Big Number is ALWAYS the Monthly Rate -->
+                        <span class="text-3xl font-black ${accent}">${monthlyPriceStr}</span>
+                        <span class="text-[11px] text-slate-400 font-mono">/child/mo</span>
+                        ${savingsBadge}
                     </div>
-                    ${savingsBadge}
+                    <div class="text-[10px] text-slate-400 font-mono mt-1">
+                        ${months === 1 
+                            ? `Billed ${termPriceStr} monthly` 
+                            : `Billed ${termPriceStr} per child / ${termSuffix}`}
+                    </div>
                 </div>
                 <div class="pt-2 border-t border-slate-800/80">
                     <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1">Eligibility</p>
@@ -194,7 +203,12 @@ function renderCalculator() {
         : `<span class="text-amber-400 font-bold">⚠ Minimum not met</span>`;
     const locDisabled  = (plan.id !== 'chain' && plan.id !== 'enterprise') ? 'disabled' : '';
     const termLabel    = b2b2cTerms.find(t => t.months === months)?.label;
-    const termSuffix   = months === 12 ? '/yr' : (months === 3 ? '/qtr' : '/mo');
+    
+    const termSuffixMap = { 1: 'mo', 3: 'qtr', 12: 'yr' };
+    const termSuffix = termSuffixMap[months] || 'term';
+    
+    // Calculate monthly per child
+    const monthlyPerChild = cost.perChild / months;
 
     container.innerHTML = `
         <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-5 space-y-4">
@@ -225,19 +239,20 @@ function renderCalculator() {
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 pt-3 border-t border-slate-800 text-xs">
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Per Child</p>
-                    <p class="text-sm font-black text-white mt-1">${fmtPrice(cost.perChild, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">${termSuffix}</p>
+                    <p class="text-[9px] uppercase font-bold text-slate-500">Per Child / Month</p>
+                    <p class="text-sm font-black text-white mt-1">${fmtPrice(monthlyPerChild, currency, { compact: true })}</p>
+                    <p class="text-[9px] text-slate-500 font-mono">/mo</p>
+                    ${months !== 1 ? `<p class="text-[9px] text-slate-500 font-mono mt-0.5">Billed ${fmtPrice(cost.perChild, currency, { compact: true })}/${termSuffix}</p>` : ''}
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold text-slate-500">Monthly</p>
+                    <p class="text-[9px] uppercase font-bold text-slate-500">Monthly Total (Cohort)</p>
                     <p class="text-sm font-black ${accent} mt-1">${fmtPrice(cost.monthlyTotal, currency, { compact: true })}</p>
                     <p class="text-[9px] text-slate-500 font-mono">per month</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
-                    <p class="text-[9px] uppercase font-bold ${accent}">Annual Total</p>
-                    <p class="text-lg font-black text-white mt-1">${fmtPrice(cost.annualTotal, currency, { compact: true })}</p>
-                    <p class="text-[9px] text-slate-500 font-mono">per year</p>
+                    <p class="text-[9px] uppercase font-bold ${accent}">Total Due Today</p>
+                    <p class="text-lg font-black text-white mt-1">${fmtPrice(cost.termTotal, currency, { compact: true })}</p>
+                    <p class="text-[9px] text-slate-500 font-mono">billed ${termSuffix}</p>
                 </div>
                 <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
                     <p class="text-[9px] uppercase font-bold text-slate-500">Minimum</p>
@@ -390,8 +405,8 @@ export function handleSubscribeClick(planId) {
         `Term: ${term.label}\n` +
         `Children: ${pricingState.childCount}\n` +
         `Locations: ${pricingState.locationCount}\n` +
-        `Monthly: ${fmtPrice(cost.monthlyTotal, pricingState.currency)}\n` +
-        `Annual: ${fmtPrice(cost.annualTotal, pricingState.currency)}\n\n` +
+        `Total due today: ${fmtPrice(cost.termTotal, pricingState.currency)}\n` +
+        `Monthly Equivalent: ${fmtPrice(cost.monthlyTotal, pricingState.currency)}\n\n` +
         `(Mockup — no real checkout yet.)`
     );
 }
