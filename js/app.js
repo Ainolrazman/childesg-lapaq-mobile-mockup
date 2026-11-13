@@ -1,9 +1,3 @@
-import { renderUpgradeView, setB2CCurrency, setB2CTerm, handleB2CSubscribe } from './views/UpgradeView.js';
-
-// Expose to window so the inline onclick handlers work
-window.setB2CCurrency = setB2CCurrency;
-window.setB2CTerm = setB2CTerm;
-window.handleB2CSubscribe = handleB2CSubscribe;
 import { state, resetState } from './state/store.js';
 import { t } from './state/i18n.js';
 
@@ -20,6 +14,9 @@ import { renderParentSdgPassport, renderPartnerSdgPassport } from './views/SdgPa
 import { renderPartnerDashboard } from './views/PartnerDashView.js';
 import { renderTokensPage } from './views/TokensView.js';
 import { renderScannerPage } from './views/ScannerView.js';
+
+// 🔧 NEW: Import B2C Pricing View
+import { renderUpgradeView, setB2CCurrency, setB2CTerm, handleB2CSubscribe } from './views/UpgradeView.js';
 
 import { startScanner, simulateScan, stopScannerIfActive } from './utils/qrScanner.js';
 import { showModalOverlay, closeModalOverlay, getTodayDateString, getMaxCalendarDateString } from './utils/helpers.js';
@@ -39,7 +36,7 @@ setInterval(updateStatusBarTime, 1000);
 export function switchTab(tabKey) {
     state.activeTabKey = tabKey;
 
-    if (state.currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq'].includes(tabKey)) {
+    if (state.currentUserRole === 'partner' && ['layer3', 'tokens', 'lapaq', 'upgrade'].includes(tabKey)) {
         alert(state.currentLang === 'bm' 
             ? "🔒 Akses Terhad: Akaun Rakan Kongsi hanya boleh melihat Profil, Pemuka Rakan Kongsi, dan Pengimbas QR." 
             : "🔒 Access Restricted: Organization Partner accounts can only view Partner Profile Home, Partner Dashboard, and QR Scanner.");
@@ -98,6 +95,10 @@ export function switchTab(tabKey) {
         case 'scanner':
             content.innerHTML = renderScannerPage();
             break;
+        // 🔧 NEW: Add the Upgrade View Case
+        case 'upgrade':
+            content.innerHTML = renderUpgradeView();
+            break;
         default:
             content.innerHTML = `<div class="p-4 bg-white rounded-xl shadow-sm text-center"><p class="text-xs text-slate-500 font-bold">ChildESG™ Mobile</p></div>`;
             break;
@@ -111,6 +112,11 @@ export function switchTab(tabKey) {
 
 // --- Window Handler Bindings for HTML Attributes ---
 window.switchTab = switchTab;
+
+// 🔧 NEW: Bind B2C Pricing Functions to Window
+window.setB2CCurrency = setB2CCurrency;
+window.setB2CTerm = setB2CTerm;
+window.handleB2CSubscribe = handleB2CSubscribe;
 
 window.setLanguage = function(lang) {
     state.currentLang = lang;
