@@ -5,18 +5,19 @@ import { renderHeader, renderDrawer } from './components/Header.js';
 import { renderBottomNav } from './components/BottomNav.js';
 import { renderModals } from './components/Modals.js';
 
-import { renderRegistrationPage, toggleRegisterFields } from './views/AuthView.js';
-import { renderParentProfilePage, renderPartnerProfilePage } from './views/HomeProfileView.js';
-import { renderProgramsPage } from './views/MarketplaceView.js';
-import { renderChildProfile } from './views/ChildProfileView.js';
-import { renderLaPaQPage } from './views/LaPaQView.js';
-import { renderParentSdgPassport, renderPartnerSdgPassport } from './views/SdgPassportView.js';
-import { renderPartnerDashboard } from './views/PartnerDashView.js';
-import { renderTokensPage } from './views/TokensView.js';
-import { renderScannerPage } from './views/ScannerView.js';
+// 🔧 CACHE BUSTERS ADDED HERE
+import { renderRegistrationPage, toggleRegisterFields } from './views/AuthView.js?v=4';
+import { renderParentProfilePage, renderPartnerProfilePage } from './views/HomeProfileView.js?v=4';
+import { renderProgramsPage } from './views/MarketplaceView.js?v=4';
+import { renderChildProfile } from './views/ChildProfileView.js?v=4';
+import { renderLaPaQPage } from './views/LaPaQView.js?v=4';
+import { renderParentSdgPassport, renderPartnerSdgPassport } from './views/SdgPassportView.js?v=4';
+import { renderPartnerDashboard } from './views/PartnerDashView.js?v=4';
+import { renderTokensPage } from './views/TokensView.js?v=4';
+import { renderScannerPage } from './views/ScannerView.js?v=4';
 
-// 🔧 B2C Pricing View Import
-import { renderUpgradeView, setB2CCurrency, setB2CTerm, handleB2CSubscribe } from './views/UpgradeView.js';
+// B2C Pricing View Import
+import { renderUpgradeView, setB2CCurrency, setB2CTerm, handleB2CSubscribe } from './views/UpgradeView.js?v=4';
 
 import { startScanner, simulateScan, stopScannerIfActive } from './utils/qrScanner.js';
 import { showModalOverlay, closeModalOverlay, getTodayDateString, getMaxCalendarDateString } from './utils/helpers.js';
@@ -74,7 +75,6 @@ export function switchTab(tabKey) {
             content.innerHTML = renderProgramsPage();
             break;
         case 'layer3':
-            // 🔧 FIX: Fallback to 'adam' if no child is selected yet
             const activeChild = state.selectedChild || 'adam';
             state.selectedChild = activeChild; 
             content.innerHTML = renderChildProfile(activeChild);
@@ -98,7 +98,6 @@ export function switchTab(tabKey) {
         case 'scanner':
             content.innerHTML = renderScannerPage();
             break;
-        // 🔧 B2C Pricing View
         case 'upgrade':
             content.innerHTML = renderUpgradeView();
             break;
@@ -107,7 +106,6 @@ export function switchTab(tabKey) {
             break;
     }
 
-    // Refresh Navigation Bars
     document.getElementById('header-container').innerHTML = renderHeader();
     document.getElementById('bottom-nav-container').innerHTML = renderBottomNav();
     updateStatusBarTime();
@@ -116,7 +114,7 @@ export function switchTab(tabKey) {
 // --- Window Handler Bindings for HTML Attributes ---
 window.switchTab = switchTab;
 
-// 🔧 B2C Pricing Functions
+// B2C Pricing Functions
 window.setB2CCurrency = setB2CCurrency;
 window.setB2CTerm = setB2CTerm;
 window.handleB2CSubscribe = handleB2CSubscribe;
@@ -139,7 +137,6 @@ window.toggleMenuDrawer = function() {
     }
 };
 
-// --- Profile Panel & Logout Window Bindings ---
 window.toggleProfilePanel = function() {
     const panel = document.getElementById('profile-dropdown-panel');
     if (panel) {
@@ -155,7 +152,6 @@ window.handleMobileLogout = function() {
     }
 };
 
-// Close dropdown panel automatically if clicked outside
 window.addEventListener('click', function(e) {
     const panel = document.getElementById('profile-dropdown-panel');
     const target = e.target;
