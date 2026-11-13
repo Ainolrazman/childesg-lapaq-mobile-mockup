@@ -15,12 +15,11 @@ function fmtPrice(amount, currency) {
     return amount.toString();
 }
 
-/* ── Render: Currency Switcher ────────────────────────────── */
 function renderCurrencySwitcher() {
     return `
         <div class="flex justify-center gap-2 mb-6">
             ${currencies.map(c => `
-                <button type="button" onclick="setB2CCurrency('${c.code}')"
+                <button type="button" onclick="window.setB2CCurrency('${c.code}')"
                         class="px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-1
                         ${b2cState.currency === c.code ? 'bg-slate-800 text-white shadow-sm' : 'bg-slate-100 text-slate-500'}">
                     <span>${c.flag}</span> ${c.code}
@@ -30,7 +29,6 @@ function renderCurrencySwitcher() {
     `;
 }
 
-/* ── Render: Term Switcher ────────────────────────────────── */
 function renderTermSwitcher() {
     const terms = [
         { months: 1, label: 'Monthly' },
@@ -41,7 +39,7 @@ function renderTermSwitcher() {
     return `
         <div class="flex bg-slate-100 p-1 rounded-2xl mb-8">
             ${terms.map(t => `
-                <button type="button" onclick="setB2CTerm(${t.months})"
+                <button type="button" onclick="window.setB2CTerm(${t.months})"
                         class="flex-1 py-2.5 rounded-xl text-xs font-bold transition flex flex-col items-center justify-center
                         ${b2cState.selectedTerm === t.months ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}">
                     <span>${t.label}</span>
@@ -52,7 +50,6 @@ function renderTermSwitcher() {
     `;
 }
 
-/* ── Render: Plan Cards ───────────────────────────────────── */
 function renderPlanCards() {
     return b2cPlans.map(plan => {
         const isPaid = plan.id !== 'free';
@@ -115,7 +112,7 @@ function renderPlanCards() {
                 </div>
 
                 <button type="button" 
-                        onclick="handleB2CSubscribe('${plan.id}')"
+                        onclick="window.handleB2CSubscribe('${plan.id}')"
                         class="w-full py-3.5 rounded-xl text-sm font-bold transition
                         ${isPlus ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30' : 
                                   (isPaid ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700')}">
@@ -126,7 +123,6 @@ function renderPlanCards() {
     }).join('');
 }
 
-/* ── Render: Full Comparison Table ────────────────────────── */
 function renderFeatureMatrix() {
     const features = [
         { label: 'Child Profiles', key: 'childProfiles' },
@@ -162,13 +158,10 @@ function renderFeatureMatrix() {
     `;
 }
 
-/* ── Main Render Function ─────────────────────────────────── */
+/* ── Main Render Function (Returns String) ────────────────── */
 export function renderUpgradeView() {
-    const container = document.getElementById('app-view');
-    if (!container) return;
-
-    container.innerHTML = `
-        <div class="p-6 pb-24 max-w-md mx-auto">
+    return `
+        <div class="p-6 pb-24">
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-black text-slate-900 mb-2">Upgrade Your Plan</h1>
                 <p class="text-sm text-slate-500">Unlock advanced nutrition tracking, meal plans, and AI coaching for your child.</p>
@@ -197,12 +190,12 @@ export function renderUpgradeView() {
 /* ── Handlers ─────────────────────────────────────────────── */
 export function setB2CCurrency(code) {
     b2cState.currency = code;
-    renderUpgradeView();
+    window.switchTab('upgrade');
 }
 
 export function setB2CTerm(months) {
     b2cState.selectedTerm = months;
-    renderUpgradeView();
+    window.switchTab('upgrade');
 }
 
 export function handleB2CSubscribe(planId) {
