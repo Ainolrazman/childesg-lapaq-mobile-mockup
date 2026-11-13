@@ -1,83 +1,77 @@
-// data/pricing-b2c.js — B2C parent-side pricing tiers.
-// Source: Subscription Fee Model PDF, Part 1.
+// data/pricing-b2c.js — B2C parent-side pricing.
 
-export const b2cTiers = [
+export const currencies = [
+    { code: 'MYR', label: 'MYR', symbol: 'RM',  flag: '🇲🇾' },
+    { code: 'USD', label: 'USD', symbol: '$',   flag: '🇺🇸' },
+    { code: 'IDR', label: 'IDR', symbol: 'IDR', flag: '🇮🇩' }
+];
+
+export const b2cPlans = [
     {
         id: 'free',
         name: 'Free',
         tagline: 'Try before you commit',
-        price: { 1: 0, 3: 0, 12: 0 },
-        perMonth: { 1: 0, 3: 0, 12: 0 },
-        savings: { 1: 0, 3: 0, 12: 0 },
+        icon: '🌱',
+        accent: 'slate',
+        pricing: { MYR: { 1: 0, 3: 0, 12: 0 }, USD: { 1: 0, 3: 0, 12: 0 }, IDR: { 1: 0, 3: 0, 12: 0 } },
         features: {
-            childProfiles: 1,
-            mealHistoryDays: 7,
-            rniBars: false,
-            dailyRniClaimRange: [1, 10],
-            streak7d: 20,
-            streak30d: 100,
-            tokenReset: 'monthly',
-            tokenRollover: 0,
-            minRedemption: 50,
-            ads: true,
-            mealPlans: false,
-            aiCoach: false,
-            weeklyReport: false
+            childProfiles: '1',
+            mealHistory: '7 days',
+            rniBars: 'Basic',
+            advice: 'Teased',
+            mealPlan: '—',
+            aiCoach: '—',
+            tokenEarn: '1–10 / day',
+            tokenRollover: '0%',
+            priorityBooking: 'Standard'
         }
     },
     {
         id: 'plus',
         name: 'Plus',
         tagline: '1 child · full features',
-        price: { 1: 9.90, 3: 24.90, 12: 79.00 },
-        perMonth: { 1: 9.90, 3: 8.30, 12: 6.58 },
-        savings: { 1: 0, 3: 16, 12: 33 },
+        icon: '⭐',
+        accent: 'emerald',
+        badge: 'Most Popular',
+        pricing: {
+            MYR: { 1: 9.90, 3: 24.90, 12: 79.00 },
+            USD: { 1: 2.50, 3: 6.50, 12: 18.00 },
+            IDR: { 1: 33000, 3: 82000, 12: 260000 }
+        },
         features: {
-            childProfiles: 1,
-            mealHistoryDays: 30,
-            rniBars: true,
-            dailyRniClaimRange: [1.5, 15],
-            streak7d: 30,
-            streak30d: 150,
-            tokenReset: 'monthly',
-            tokenRollover: 50,           // %
-            tokenRolloverCap: 300,
-            minRedemption: 30,
-            ads: false,
-            mealPlans: true,
-            aiCoach: true,
-            weeklyReport: true
+            childProfiles: '1',
+            mealHistory: '30 days + custom',
+            rniBars: 'All 9',
+            advice: 'Full',
+            mealPlan: '✓',
+            aiCoach: '✓',
+            tokenEarn: '1.5–15 / day',
+            tokenRollover: '50% (cap 300)',
+            priorityBooking: 'Standard'
         }
     },
     {
         id: 'family',
         name: 'Family',
         tagline: '2+ children · best value',
-        price: { 1: 19.90, 3: 49.90, 12: 159.00 },
-        perMonth: { 1: 19.90, 3: 16.63, 12: 13.25 },
-        savings: { 1: 0, 3: 16, 12: 33 },
+        icon: '👨‍👩‍👧‍👦',
+        accent: 'indigo',
+        badge: 'Best Value',
+        pricing: {
+            MYR: { 1: 19.90, 3: 49.90, 12: 159.00 },
+            USD: { 1: 5.00, 3: 12.90, 12: 39.00 },
+            IDR: { 1: 66000, 3: 165000, 12: 520000 }
+        },
         features: {
-            childProfiles: 4,
-            mealHistoryDays: 365,        // unlimited (but 365 is the cap)
-            rniBars: true,
-            dailyRniClaimRange: [2, 20],
-            streak7d: 40,
-            streak30d: 200,
-            tokenReset: 'never',
-            tokenRollover: 100,          // %
-            minRedemption: 20,
-            ads: false,
-            mealPlans: true,
-            aiCoach: true,
-            weeklyReport: true
+            childProfiles: '4',
+            mealHistory: 'Unlimited',
+            rniBars: 'All 9',
+            advice: 'Full',
+            mealPlan: '✓',
+            aiCoach: '✓',
+            tokenEarn: '2–20 / day',
+            tokenRollover: '100%',
+            priorityBooking: 'Priority 24h'
         }
     }
 ];
-
-export const b2cTerms = [
-    { months: 1,  label: '1 Month',   notice: 'Cancel anytime, no notice required' },
-    { months: 3,  label: '3 Months',  notice: 'Auto-renews; 7-day cancellation notice' },
-    { months: 12, label: '1 Year',    notice: 'Auto-renews; 30-day pre-renewal reminder; pro-rated refund minus RM10 admin (first 30 days)' }
-];
-
-export const b2cGuarantee = '7-day money-back guarantee on first purchase';
