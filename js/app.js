@@ -15,7 +15,7 @@ import { renderPartnerDashboard } from './views/PartnerDashView.js';
 import { renderTokensPage } from './views/TokensView.js';
 import { renderScannerPage } from './views/ScannerView.js';
 
-// 🔧 NEW: Import B2C Pricing View
+// 🔧 B2C Pricing View Import
 import { renderUpgradeView, setB2CCurrency, setB2CTerm, handleB2CSubscribe } from './views/UpgradeView.js';
 
 import { startScanner, simulateScan, stopScannerIfActive } from './utils/qrScanner.js';
@@ -74,7 +74,10 @@ export function switchTab(tabKey) {
             content.innerHTML = renderProgramsPage();
             break;
         case 'layer3':
-            content.innerHTML = renderChildProfile(state.selectedChild);
+            // 🔧 FIX: Fallback to 'adam' if no child is selected yet
+            const activeChild = state.selectedChild || 'adam';
+            state.selectedChild = activeChild; 
+            content.innerHTML = renderChildProfile(activeChild);
             setTimeout(() => {
                 const orgSel = document.getElementById('apply-org-select');
                 if (orgSel) window.updateCourseDropdown(orgSel.value);
@@ -95,7 +98,7 @@ export function switchTab(tabKey) {
         case 'scanner':
             content.innerHTML = renderScannerPage();
             break;
-        // 🔧 NEW: Add the Upgrade View Case
+        // 🔧 B2C Pricing View
         case 'upgrade':
             content.innerHTML = renderUpgradeView();
             break;
@@ -113,7 +116,7 @@ export function switchTab(tabKey) {
 // --- Window Handler Bindings for HTML Attributes ---
 window.switchTab = switchTab;
 
-// 🔧 NEW: Bind B2C Pricing Functions to Window
+// 🔧 B2C Pricing Functions
 window.setB2CCurrency = setB2CCurrency;
 window.setB2CTerm = setB2CTerm;
 window.handleB2CSubscribe = handleB2CSubscribe;
