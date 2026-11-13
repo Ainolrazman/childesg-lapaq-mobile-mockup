@@ -1,6 +1,3 @@
-Here is the complete, full `README.md` file. You can click the "Copy" button in the top-right corner of the code block below and paste it directly into your `README.md` file.
-
-```markdown
 # ChildESG™ & LaPaQ Platform
 
 A dual-entry governance and nutrition platform for child-focused ESG partners — a **desktop dashboard** for partner organizations (B2B2C) and a **mobile PWA** for parents (B2C), sharing a common data and utility core.
