@@ -5,6 +5,18 @@ export function renderParentProfilePage() {
     const p = state.userProfiles.parent;
     const isBm = state.currentLang === 'bm';
     return `
+        <!-- 🔧 NEW: Upgrade Banner -->
+        <div onclick="window.switchTab('upgrade')" class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-4 mb-2 text-white flex justify-between items-center shadow-lg shadow-emerald-500/20 cursor-pointer transform active:scale-95 transition">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-xl">⭐</div>
+                <div>
+                    <h3 class="font-black text-sm">${isBm ? 'Naik Taraf ke Plus' : 'Upgrade to Plus'}</h3>
+                    <p class="text-[10px] opacity-90 font-medium">${isBm ? 'Buka pelan makan & jurulatih AI' : 'Unlock meal plans & AI coach'}</p>
+                </div>
+            </div>
+            <span class="text-xl font-bold">→</span>
+        </div>
+
         <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-5 text-white shadow-lg space-y-2">
             <span class="bg-emerald-400/30 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">${isBm ? 'Profil Utama' : 'Home Profile'}</span>
             <h2 class="text-xl font-bold">${p.name}</h2>
