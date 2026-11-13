@@ -1,3 +1,9 @@
+import { renderUpgradeView, setB2CCurrency, setB2CTerm, handleB2CSubscribe } from './views/UpgradeView.js';
+
+// Expose to window so the inline onclick handlers work
+window.setB2CCurrency = setB2CCurrency;
+window.setB2CTerm = setB2CTerm;
+window.handleB2CSubscribe = handleB2CSubscribe;
 import { state, resetState } from './state/store.js';
 import { t } from './state/i18n.js';
 
