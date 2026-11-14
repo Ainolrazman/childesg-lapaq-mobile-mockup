@@ -1,4 +1,54 @@
 import { state } from '../state/store.js';
+import { askGemini } from '../utils/geminiService.js';
+
+/* ============================================================ */
+/* ============ AI NUTRITION COACH (Gemini) =================== */
+/* ============================================================ */
+
+window.runCustomAiInquiry = async function() {
+    const inputEl = document.getElementById('ai-coach-input');
+    const outputEl = document.getElementById('ai-coach-response');
+    const btnEl = document.getElementById('ai-coach-btn');
+    const userQuery = inputEl?.value.trim();
+    const isBm = state.currentLang === 'bm';
+
+    if (!userQuery) {
+        alert(isBm ? 'Sila masukkan soalan anda terlebih dahulu.' : 'Please enter your question first.');
+        return;
+    }
+
+    if (outputEl) {
+        outputEl.innerHTML = `<span class="italic text-slate-400 animate-pulse">${isBm ? '🤖 Gemini sedang menganalisis...' : '🤖 Gemini is analyzing...'}</span>`;
+    }
+    if (btnEl) btnEl.disabled = true;
+
+    const child = state.childrenData[state.selectedChild];
+    const prompt = `Act as a professional pediatric nutritionist for the LaPaQ child nutrition platform. 
+    Child context: ${child.name}, ${child.age || 'young'} years old. 
+    User question: "${userQuery}". 
+    Provide a concise, practical, and affordable local Malaysian food recommendation or answer. Keep it under 3 sentences.`;
+
+    try {
+        let apiKey = localStorage.getItem('GEMINI_API_KEY');
+        if (!apiKey || apiKey === 'undefined' || apiKey === 'YOUR_ACTUAL_API_KEY' || apiKey.trim() === '') {
+            apiKey = 'AQ.Ab8RN6LXSvTJhvnmYSv-uvjYYERj6GAV-ECzHTR0F_C2sWEBWg';
+            localStorage.setItem('GEMINI_API_KEY', apiKey);
+        }
+
+        const aiResponse = await askGemini(prompt, apiKey);
+
+        if (outputEl) {
+            outputEl.innerHTML = `<p class="text-xs text-slate-700 leading-relaxed font-medium">✨ ${aiResponse}</p>`;
+        }
+    } catch (error) {
+        console.error('AI Inquiry Error:', error);
+        if (outputEl) {
+            outputEl.innerHTML = `<p class="text-xs text-rose-600 font-medium">⚠️ Error: ${error.message}</p>`;
+        }
+    } finally {
+        if (btnEl) btnEl.disabled = false;
+    }
+};
 
 // ✅ FIX: Local timezone function to match the browser's date picker exactly.
 function getTodayDateString() {
@@ -123,9 +173,9 @@ function formatShortDate(dateStr, isBm) {
 /* ============ TOKEN CLAIM GATE + TIERS ====================== */
 /* ============================================================ */
 
-const RNI_TOKEN_THRESHOLD    = 75;    // ✅ unlocked at 75%
-const RNI_OVER_THRESHOLD     = 150;   // ⚠️ above this = over-nutrition VISUAL flag (bar orange)
-const RNI_PENALTY_PER_BLOCK  = 1;     // ✅ 1 token per 50% block (per nutrient)
+const RNI_TOKEN_THRESHOLD    = 75;
+const RNI_OVER_THRESHOLD     = 150;
+const RNI_PENALTY_PER_BLOCK  = 1;
 const RNI_METRIC_KEYS = ['Calories','Carbohydrate','Protein','Fiber','Calcium',
                          'Iron','Potassium','Vitamin A','Vitamin C'];
 
@@ -204,21 +254,6 @@ function computeOverallRniCompliancePct(childId, timeSpan, startDate, endDate) {
     return Math.round(sum / RNI_METRIC_KEYS.length);
 }
 
-/**
- * ⚠️ Over-nutrition penalty — PER-NUTRIENT aggregation.
- *
- * For each nutrient, if it exceeds 100% of RNI:
- *   blocks_for_this_nutrient = floor((pct - 100) / 50)   ← 1 block per 50% over
- *   add those blocks to the total.
- *
- * Penalty = totalBlocks × RNI_PENALTY_PER_BLOCK
- *
- * A nutrient only starts costing tokens once it crosses 150% RNI.
- * Aligns with RNI_OVER_THRESHOLD (orange bar) so visual warning = penalty.
- *
- * Returns { avgPct, blocks, penalty, worstPct, overNutrients }
- *   overNutrients = [{ key, pct, blocks }, ...]
- */
 function computeOverNutritionPenalty(childId, timeSpan, startDate, endDate) {
     const dayCount = getPeriodDayCount(timeSpan, startDate, endDate);
     const meals    = getPeriodMeals(childId, timeSpan, startDate, endDate);
@@ -241,7 +276,6 @@ function computeOverNutritionPenalty(childId, timeSpan, startDate, endDate) {
         sumPct += pct;
         if (pct > worstPct) worstPct = pct;
 
-        // ⚠️ Per-nutrient blocks — 1 block per 50% above 100% (starts at 150%)
         if (pct > 100) {
             const nutrientBlocks = Math.floor((pct - 100) / 50);
             if (nutrientBlocks > 0) {
@@ -269,7 +303,6 @@ window.claimRNITokenWithGate = function () {
 
     if (!child) return;
 
-    // Robust "already claimed" check — child object OR localStorage
     let alreadyClaimed = !!child.rniClaimed;
     if (!alreadyClaimed) {
         try {
@@ -293,11 +326,9 @@ window.claimRNITokenWithGate = function () {
         return;
     }
 
-    /* ---- Compute tier reward ---- */
     const reward = getRNITokenReward(pct);
     if (reward <= 0) return;
 
-    /* ---- ⚠️ Over-nutrition penalty (per-nutrient, 50% blocks) ---- */
     const over = computeOverNutritionPenalty(
         childId,
         state.lapaqTimeSpan,
@@ -305,24 +336,22 @@ window.claimRNITokenWithGate = function () {
         state.lapaqEndDate
     );
 
-    /* ---- Apply ACTUAL wallet change (can be negative) ---- */
     const walletBefore  = Number(child.totalTokens) || 0;
-    const netChange     = reward - over.penalty;          // can be negative
+    const netChange     = reward - over.penalty;
     const walletAfter   = Math.max(0, walletBefore + netChange);
-    const actualChange  = walletAfter - walletBefore;      // what really happened
+    const actualChange  = walletAfter - walletBefore;
 
     child.totalTokens    = walletAfter;
     child.rniClaimed     = true;
     child.rniClaimPct    = pct;
-    child.rniClaimTokens = actualChange;                   // can be negative
+    child.rniClaimTokens = actualChange;
     child.rniClaimDate   = new Date().toISOString();
 
-    /* ---- Persist the claim so TokensView can display it ---- */
     try {
         const claims = JSON.parse(localStorage.getItem('lapaq_rni_claims') || '{}');
         claims[childId] = {
             pct,
-            tokens:   actualChange,       // can be negative
+            tokens:   actualChange,
             reward:   reward,
             penalty:  over.penalty,
             blocks:   over.blocks,
@@ -335,7 +364,6 @@ window.claimRNITokenWithGate = function () {
         console.error('Failed to persist RNI claim', e);
     }
 
-    /* ---- Show confirmation ---- */
     const sortedOver = [...(over.overNutrients || [])].sort((a, b) => b.blocks - a.blocks);
     const overList = sortedOver
         .slice(0, 5)
@@ -370,7 +398,6 @@ window.claimRNITokenWithGate = function () {
         ? `${titleLine}\n\nPematuhan RNI harian: ${pct}%\nGanjaran: ${reward} token 🪙${penaltyLine}${netLine}\n\n🔄 Log makanan ${child.name} akan direset ke 0% untuk sesi baharu.`
         : `${titleLine}\n\nDaily RNI compliance: ${pct}%\nReward: ${reward} token${reward > 1 ? 's' : ''} 🪙${penaltyLine}${netLine}\n\n🔄 ${child.name}'s meal log will be reset to 0% for a new session.`);
 
-    /* ---- 🔄 Reset meals + claim state back to zero ---- */
     try {
         const remaining = getLoggedMeals().filter(m => m.child !== childId);
         persistLoggedMeals(remaining);
@@ -389,11 +416,9 @@ window.claimRNITokenWithGate = function () {
         localStorage.setItem('lapaq_rni_claims', JSON.stringify(claims));
     } catch (e) { /* ignore */ }
 
-    /* ---- Refresh both views ---- */
     window._refreshLaPaQView?.();
     window._refreshTokensView?.();
 };
-/* ---- Expose for TokensView.js (used to render the reward card) ---- */
 window.RNI_TOKEN_THRESHOLD = RNI_TOKEN_THRESHOLD;
 window.RNI_TOKEN_TIERS     = RNI_TOKEN_TIERS;
 window.getRNITokenReward   = getRNITokenReward;
@@ -416,12 +441,12 @@ window.getRNIClaimPreview = function () {
             state.lapaqStartDate,
             state.lapaqEndDate
         );
-        const netReward = reward - over.penalty;    // can be negative
+        const netReward = reward - over.penalty;
         return {
             pct,
-            tokens:   reward,          // gross reward
-            penalty:  over.penalty,    // penalty
-            netReward,                 // real change (can be negative)
+            tokens:   reward,
+            penalty:  over.penalty,
+            netReward,
             avgPct:   over.avgPct,
             blocks:   over.blocks,
             overNutrients: over.overNutrients,
@@ -1502,7 +1527,6 @@ const RNI_CONSEQUENCES = {
                       en: 'Weak immunity, slow wound healing, bleeding gums' }
 };
 
-/* ⚠️ Over-nutrition consequences (above RNI_OVER_THRESHOLD) */
 const RNI_OVER_CONSEQUENCES = {
     'Calories':     { bm: 'Pertambahan berat berlebihan, risiko obesiti & diabetes jenis 2',
                       en: 'Excess weight gain, obesity & type 2 diabetes risk' },
@@ -1823,7 +1847,6 @@ export function renderLaPaQPage() {
     });
     const overallCompliancePct = rniMetrics.length > 0 ? Math.round(totalCompliance / rniMetrics.length) : 0;
 
-    /* ⚠️ Over-nutrition count (per-nutrient visual flag at >RNI_OVER_THRESHOLD) */
     const overNutritionCount = rniMetrics.filter(m =>
         m.target > 0 && (m.current / m.target) * 100 > RNI_OVER_THRESHOLD
     ).length;
@@ -1945,7 +1968,6 @@ export function renderLaPaQPage() {
     const isRniClaimed = !!(child.rniClaimed || childClaim);
     const rewardPreview = getRNITokenReward(overallCompliancePct);
 
-    /* ⚠️ Penalty preview for hero card button */
     const previewPenalty = (() => {
         try {
             const over = computeOverNutritionPenalty(
@@ -1957,7 +1979,7 @@ export function renderLaPaQPage() {
             return over.penalty;
         } catch (e) { return 0; }
     })();
-    const netRewardPreview = rewardPreview - previewPenalty;    // can be negative
+    const netRewardPreview = rewardPreview - previewPenalty;
     const absNetPreview = Math.abs(netRewardPreview);
 
     const tabBtn = (tab, icon, label, badge) => `
@@ -2049,6 +2071,35 @@ export function renderLaPaQPage() {
         <!-- ===== TAB: NUTRITION ===== -->
         ${activeTab === 'nutrition' ? `
         <div class="mt-3 space-y-3">
+
+            <!-- ===== AI NUTRITION COACH CARD ===== -->
+            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4 space-y-3 shadow-xs">
+                <div class="flex justify-between items-center border-b border-emerald-200/60 pb-2">
+                    <h3 class="text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center space-x-1.5">
+                        <span>🤖</span>
+                        <span>${isBm ? 'AI Pakar Pemakanan LaPaQ' : 'LaPaQ AI Nutrition Coach'}</span>
+                    </h3>
+                </div>
+
+                <div class="flex gap-2">
+                    <input type="text" id="ai-coach-input"
+                           placeholder="${isBm ? 'Taip soalan pemakanan di sini...' : 'Ask a nutrition or meal question...'}"
+                           class="flex-1 bg-white border border-emerald-300 rounded-lg px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-500">
+                    <button id="ai-coach-btn" onclick="window.runCustomAiInquiry()"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-extrabold px-3 py-1.5 rounded-lg shadow-xs transition whitespace-nowrap flex items-center space-x-1">
+                        <span>✨</span>
+                        <span>${isBm ? 'Hantar' : 'Ask AI'}</span>
+                    </button>
+                </div>
+
+                <div id="ai-coach-response" class="p-2.5 bg-white rounded-lg border border-emerald-100 min-h-[48px] flex items-center">
+                    <p class="text-[10px] text-slate-500 italic">
+                        ${isBm
+                            ? 'Taip soalan anda di atas dan klik Hantar untuk mendapatkan jawapan daripada Gemini AI.'
+                            : 'Type your question above and click Ask AI to get personalized guidance.'}
+                    </p>
+                </div>
+            </div>
 
             <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-2">
