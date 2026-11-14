@@ -1,4 +1,50 @@
 import { state } from '../state/store.js';
+import { askGemini } from '../utils/geminiService.js';
+
+window.runCustomAiInquiry = async function() {
+    const inputEl = document.getElementById('ai-coach-input');
+    const outputEl = document.getElementById('ai-coach-response');
+    const btnEl = document.getElementById('ai-coach-btn');
+    const userQuery = inputEl?.value.trim();
+    const isBm = state.currentLang === 'bm';
+
+    if (!userQuery) {
+        alert(isBm ? 'Sila masukkan soalan anda terlebih dahulu.' : 'Please enter your question first.');
+        return;
+    }
+
+    if (outputEl) {
+        outputEl.innerHTML = `<span class="italic text-slate-400 animate-pulse">${isBm ? '🤖 Gemini sedang menganalisis...' : '🤖 Gemini is analyzing...'}</span>`;
+    }
+    if (btnEl) btnEl.disabled = true;
+
+    const child = state.childrenData[state.selectedChild];
+    const prompt = `Act as a professional pediatric nutritionist for the LaPaQ child nutrition platform. 
+    Child context: ${child.name}, ${child.age || 'young'} years old. 
+    User question: "${userQuery}". 
+    Provide a concise, practical, and affordable local Malaysian food recommendation or answer. Keep it under 3 sentences.`;
+
+    try {
+        let apiKey = localStorage.getItem('GEMINI_API_KEY');
+        if (!apiKey || apiKey === 'undefined' || apiKey === 'YOUR_ACTUAL_API_KEY' || apiKey.trim() === '') {
+            apiKey = 'AQ.Ab8RN6LXSvTJhvnmYSv-uvjYYERj6GAV-ECzHTR0F_C2sWEBWg';
+            localStorage.setItem('GEMINI_API_KEY', apiKey);
+        }
+
+        const aiResponse = await askGemini(prompt, apiKey);
+        
+        if (outputEl) {
+            outputEl.innerHTML = `<p class="text-xs text-slate-700 leading-relaxed font-medium">✨ ${aiResponse}</p>`;
+        }
+    } catch (error) {
+        console.error('AI Inquiry Error:', error);
+        if (outputEl) {
+            outputEl.innerHTML = `<p class="text-xs text-rose-600 font-medium">⚠️ Error: ${error.message}</p>`;
+        }
+    } finally {
+        if (btnEl) btnEl.disabled = false;
+    }
+};
 
 // ✅ FIX: Local timezone function to match the browser's date picker exactly.
 function getTodayDateString() {
@@ -209,7 +255,6 @@ window.claimRNITokenWithGate = function () {
 
     if (!child) return;
 
-    // Robust "already claimed" check — child object OR localStorage
     let alreadyClaimed = !!child.rniClaimed;
     if (!alreadyClaimed) {
         try {
@@ -233,18 +278,15 @@ window.claimRNITokenWithGate = function () {
         return;
     }
 
-    /* ---- Compute tier reward ---- */
     const reward = getRNITokenReward(pct);
     if (reward <= 0) return;
 
-    /* ---- Award tokens to the wallet ---- */
     child.totalTokens    = (child.totalTokens || 0) + reward;
     child.rniClaimed     = true;
     child.rniClaimPct    = pct;
     child.rniClaimTokens = reward;
     child.rniClaimDate   = new Date().toISOString();
 
-    /* ---- Persist the claim so TokensView can display it ---- */
     try {
         const claims = JSON.parse(localStorage.getItem('lapaq_rni_claims') || '{}');
         claims[childId] = {
@@ -257,17 +299,14 @@ window.claimRNITokenWithGate = function () {
         console.error('Failed to persist RNI claim', e);
     }
 
-    /* ---- Show confirmation ---- */
     alert(isBm
         ? `🎉 Tahniah!\n\nPematuhan RNI harian: ${pct}%\nGanjaran: ${reward} token 🪙\n\n${reward} token telah ditambah ke dompet anda.`
         : `🎉 Congratulations!\n\nDaily RNI compliance: ${pct}%\nReward: ${reward} token${reward > 1 ? 's' : ''} 🪙\n\n${reward} token${reward > 1 ? 's have' : ' has'} been added to your wallet.`);
 
-    /* ---- Refresh both views ---- */
     window._refreshLaPaQView?.();
     window._refreshTokensView?.();
 };
 
-/* ---- Expose for TokensView.js (used to render the reward card) ---- */
 window.RNI_TOKEN_THRESHOLD = RNI_TOKEN_THRESHOLD;
 window.RNI_TOKEN_TIERS     = RNI_TOKEN_TIERS;
 window.getRNITokenReward   = getRNITokenReward;
@@ -299,7 +338,6 @@ window.resetRNIClaim = function () {
     const child   = state.childrenData[childId];
     if (!child) return;
 
-    // Recover how many tokens the claim awarded (child object OR localStorage)
     let claimedTokens = Number(child.rniClaimTokens) || 0;
     if (!claimedTokens) {
         try {
@@ -314,25 +352,21 @@ window.resetRNIClaim = function () {
         : `Reset the minted token for ${child.name}?\n\n• Remove the RNI claim record\n• Deduct ${claimedTokens} token${claimedTokens === 1 ? '' : 's'} from the wallet\n• Allow a new claim once RNI ≥ ${RNI_TOKEN_THRESHOLD}%`;
     if (!confirm(msg)) return;
 
-    // 1) Clear claim flags on the child
     child.rniClaimed     = false;
     child.rniClaimPct    = null;
     child.rniClaimTokens = null;
     child.rniClaimDate   = null;
 
-    // 2) Deduct the awarded tokens from the wallet (never below 0)
     if (claimedTokens > 0) {
         child.totalTokens = Math.max(0, (Number(child.totalTokens) || 0) - claimedTokens);
     }
 
-    // 3) Remove the persisted claim record
     try {
         const claims = JSON.parse(localStorage.getItem('lapaq_rni_claims') || '{}');
         delete claims[childId];
         localStorage.setItem('lapaq_rni_claims', JSON.stringify(claims));
     } catch (e) { /* ignore */ }
 
-    // 4) Refresh both views
     window._refreshLaPaQView?.();
     window._refreshTokensView?.();
     console.log(`[LaPaQ] RNI claim reset for ${childId}. Deducted ${claimedTokens} token(s).`);
@@ -354,23 +388,13 @@ window.setLaPaQTab = function (tab) {
 /* ============ WHO HEIGHT-FOR-AGE REFERENCE ================== */
 /* ============================================================ */
 
-/*
- * WHO 2007 Growth Reference (5–19 years) — Height-for-age.
- * `median` = 50th percentile (cm), `sd` = approximate standard deviation (cm).
- * The healthy band plotted on the chart is median ± 2 SD.
- */
 const WHO_HEIGHT_FOR_AGE = {
     6: { median: 115.1, sd: 6.0 },
     9: { median: 132.6, sd: 7.0 }
 };
 
-/* Current age per child (used only when state has no numeric `age`). */
 const CHILD_CURRENT_AGE = { adam: 8, maya: 5 };
 
-/**
- * Returns the WHO height-for-age reference for the child's NEXT birth year,
- * e.g. Maya (5) → age 6, Adam (8) → age 9.
- */
 function getWhoNextBirthYearRef(childId, child, isBm) {
     const rawAge = Number(child?.age);
     const currentAge = (Number.isFinite(rawAge) && rawAge > 0)
@@ -421,7 +445,6 @@ function buildGrowthChartSvg(records, child, isBm, opts = {}) {
         bmi:    Number(r.bmi)    || 0
     })).filter(p => p.height > 0 || p.bmi > 0 || p.weight > 0);
 
-    // 🛠️ FIX: Prevent the height line from dipping (heights shouldn't decrease)
     let maxHeightSoFar = 0;
     pts.forEach(p => {
         if (p.height > 0) {
@@ -509,7 +532,6 @@ function buildGrowthChartSvg(records, child, isBm, opts = {}) {
         `;
     }).join('');
 
-    /* ✅ WHO median ± 2 SD band (rendered behind the data series) */
     const whoSvg = (whoRef && heightYFn) ? (() => {
         const yHigh   = heightYFn(whoRef.high);
         const yLow    = heightYFn(whoRef.low);
@@ -743,8 +765,6 @@ function seedMealsForChild(childId, daySchedule, scaleFactor) {
 
     Object.entries(daySchedule).forEach(([dayOffset, mealsByType]) => {
         const offset = parseInt(dayOffset, 10);
-        // ✅ HARD GUARANTEE: never seed TODAY (offset 0).
-        // Today must stay empty so the user can log their own meals from scratch.
         if (offset === 0) return;
 
         const date = new Date(today);
@@ -800,8 +820,6 @@ function ensureSampleMeals() {
     const todayStr = getTodayDateString();
     let all = getLoggedMeals();
 
-    // ✅ STEP 1 — today must always be empty (only samples get stripped;
-    // user-logged meals for today are preserved).
     const todaySamplesCount = all.filter(m => isSampleMeal(m) && m.date === todayStr).length;
     if (todaySamplesCount > 0) {
         all = all.filter(m => !(isSampleMeal(m) && m.date === todayStr));
@@ -843,16 +861,8 @@ window.resetSampleMeals = function () {
     ensureSampleMeals();
     window._refreshLaPaQView?.();
 };
-/**
- * ✅ Full Day-1 reset for the LaPaQ view.
- * Wipes ALL LaPaQ-owned localStorage (meals, growth, claims),
- * resets the time-span to 1 day / today, and re-seeds the demo
- * sample dataset (past 6 days only — today stays empty).
- *
- * Called from window.resetDemo() in app.js.
- */
+
 window.resetLaPaQDemo = function () {
-    /* 1. Clear every LaPaQ-owned localStorage key */
     try {
         localStorage.removeItem('lapaq_logged_meals');
         localStorage.removeItem('lapaq_growth_records');
@@ -860,10 +870,6 @@ window.resetLaPaQDemo = function () {
     } catch (e) {
         console.warn('[LaPaQ] Could not clear localStorage during reset:', e);
     }
-    /* 1b. 🔑 Force-clear claim flags on every child in memory.
-           localStorage is wiped, but state.childrenData may still hold
-           rniClaimed:true from before — resetState() doesn't touch it,
-           so the "✓ Token Minted" badge keeps reappearing after reset. */
     if (state.childrenData) {
         Object.values(state.childrenData).forEach(child => {
             if (!child) return;
@@ -874,30 +880,24 @@ window.resetLaPaQDemo = function () {
         });
     }
     
-    /* 2. Reset LaPaQ view state to Day-1 defaults */
     state.lapaqTimeSpan  = '1day';
     state.lapaqStartDate = getTodayDateString();
     state.lapaqEndDate   = getTodayDateString();
     window._lapaqActiveTab = 'nutrition';
 
-    /* 3. Re-seed demo data — past 6 days only, today left empty */
     SAMPLE_MEAL_ID_BASE    = Date.now();
     SAMPLE_MEAL_ID_COUNTER = 1;
     ensureSampleMeals();
     seedGrowthData();
     removeNov2026AdamRecord();
 
-    /* 4. Refresh the view if it's currently on screen */
     window._refreshLaPaQView?.();
 
     console.log('[LaPaQ] 🔄 Demo reset — today empty, past 6 days re-seeded, no claims, time span = 1 day.');
 };
 
 ensureSampleMeals();
-/**
- * Wipe every meal logged for TODAY (samples + user). Past 6 days untouched.
- * Handy for demoing the "empty today → fill in → claim token" flow.
- */
+
 window.clearTodayMeals = function () {
     const todayStr = getTodayDateString();
     const before = getLoggedMeals();
@@ -914,7 +914,6 @@ window.clearTodayMeals = function () {
     window._refreshLaPaQView?.();
     console.log(`[LaPaQ] 🧹 Cleared ${removed} meal(s) for today (${todayStr}).`);
 };
-
 
 /* ============================================================ */
 /* ============ GROWTH RECORD HELPERS ========================= */
@@ -933,7 +932,6 @@ function computeBMI(heightCm, weightKg) {
     return +(weightKg / (hM * hM)).toFixed(2);
 }
 
-// 🛠️ FIX: Auto-seed realistic, steady growth data if records are sparse or corrupted
 function seedGrowthData() {
     let records = getGrowthRecords();
     let changed = false;
@@ -989,7 +987,6 @@ function seedGrowthData() {
 
 seedGrowthData();
 
-// 🛠️ FIX: Explicitly delete the "1st of Nov 2026" reading for Adam
 function removeNov2026AdamRecord() {
     let records = getGrowthRecords();
     const originalLength = records.length;
@@ -1001,7 +998,6 @@ function removeNov2026AdamRecord() {
     }
 }
 removeNov2026AdamRecord();
-
 
 window.resetGrowthData = function () {
     if (!confirm('Reset growth data to default realistic demo values?')) return;
@@ -1060,10 +1056,6 @@ window.recordGrowthMeasurement = function () {
 
     window.showGrowthRecordedPopup(newId);
 };
-
-/* ============================================================ */
-/* ============ GROWTH RECORDED POPUP ========================= */
-/* ============================================================ */
 
 window.closeGrowthRecordedPopup = function () {
     document.getElementById('modal-growth-recorded')?.remove();
@@ -1208,10 +1200,6 @@ window.deleteGrowthRecord = function (id) {
     }
     window._refreshLaPaQView?.();
 };
-
-/* ============================================================ */
-/* ============ MEAL MODAL ==================================== */
-/* ============================================================ */
 
 window.openCreateMealModal = function (date, type) {
     const modal = document.getElementById('modal-create-meal');
@@ -1377,10 +1365,6 @@ window.deleteLoggedMeal = function (id) {
     window._refreshLaPaQView?.();
 };
 
-/* ============================================================ */
-/* ============ DAILY NUTRITION REPORT ======================== */
-/* ============================================================ */
-
 const RNI_CONSEQUENCES = {
     'Calories':     { bm: 'Tenaga rendah, cepat letih, kurang tumpuan, pertumbuhan terbantut',
                       en: 'Low energy, fatigue, poor focus, stunted growth' },
@@ -1446,7 +1430,7 @@ function buildNutritionReport(rniMetrics, isBm, periodDayCount, hasMeals) {
                      : met.length >= 4 ? (isBm ? 'Sederhana'   : 'Moderate')
                      :                   (isBm ? 'Perlu Perhatian' : 'Needs Attention');
     const scoreCls = met.length >= 7 ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                   : met.length >= 4 ? 'bg-amber-50 text-amber-700 border-amber-200'
+                   : met.length >= 4 ? 'bg-amber-50 text-amber-700 border-emerald-200'
                    :                   'bg-rose-50 text-rose-700 border-rose-200';
 
     const title = isMultiDay
@@ -1548,19 +1532,12 @@ function buildNutritionReport(rniMetrics, isBm, periodDayCount, hasMeals) {
     `;
 }
 
-/* ============================================================ */
-/* ============ MAIN RENDER =================================== */
-/* ============================================================ */
-
 export function renderLaPaQPage() {
     const child = state.childrenData[state.selectedChild];
     const isBm = state.currentLang === 'bm';
     const todayDateStr = getTodayDateString();
     const activeTab = window._lapaqActiveTab || 'nutrition';
 
-    /* -------------------------------------------------------- */
-    /* SPAN → DAY COUNT                                          */
-    /* -------------------------------------------------------- */
     let spanLabel = isBm ? "1 Hari" : "1 Day";
     let periodDayCount = 1;
 
@@ -1624,12 +1601,10 @@ export function renderLaPaQPage() {
         return acc;
     }, {});
 
-    // ---- Cost aggregates ----
     const periodCost = getPeriodCost(periodMeals);
     const dailyAvgCost = periodCost / periodDayCount;
     const perMealCost = periodMeals.length > 0 ? periodCost / periodMeals.length : 0;
 
-    // Daily-average RNI bars
     const rniMetrics = rawMetrics.map(m => {
         const mealKey = METRIC_KEY_MAP[m.name];
         const totalLogged = mealKey ? (mealTotals[mealKey] || 0) : 0;
@@ -1719,7 +1694,6 @@ export function renderLaPaQPage() {
         .filter(r => !(state.selectedChild === 'adam' && r.date === '2026-11-01'))
         .sort((a, b) => b.id - a.id);
 
-    /* ✅ NEW: WHO height-for-age reference for the child's NEXT birth year */
     const whoRef = getWhoNextBirthYearRef(state.selectedChild, child, isBm);
 
     const latestGrowth = growthRecordsForChild[0] || null;
@@ -1756,7 +1730,6 @@ export function renderLaPaQPage() {
 
     const growthSvgContent = buildGrowthChartSvg(growthRecordsForChild, child, isBm, { whoRef });
 
-    /* ✅ RNI claim status (state + localStorage) for hero card rendering */
     const childClaim = (() => {
         try {
             return JSON.parse(localStorage.getItem('lapaq_rni_claims') || '{}')[state.selectedChild] || null;
@@ -1774,515 +1747,553 @@ export function renderLaPaQPage() {
     `;
 
     return `
-        <div id="lapaq-view-root">
-        <!-- ===== TOP BAR ===== -->
-        <div class="flex items-center justify-between mb-3 gap-2">
-            <div class="flex items-center space-x-2.5">
-                <img src="https://i.imgur.com/USLbaEN.png"
-                     alt="LaPaQ Logo"
-                     class="w-10 h-10 rounded-xl object-contain bg-slate-800 p-1 shadow-md ring-1 ring-slate-700">
-                <div>
-                    <p class="text-sm font-extrabold text-slate-800 leading-tight">LaPaQ</p>
-                    <p class="text-[10px] font-mono text-slate-500 leading-tight">Nutrition &amp; Growth Intelligence</p>
+        <div id="lapaq-view-root" class="space-y-3 pb-8">
+            <!-- ===== TOP BAR ===== -->
+            <div class="flex items-center justify-between mb-3 gap-2">
+                <div class="flex items-center space-x-2.5">
+                    <img src="https://i.imgur.com/USLbaEN.png"
+                         alt="LaPaQ Logo"
+                         class="w-10 h-10 rounded-xl object-contain bg-slate-800 p-1 shadow-md ring-1 ring-slate-700">
+                    <div>
+                        <p class="text-sm font-extrabold text-slate-800 leading-tight">LaPaQ</p>
+                        <p class="text-[10px] font-mono text-slate-500 leading-tight">Nutrition &amp; Growth Intelligence</p>
+                    </div>
                 </div>
+                <a href="https://lapaq.app:3000/login" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition shadow-md inline-block whitespace-nowrap">Sign in to LaPaQ</a>
             </div>
-            <a href="https://lapaq.app:3000/login" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition shadow-md inline-block whitespace-nowrap">Sign in to LaPaQ</a>
-        </div>
 
-        <!-- ===== HERO CARD ===== -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
-                <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
-                <select onchange="window.changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
-                    <option value="adam" ${state.selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
-                    <option value="maya" ${state.selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
-                </select>
-            </div>
-            <div>
-                <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
-                <p class="text-xs text-slate-300 mt-0.5">${isBm ? 'Profil pematuhan Pengambilan Nutrien Disyorkan (RNI)' : 'Recommended Nutrient Intake (RNI) compliance profile'}</p>
-            </div>
-            <div class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
-                <div>
-                    <p class="text-slate-300 text-[10px] font-bold uppercase">
-                        ${isMultiDay
-                            ? (isBm
-                                ? `Sasaran Diet RNI Harian · Purata ${periodDayCount} Hari`
-                                : `Daily RNI Diet Target · ${periodDayCount}-Day Avg`)
-                            : (isBm ? 'Sasaran Diet RNI Harian' : 'Daily RNI Diet Target')}
-                    </p>
-                    <p class="font-bold ${statusColor} mt-0.5">${calculatedRniStatus}</p>
+            <!-- ===== HERO CARD ===== -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-lg space-y-3">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-2.5">
+                    <span class="bg-slate-700 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full text-blue-400">Intelligence Engine</span>
+                    <select onchange="window.changeLaPaQChild(this.value)" class="bg-blue-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg outline-none cursor-pointer">
+                        <option value="adam" ${state.selectedChild === 'adam' ? 'selected' : ''}>👦 Adam (8 Yrs)</option>
+                        <option value="maya" ${state.selectedChild === 'maya' ? 'selected' : ''}>👧 Maya (5 Yrs)</option>
+                    </select>
                 </div>
-                ${isRniClaimed
-                    ? `<span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold">✓ ${isBm ? 'Token Dicetak' : 'Token Minted'} · ${child.rniClaimTokens || childClaim?.tokens || 0} 🪙</span>`
-                    : overallCompliancePct >= RNI_TOKEN_THRESHOLD
-                        ? `<button onclick="window.claimRNITokenWithGate()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">
-                              🥗 ${isBm
-                                    ? `Tuntut ${rewardPreview} Token`
-                                    : `Claim ${rewardPreview} Token${rewardPreview > 1 ? 's' : ''}`}
-                           </button>`
-                        : `<div class="flex flex-col items-end gap-0.5">
-                                <button disabled
-                                        title="${isBm ? `Perlu ${RNI_TOKEN_THRESHOLD}% RNI harian untuk menuntut` : `Reach ${RNI_TOKEN_THRESHOLD}% daily RNI to claim`}"
-                                        class="bg-slate-600/40 text-slate-400 text-[10px] px-3 py-1.5 rounded-lg font-extrabold cursor-not-allowed border border-slate-600">
-                                    🔒 ${isBm ? 'Token Dikunci' : 'Token Locked'}
-                                </button>
-                                <span class="text-[8px] font-mono text-slate-400">${overallCompliancePct}% / ${RNI_TOKEN_THRESHOLD}% RNI</span>
+                <div>
+                    <h2 class="text-xl font-bold">${child.name}${isBm ? 'Ambilan RNI LaPaQ' : "'s LaPaQ RNI Intake"}</h2>
+                    <p class="text-xs text-slate-300 mt-0.5">${isBm ? 'Profil pematuhan Pengambilan Nutrien Disyorkan (RNI)' : 'Recommended Nutrient Intake (RNI) compliance profile'}</p>
+                </div>
+                <div class="p-3 bg-slate-700/60 rounded-xl border border-slate-600 flex justify-between items-center text-xs mt-2">
+                    <div>
+                        <p class="text-slate-300 text-[10px] font-bold uppercase">
+                            ${isMultiDay
+                                ? (isBm
+                                    ? `Sasaran Diet RNI Harian · Purata ${periodDayCount} Hari`
+                                    : `Daily RNI Diet Target · ${periodDayCount}-Day Avg`)
+                                : (isBm ? 'Sasaran Diet RNI Harian' : 'Daily RNI Diet Target')}
+                        </p>
+                        <p class="font-bold ${statusColor} mt-0.5">${calculatedRniStatus}</p>
+                    </div>
+                    ${isRniClaimed
+                        ? `<div class="flex items-center space-x-2">
+                               <span class="bg-emerald-600/30 text-emerald-300 text-[10px] px-2.5 py-1 rounded-lg font-bold">
+                                   ✓ ${isBm ? 'Token Dicetak' : 'Token Minted'} · ${child.rniClaimTokens || childClaim?.tokens || rewardPreview} 🪙
+                               </span>
+                               <button onclick="window.resetRNIClaim()" 
+                                       title="${isBm ? 'Set semula tuntutan' : 'Reset RNI claim'}" 
+                                       class="bg-slate-700 hover:bg-slate-600 text-slate-300 text-[10px] px-2 py-1 rounded-lg font-bold transition shadow-sm">
+                                   ↺
+                               </button>
                            </div>`
-                }
+                        : overallCompliancePct >= RNI_TOKEN_THRESHOLD
+                            ? `<button onclick="window.claimRNITokenWithGate()" 
+                                       class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-[10px] px-3 py-1.5 rounded-lg shadow-md transition">
+                                  🥗 ${isBm ? `Tuntut ${rewardPreview} Token` : `Claim ${rewardPreview} Token${rewardPreview > 1 ? 's' : ''}`}
+                               </button>`
+                            : `<div class="flex flex-col items-end gap-0.5">
+                                    <button disabled
+                                            title="${isBm ? `Perlu ${RNI_TOKEN_THRESHOLD}% RNI harian untuk menuntut` : `Reach ${RNI_TOKEN_THRESHOLD}% daily RNI to claim`}"
+                                            class="bg-slate-600/40 text-slate-400 text-[10px] px-3 py-1.5 rounded-lg font-extrabold cursor-not-allowed border border-slate-600">
+                                        🔒 ${isBm ? 'Token Dikunci' : 'Token Locked'}
+                                    </button>
+                                    <span class="text-[8px] font-mono text-slate-400">${overallCompliancePct}% / ${RNI_TOKEN_THRESHOLD}% RNI</span>
+                               </div>`
+                    }
+                </div>
             </div>
-        </div>
 
-        <!-- ===== TAB BAR ===== -->
-        <div class="mt-3 grid grid-cols-3 gap-1 bg-slate-200 p-1 rounded-xl">
-            ${tabBtn('nutrition', '🥗', isBm ? 'Pemakanan' : 'Nutrition', periodMeals.length > 0 ? periodMeals.length : '')}
-            ${tabBtn('growth',    '📏', isBm ? 'Pertumbuhan' : 'Growth',  growthRecordsForChild.length > 0 ? growthRecordsForChild.length : '')}
-            ${tabBtn('history',   '📜', isBm ? 'Sejarah' : 'History',     fullDays7 > 0 ? `${fullDays7}/${last7Days.length}` : '')}
-        </div>
+            <!-- ===== TAB BAR ===== -->
+            <div class="mt-3 grid grid-cols-3 gap-1 bg-slate-200 p-1 rounded-xl">
+                ${tabBtn('nutrition', '🥗', isBm ? 'Pemakanan' : 'Nutrition', periodMeals.length > 0 ? periodMeals.length : '')}
+                ${tabBtn('growth',    '📏', isBm ? 'Pertumbuhan' : 'Growth',  growthRecordsForChild.length > 0 ? growthRecordsForChild.length : '')}
+                ${tabBtn('history',   '📜', isBm ? 'Sejarah' : 'History',     fullDays7 > 0 ? `${fullDays7}/${last7Days.length}` : '')}
+            </div>
 
-        <!-- ===== TAB: NUTRITION ===== -->
-        ${activeTab === 'nutrition' ? `
-        <div class="mt-3 space-y-3">
+            <!-- ===== TAB: NUTRITION ===== -->
+            ${activeTab === 'nutrition' ? `
+            <div class="mt-3 space-y-3">
 
-            <!-- ===== CARD 1: Time Span + Cost Summary ===== -->
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
-                        <span>⏱️</span>
-                        <span>${isBm ? 'Tetapan Tempoh Masa RNI' : 'RNI Time Span Calculator'}</span>
-                    </h3>
-                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">${spanLabel}</span>
+                <!-- ===== AI NUTRITION COACH CARD ===== -->
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4 space-y-3 shadow-xs">
+                    <div class="flex justify-between items-center border-b border-emerald-200/60 pb-2">
+                        <h3 class="text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center space-x-1.5">
+                            <span>🤖</span>
+                            <span>${isBm ? 'AI Pakar Pemakanan LaPaQ' : 'LaPaQ AI Nutrition Coach'}</span>
+                        </h3>
+                    </div>
+                    
+                    <!-- Interactive Inquiry Box & Send Button -->
+                    <div class="flex gap-2">
+                        <input type="text" id="ai-coach-input" 
+                               placeholder="${isBm ? 'Taip soalan pemakanan di sini...' : 'Ask a nutrition or meal question...'}" 
+                               class="flex-1 bg-white border border-emerald-300 rounded-lg px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-emerald-500">
+                        <button id="ai-coach-btn" onclick="window.runCustomAiInquiry()" 
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-extrabold px-3 py-1.5 rounded-lg shadow-xs transition whitespace-nowrap flex items-center space-x-1">
+                            <span>✨</span>
+                            <span>${isBm ? 'Hantar' : 'Ask AI'}</span>
+                        </button>
+                    </div>
+
+                    <div id="ai-coach-response" class="p-2.5 bg-white rounded-lg border border-emerald-100 min-h-[48px] flex items-center">
+                        <p class="text-[10px] text-slate-500 italic">
+                            ${isBm 
+                                ? 'Taip soalan anda di atas dan klik Hantar untuk mendapatkan jawapan daripada Gemini AI.' 
+                                : 'Type your question above and click Ask AI to get personalized guidance.'}
+                        </p>
+                    </div>
                 </div>
-                <div class="grid grid-cols-4 gap-1.5 bg-slate-100 p-1 rounded-xl text-center">
-                    <button onclick="window.setLaPaQTimeSpan('1day')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === '1day' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Day</button>
-                    <button onclick="window.setLaPaQTimeSpan('1week')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === '1week' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Week</button>
-                    <button onclick="window.setLaPaQTimeSpan('1month')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === '1month' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Month</button>
-                    <button onclick="window.setLaPaQTimeSpan('custom')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === 'custom' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Date Search</button>
+
+                <!-- ===== CARD 1: Time Span + Cost Summary ===== -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
+                            <span>⏱️</span>
+                            <span>${isBm ? 'Tetapan Tempoh Masa RNI' : 'RNI Time Span Calculator'}</span>
+                        </h3>
+                        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">${spanLabel}</span>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1.5 bg-slate-100 p-1 rounded-xl text-center">
+                        <button onclick="window.setLaPaQTimeSpan('1day')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === '1day' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Day</button>
+                        <button onclick="window.setLaPaQTimeSpan('1week')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === '1week' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Week</button>
+                        <button onclick="window.setLaPaQTimeSpan('1month')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === '1month' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">1 Month</button>
+                        <button onclick="window.setLaPaQTimeSpan('custom')" class="py-1.5 rounded-lg text-[10px] font-extrabold transition ${state.lapaqTimeSpan === 'custom' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Date Search</button>
+                    </div>
+                    ${state.lapaqTimeSpan === 'custom' ? `
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                            <span class="text-[9px] font-bold text-slate-500 uppercase block">${isBm ? 'Pilih Tarikh Dengan Kalendar:' : 'Date Search with Calendar:'}</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">From (Open)</label>
+                                    <input type="date" id="lapaq-start-date" value="${state.lapaqStartDate}" max="${todayDateStr}" onchange="window.updateLaPaQCustomDates()" class="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">To (Today)</label>
+                                    <input type="date" id="lapaq-end-date" value="${state.lapaqEndDate}" max="${todayDateStr}" onchange="window.updateLaPaQCustomDates()" class="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- ===== COST SUMMARY CARD ===== -->
+                    <div class="grid grid-cols-3 gap-2 pt-1">
+                        <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                            <p class="text-[9px] font-bold text-emerald-600 uppercase">${isBm ? 'Jumlah Kos' : 'Total Spend'}</p>
+                            <p class="text-base font-black text-emerald-700 font-mono">${formatRM(periodCost)}</p>
+                            <p class="text-[8px] text-emerald-600">${periodMeals.length} ${isBm ? 'makanan' : 'meals'}</p>
+                        </div>
+                        <div class="p-2.5 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-[9px] font-bold text-blue-600 uppercase">${isBm ? 'Purata Harian' : 'Daily Avg'}</p>
+                            <p class="text-base font-black text-blue-700 font-mono">${formatRM(dailyAvgCost)}</p>
+                            <p class="text-[8px] text-blue-600">${isBm ? 'sehari' : 'per day'}</p>
+                        </div>
+                        <div class="p-2.5 bg-purple-50 border border-purple-200 rounded-lg">
+                            <p class="text-[9px] font-bold text-purple-600 uppercase">${isBm ? 'Purata Makanan' : 'Per Meal'}</p>
+                            <p class="text-base font-black text-purple-700 font-mono">${formatRM(perMealCost)}</p>
+                            <p class="text-[8px] text-purple-600">${isBm ? 'setiap hidangan' : 'avg cost'}</p>
+                        </div>
+                    </div>
                 </div>
-                ${state.lapaqTimeSpan === 'custom' ? `
-                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
-                        <span class="text-[9px] font-bold text-slate-500 uppercase block">${isBm ? 'Pilih Tarikh Dengan Kalendar:' : 'Date Search with Calendar:'}</span>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">From (Open)</label>
-                                <input type="date" id="lapaq-start-date" value="${state.lapaqStartDate}" max="${todayDateStr}" onchange="window.updateLaPaQCustomDates()" class="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
-                            </div>
-                            <div>
-                                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-0.5">To (Today)</label>
-                                <input type="date" id="lapaq-end-date" value="${state.lapaqEndDate}" max="${todayDateStr}" onchange="window.updateLaPaQCustomDates()" class="w-full text-xs p-2 bg-white border border-slate-200 rounded-lg font-bold text-slate-800">
-                            </div>
+
+                <!-- ===== CARD 2: 9 RNI Intake Bars (the indicator) ===== -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2 gap-2 flex-wrap">
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
+                        <div class="flex items-center space-x-2">
+                            ${periodMeals.length > 0
+                                ? `<span class="text-[9px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">🥘 ${periodMeals.length} ${isBm ? 'makanan' : 'meals'}</span>`
+                                : ''}
+                            <button onclick="window.openCreateMealModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm transition">＋ ${isBm ? 'Log Makanan' : 'Log Meal'}</button>
+                        </div>
+                    </div>
+                    <div class="space-y-2.5">
+                        ${rniMetrics.map(m => {
+                            const pct = Math.min(Math.round((m.current / m.target) * 100), 100);
+                            const displayCurrent = isMultiDay
+                                ? m.current.toLocaleString(undefined, { maximumFractionDigits: 1 })
+                                : m.current.toLocaleString();
+                            const totalSuffix = isMultiDay
+                                ? `<span class="text-[9px] text-slate-400 font-mono ml-1" title="${isBm ? 'Jumlah dalam tempoh' : 'Period total'}">Σ ${Math.round(m.totalLogged).toLocaleString()}</span>`
+                                : '';
+                            return `
+                                <div class="space-y-1">
+                                    <div class="flex justify-between text-xs font-semibold gap-2">
+                                        <span class="text-slate-700">${m.name}${isMultiDay ? ` <span class="text-[9px] text-slate-400 font-normal">/day</span>` : ''}</span>
+                                        <span class="text-slate-800 text-right whitespace-nowrap">
+                                            ${displayCurrent} / ${m.target.toLocaleString()}${m.unit}${isMultiDay ? '/day' : ''}
+                                            <span class="text-emerald-600 font-bold">(${pct}%)</span>
+                                            ${totalSuffix}
+                                        </span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                        <div class="${m.color} h-full transition-all duration-500" style="width: ${pct}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- ===== CARD 3: Daily Nutrition Report ===== -->
+                ${buildNutritionReport(rniMetrics, isBm, periodDayCount, periodMeals.length > 0)}
+
+                <!-- ===== CARD 4: Logged Meals list ===== -->
+                ${periodMeals.length > 0 ? `
+                    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
+                                <span>🥘</span>
+                                <span>${isBm ? 'Makanan Direkodkan' : 'Logged Meals'}</span>
+                            </h4>
+                            <span class="text-[9px] text-emerald-700 font-mono font-bold">${formatRM(periodCost)}</span>
+                        </div>
+                        <div class="space-y-1.5 max-h-56 overflow-y-auto">
+                            ${periodMeals.slice().reverse().map(m => `
+                                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-start gap-2">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center space-x-1.5 flex-wrap">
+                                            <span class="text-[8px] font-extrabold text-white bg-blue-500 px-1.5 py-0.5 rounded">${escHtml(m.type)}</span>
+                                            <span class="text-[11px] font-bold text-slate-800 truncate">${escHtml(m.name)}</span>
+                                            <span class="text-[8px] bg-emerald-100 text-emerald-700 px-1 py-0.5 rounded font-mono font-bold">${formatRM(getMealCost(m))}</span>
+                                        </div>
+                                        <p class="text-[9px] text-slate-500 font-mono mt-0.5">${m.date} • ${m.ingredients.length} ${isBm ? 'bahan' : 'ingredients'}</p>
+                                        <div class="flex flex-wrap gap-1 mt-1">
+                                            ${Object.entries(m.nutrients).filter(([k,v]) => v > 0).slice(0, 4).map(([k, v]) =>
+                                                `<span class="text-[8px] bg-white border border-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">${k}: ${v}${RNI_REFERENCE[k]?.unit || ''}</span>`
+                                            ).join('')}
+                                            ${Object.values(m.nutrients).filter(v => v > 0).length > 4 ? `<span class="text-[8px] text-slate-400 font-mono">+${Object.values(m.nutrients).filter(v => v > 0).length - 4} more</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <button onclick="window.deleteLoggedMeal(${m.id})" title="Delete meal" class="text-rose-500 hover:text-rose-600 text-xs font-bold shrink-0">✕</button>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                 ` : ''}
 
-                <!-- ===== COST SUMMARY CARD ===== -->
-                <div class="grid grid-cols-3 gap-2 pt-1">
-                    <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-                        <p class="text-[9px] font-bold text-emerald-600 uppercase">${isBm ? 'Jumlah Kos' : 'Total Spend'}</p>
-                        <p class="text-base font-black text-emerald-700 font-mono">${formatRM(periodCost)}</p>
-                        <p class="text-[8px] text-emerald-600">${periodMeals.length} ${isBm ? 'makanan' : 'meals'}</p>
-                    </div>
-                    <div class="p-2.5 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p class="text-[9px] font-bold text-blue-600 uppercase">${isBm ? 'Purata Harian' : 'Daily Avg'}</p>
-                        <p class="text-base font-black text-blue-700 font-mono">${formatRM(dailyAvgCost)}</p>
-                        <p class="text-[8px] text-blue-600">${isBm ? 'sehari' : 'per day'}</p>
-                    </div>
-                    <div class="p-2.5 bg-purple-50 border border-purple-200 rounded-lg">
-                        <p class="text-[9px] font-bold text-purple-600 uppercase">${isBm ? 'Purata Makanan' : 'Per Meal'}</p>
-                        <p class="text-base font-black text-purple-700 font-mono">${formatRM(perMealCost)}</p>
-                        <p class="text-[8px] text-purple-600">${isBm ? 'setiap hidangan' : 'avg cost'}</p>
-                    </div>
-                </div>
             </div>
+            ` : ''}
 
-            <!-- ===== CARD 2: 9 RNI Intake Bars (the indicator) ===== -->
-            <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-4">
+            <!-- ===== TAB: GROWTH ===== -->
+            ${activeTab === 'growth' ? `
+            <div class="mt-3 bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 ${isBm ? 'Pemeriksaan Kesihatan & Pertumbuhan Tahunan' : 'Annual Health & Growth Check'}</h3>
+                    <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
+                </div>
+
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                    <div class="flex justify-between items-center flex-wrap gap-1">
+                        <span class="text-[10px] font-bold text-slate-700 uppercase">${isBm ? 'Trend Pertumbuhan & BMI' : 'Growth & BMI Trend'}</span>
+                        <div class="flex items-center space-x-3 text-[9px] font-bold">
+                            <span class="flex items-center text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block mr-1"></span>${isBm ? 'Tinggi' : 'Height'}</span>
+                            <span class="flex items-center text-red-600"><span class="w-2 h-2 rounded-full bg-red-600 inline-block mr-1"></span>BMI</span>
+                            ${whoRef ? `<span class="flex items-center text-amber-700"><span class="w-2.5 h-1.5 rounded-sm bg-amber-400/60 border border-amber-500 inline-block mr-1"></span>${escHtml(whoRef.label)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        ${growthSvgContent}
+                    </div>
+
+                    ${whoStatus ? `
+                        <div class="flex items-start space-x-1.5 p-2 border rounded-lg ${whoStatus.cls}">
+                            <span class="text-xs shrink-0">${whoStatus.icon}</span>
+                            <p class="text-[10px] font-bold leading-snug">${whoStatus.text}</p>
+                        </div>
+                    ` : ''}
+
+                    ${whoRef ? `
+                        <p class="text-[9px] text-amber-700 font-mono text-center">
+                            ${isBm
+                                ? `WHO ${whoRef.age} thn · median ${whoRef.median} cm · jalur normal (±2 SD) ${whoRef.low}–${whoRef.high} cm`
+                                : `WHO ${whoRef.age} yrs · median ${whoRef.median} cm · normal band (±2 SD) ${whoRef.low}–${whoRef.high} cm`}
+                        </p>
+                    ` : ''}
+
+                    <p class="text-[10px] text-slate-500 italic text-center pt-1">
+                        ${state.selectedChild === 'maya'
+                            ? (isBm
+                                ? "Tinggi Maya berbanding umur sebelum ini di bawah skor-Z, tetapi menunjukkan peningkatan pada Julai 2025 dan kini berada pada trajektori yang sihat."
+                                : "Maya's height-for-age was previously below Z-score, but improved in July 2025 and is now on a healthy growth trajectory.")
+                            : (isBm
+                                ? `${child.name} mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.`
+                                : `${child.name} maintains a consistent healthy growth and stable BMI rate.`)
+                        }
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tinggi (cm)' : 'Height (cm)'}</label><input type="number" id="input-height" value="${child.height}" oninput="window.recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
+                    <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Berat (kg)' : 'Weight (kg)'}</label><input type="number" id="input-weight" value="${child.weight}" oninput="window.recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
+                </div>
+
+                <button onclick="window.recordGrowthMeasurement()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold py-2.5 rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
+                    <span class="text-sm">📏</span>
+                    <span>${isBm ? 'Rekod Berat & Tinggi' : 'Record Weight & Height'}</span>
+                </button>
+
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+                    <div class="flex justify-between"><span class="text-slate-500 font-semibold">BMI:</span><span id="res-bmi" class="font-bold text-slate-800">${child.bmi}</span></div>
+                    <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Status Bantut:' : 'Stunting Status:'}</span><span id="res-stunting" class="font-bold text-emerald-600">${child.stuntingStatus}</span></div>
+                    <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
+                </div>
+
+                ${growthRecordsForChild.length > 0 ? `
+                    <div class="pt-3 border-t border-slate-100 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-[10px] font-extrabold text-slate-600 uppercase tracking-wider">📏 ${isBm ? 'Rekod Pertumbuhan' : 'Growth Records'}</h4>
+                            <button onclick="window.resetGrowthData()" class="text-[9px] font-bold text-rose-500 hover:text-rose-600 px-2 py-0.5 rounded border border-rose-200 transition">Reset Chart Data</button>
+                        </div>
+                        <div class="space-y-1.5 max-h-48 overflow-y-auto">
+                            ${growthRecordsForChild.map((r, idx) => `
+                                <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-start gap-2">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center space-x-1.5 flex-wrap">
+                                            ${idx === 0 ? `<span class="text-[8px] font-extrabold text-white bg-emerald-500 px-1.5 py-0.5 rounded">LATEST</span>` : ''}
+                                            <span class="text-[11px] font-extrabold text-slate-800">${r.height} cm · ${r.weight} kg</span>
+                                            <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">BMI ${r.bmi}</span>
+                                        </div>
+                                        <p class="text-[9px] text-slate-500 font-mono mt-0.5">${r.date}</p>
+                                        <div class="flex flex-wrap gap-1 mt-1">
+                                            <span class="text-[8px] bg-white border border-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">Stunting: ${escHtml(r.stuntingStatus)}</span>
+                                            <span class="text-[8px] bg-white border border-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">Wasting: ${escHtml(r.wastingStatus)}</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="window.deleteGrowthRecord(${r.id})" title="Delete record" class="text-rose-500 hover:text-rose-600 text-xs font-bold shrink-0">✕</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+            ` : ''}
+
+            <!-- ===== TAB: HISTORY ===== -->
+            ${activeTab === 'history' ? `
+            <div class="mt-3 bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
                 <div class="flex justify-between items-center border-b border-slate-100 pb-2 gap-2 flex-wrap">
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">${isBm ? 'Pematuhan 9 Bar Ambilan RNI' : '9 RNI Intake Bars Compliance'}</h3>
-                    <div class="flex items-center space-x-2">
-                        ${periodMeals.length > 0
-                            ? `<span class="text-[9px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">🥘 ${periodMeals.length} ${isBm ? 'makanan' : 'meals'}</span>`
-                            : ''}
-                        <button onclick="window.openCreateMealModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-sm transition">＋ ${isBm ? 'Log Makanan' : 'Log Meal'}</button>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
+                            <span>📜</span>
+                            <span>${isBm ? 'Sejarah Makanan 7 Hari' : '7-Day Meal History'}</span>
+                        </h3>
+                        <p class="text-[10px] text-slate-400 font-mono mt-0.5">${sevenDayRangeLabel}</p>
+                    </div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${totalMainMeals7}/${targetMainMeals7} ${isBm ? 'hidangan' : 'meals'}</span>
+                        <button onclick="window.resetSampleMeals()" title="Reset & reload sample demo data (today will remain empty)" class="text-[10px] font-bold text-slate-400 hover:text-rose-500 px-1.5 py-0.5 rounded border border-slate-200 hover:border-rose-300 transition">↻</button>
                     </div>
                 </div>
-                <div class="space-y-2.5">
-                    ${rniMetrics.map(m => {
-                        const pct = Math.min(Math.round((m.current / m.target) * 100), 100);
-                        const displayCurrent = isMultiDay
-                            ? m.current.toLocaleString(undefined, { maximumFractionDigits: 1 })
-                            : m.current.toLocaleString();
-                        const totalSuffix = isMultiDay
-                            ? `<span class="text-[9px] text-slate-400 font-mono ml-1" title="${isBm ? 'Jumlah dalam tempoh' : 'Period total'}">Σ ${Math.round(m.totalLogged).toLocaleString()}</span>`
-                            : '';
+
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                        <p class="text-[9px] font-bold text-emerald-600 uppercase">${isBm ? 'Hari Penuh' : 'Full Days'}</p>
+                        <p class="text-lg font-black text-emerald-700">${fullDays7}<span class="text-xs text-emerald-500">/${last7Days.length}</span></p>
+                        <p class="text-[8px] text-emerald-600">3/3 meals</p>
+                    </div>
+                    <div class="p-2 bg-amber-50 border border-amber-200 rounded-lg">
+                        <p class="text-[9px] font-bold text-amber-600 uppercase">${isBm ? 'Sebahagian' : 'Partial'}</p>
+                        <p class="text-lg font-black text-amber-700">${partialDays7}</p>
+                        <p class="text-[8px] text-amber-600">1–2 meals</p>
+                    </div>
+                    <div class="p-2 bg-rose-50 border border-rose-200 rounded-lg">
+                        <p class="text-[9px] font-bold text-rose-600 uppercase">${isBm ? 'Tiada' : 'Missed'}</p>
+                        <p class="text-lg font-black text-rose-700">${emptyDays7}</p>
+                        <p class="text-[8px] text-rose-600">0 meals</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    ${ALL_MEAL_TYPES.map(type => {
+                        const count = perTypeCount7[type];
+                        const pct = Math.round((count / last7Days.length) * 100);
+                        const color = pct >= 80 ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                            : pct >= 50 ? 'text-amber-700 bg-amber-50 border-amber-200'
+                            : 'text-rose-700 bg-rose-50 border-rose-200';
+                        const barColor = pct >= 80 ? 'bg-emerald-500' : pct >= 50 ? 'bg-amber-500' : 'bg-rose-500';
                         return `
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-xs font-semibold gap-2">
-                                    <span class="text-slate-700">${m.name}${isMultiDay ? ` <span class="text-[9px] text-slate-400 font-normal">/day</span>` : ''}</span>
-                                    <span class="text-slate-800 text-right whitespace-nowrap">
-                                        ${displayCurrent} / ${m.target.toLocaleString()}${m.unit}${isMultiDay ? '/day' : ''}
-                                        <span class="text-emerald-600 font-bold">(${pct}%)</span>
-                                        ${totalSuffix}
-                                    </span>
+                            <div class="p-2 border rounded-lg ${color}">
+                                <div class="flex justify-between items-center">
+                                    <p class="text-[10px] font-bold uppercase">${mealTypeIcon[type]} ${mealTypeLabel[type]}</p>
+                                    <p class="text-[10px] font-mono font-black">${count}/${last7Days.length}</p>
                                 </div>
-                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                                    <div class="${m.color} h-full transition-all duration-500" style="width: ${pct}%"></div>
+                                <div class="w-full bg-white/60 h-1.5 rounded-full overflow-hidden mt-1">
+                                    <div class="${barColor} h-full" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                    ${last7Entries.map(({ day, byType, coverage }, idx) => {
+                        const isToday = idx === 0;
+                        const covBg = coverage === 3 ? 'bg-emerald-500' : coverage === 2 ? 'bg-amber-500' : coverage === 1 ? 'bg-orange-500' : 'bg-rose-500';
+                        const covBorder = coverage === 3 ? 'border-emerald-200' : coverage === 2 ? 'border-amber-200' : coverage === 1 ? 'border-orange-200' : 'border-rose-200';
+                        const todayHighlight = isToday ? 'ring-2 ring-emerald-400/40 shadow-md' : '';
+                        const dayCost = Object.values(byType).reduce((s, m) => s + getMealCost(m), 0);
+                        return `
+                            <div class="border ${covBorder} ${todayHighlight} rounded-lg overflow-hidden bg-white">
+                                <div class="px-2.5 py-1.5 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                                    <div class="flex items-center space-x-2">
+                                        ${isToday ? `<span class="text-[8px] font-extrabold text-white bg-emerald-500 px-1.5 py-0.5 rounded">TODAY</span>` : ''}
+                                        <span class="text-[11px] font-extrabold text-slate-800">${formatDisplayDate(day, isBm)}</span>
+                                        <span class="text-[8px] font-mono font-bold text-white ${covBg} px-1.5 py-0.5 rounded">${coverage}/3</span>
+                                    </div>
+                                    <span class="text-[9px] font-mono text-emerald-700 font-bold">${formatRM(dayCost)}</span>
+                                </div>
+                                <div class="divide-y divide-slate-100">
+                                    ${ALL_MEAL_TYPES.map(type => {
+                                        const meal = byType[type];
+                                        if (meal) {
+                                            const kcal = meal.nutrients?.Calories || 0;
+                                            return `
+                                                <div class="px-2.5 py-1.5 flex items-center justify-between hover:bg-emerald-50/40 transition">
+                                                    <div class="flex items-center space-x-2 min-w-0 flex-1">
+                                                        <span class="text-sm shrink-0">${mealTypeIcon[type]}</span>
+                                                        <div class="min-w-0">
+                                                            <div class="flex items-center space-x-1.5 flex-wrap">
+                                                                <span class="text-[9px] font-bold text-emerald-600">${mealTypeLabel[type]}</span>
+                                                                <span class="text-[10px] font-bold text-slate-800 truncate">${escHtml(meal.name)}</span>
+                                                                <span class="text-[8px] bg-emerald-100 text-emerald-700 px-1 py-0.5 rounded font-mono font-bold">${formatRM(getMealCost(meal))}</span>
+                                                            </div>
+                                                            <p class="text-[8px] text-slate-400 font-mono">${meal.ingredients.length} ${isBm ? 'bahan' : 'ing.'}${kcal > 0 ? ' · ' + kcal + ' kcal' : ''}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-center space-x-1 shrink-0 ml-2">
+                                                        <button onclick="window.viewLoggedMeal(${meal.id})" title="View details" class="text-blue-500 hover:text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded hover:bg-blue-50 transition">👁</button>
+                                                        <button onclick="window.deleteLoggedMeal(${meal.id})" title="Delete" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold px-1.5 py-0.5 rounded hover:bg-rose-50 transition">✕</button>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }
+                                        return `
+                                            <div class="px-2.5 py-1.5 flex items-center justify-between text-slate-400">
+                                                <div class="flex items-center space-x-2">
+                                                    <span class="text-sm shrink-0 opacity-40">${mealTypeIcon[type]}</span>
+                                                    <span class="text-[10px] italic">${mealTypeLabel[type]} — ${isBm ? 'tidak direkod' : 'not logged'}</span>
+                                                </div>
+                                                <button onclick="window.openCreateMealModal('${day}', '${type}')" class="text-[9px] font-bold text-emerald-600 hover:text-emerald-700 px-2 py-0.5 border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 rounded transition">＋ ${isBm ? 'Log' : 'Log'}</button>
+                                            </div>
+                                        `;
+                                    }).join('')}
                                 </div>
                             </div>
                         `;
                     }).join('')}
                 </div>
             </div>
-
-            <!-- ===== CARD 3: Daily Nutrition Report ===== -->
-            ${buildNutritionReport(rniMetrics, isBm, periodDayCount, periodMeals.length > 0)}
-
-            <!-- ===== CARD 4: Logged Meals list ===== -->
-            ${periodMeals.length > 0 ? `
-                <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
-                            <span>🥘</span>
-                            <span>${isBm ? 'Makanan Direkodkan' : 'Logged Meals'}</span>
-                        </h4>
-                        <span class="text-[9px] text-emerald-700 font-mono font-bold">${formatRM(periodCost)}</span>
-                    </div>
-                    <div class="space-y-1.5 max-h-56 overflow-y-auto">
-                        ${periodMeals.slice().reverse().map(m => `
-                            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-start gap-2">
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center space-x-1.5 flex-wrap">
-                                        <span class="text-[8px] font-extrabold text-white bg-blue-500 px-1.5 py-0.5 rounded">${escHtml(m.type)}</span>
-                                        <span class="text-[11px] font-bold text-slate-800 truncate">${escHtml(m.name)}</span>
-                                        <span class="text-[8px] bg-emerald-100 text-emerald-700 px-1 py-0.5 rounded font-mono font-bold">${formatRM(getMealCost(m))}</span>
-                                    </div>
-                                    <p class="text-[9px] text-slate-500 font-mono mt-0.5">${m.date} • ${m.ingredients.length} ${isBm ? 'bahan' : 'ingredients'}</p>
-                                    <div class="flex flex-wrap gap-1 mt-1">
-                                        ${Object.entries(m.nutrients).filter(([k,v]) => v > 0).slice(0, 4).map(([k, v]) =>
-                                            `<span class="text-[8px] bg-white border border-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">${k}: ${v}${RNI_REFERENCE[k]?.unit || ''}</span>`
-                                        ).join('')}
-                                        ${Object.values(m.nutrients).filter(v => v > 0).length > 4 ? `<span class="text-[8px] text-slate-400 font-mono">+${Object.values(m.nutrients).filter(v => v > 0).length - 4} more</span>` : ''}
-                                    </div>
-                                </div>
-                                <button onclick="window.deleteLoggedMeal(${m.id})" title="Delete meal" class="text-rose-500 hover:text-rose-600 text-xs font-bold shrink-0">✕</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
             ` : ''}
 
-        </div>
-        ` : ''}
+            <!-- ===== CREATE MEAL MODAL (always present) ===== -->
+            <div id="modal-create-meal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
+                <div class="bg-white rounded-2xl max-w-2xl w-full p-5 space-y-4 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+                    <button onclick="window.closeCreateMealModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 font-bold p-1">✕</button>
 
-        <!-- ===== TAB: GROWTH ===== -->
-        ${activeTab === 'growth' ? `
-        <div class="mt-3 bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center">🩺 ${isBm ? 'Pemeriksaan Kesihatan & Pertumbuhan Tahunan' : 'Annual Health & Growth Check'}</h3>
-                <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">WHO Standards</span>
-            </div>
-
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                <div class="flex justify-between items-center flex-wrap gap-1">
-                    <span class="text-[10px] font-bold text-slate-700 uppercase">${isBm ? 'Trend Pertumbuhan & BMI' : 'Growth & BMI Trend'}</span>
-                    <div class="flex items-center space-x-3 text-[9px] font-bold">
-                        <span class="flex items-center text-blue-600"><span class="w-2 h-2 rounded-full bg-blue-600 inline-block mr-1"></span>${isBm ? 'Tinggi' : 'Height'}</span>
-                        <span class="flex items-center text-red-600"><span class="w-2 h-2 rounded-full bg-red-600 inline-block mr-1"></span>BMI</span>
-                        ${whoRef ? `<span class="flex items-center text-amber-700"><span class="w-2.5 h-1.5 rounded-sm bg-amber-400/60 border border-amber-500 inline-block mr-1"></span>${escHtml(whoRef.label)}</span>` : ''}
+                    <div class="flex items-center space-x-3 border-b border-slate-200 pb-3">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl font-extrabold">🍽️</div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">${isBm ? 'Rekod Makanan Baru' : 'Log New Meal'}</h3>
+                            <p class="text-[10px] text-slate-500">${isBm ? 'Nama makanan · bahan · ukuran · kiraan mikronutrien · kos' : 'Meal name · ingredients · measurement · micronutrient count · cost'}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="pt-2">
-                    ${growthSvgContent}
-                </div>
 
-                ${whoStatus ? `
-                    <div class="flex items-start space-x-1.5 p-2 border rounded-lg ${whoStatus.cls}">
-                        <span class="text-xs shrink-0">${whoStatus.icon}</span>
-                        <p class="text-[10px] font-bold leading-snug">${whoStatus.text}</p>
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-2.5 space-y-1.5">
+                        <div class="flex justify-between items-center gap-2 flex-wrap">
+                            <label class="block text-[9px] font-extrabold text-emerald-700 uppercase tracking-wider">⚡ Quick Load Sample Menu</label>
+                            <span class="text-[8px] font-mono text-emerald-600">Auto-fills name, ingredients, nutrients &amp; costs</span>
+                        </div>
+                        <select id="sample-meal-picker" onchange="window.loadSampleMealTemplate(this.value)" class="w-full bg-white border border-emerald-300 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500 cursor-pointer">
+                            <option value="">— Choose a sample meal to auto-fill —</option>
+                            ${Object.entries(SAMPLE_MEAL_TEMPLATES).map(([type, templates]) => `
+                                <optgroup label="${mealTypeIcon[type] || '🍽️'} ${mealTypeLabel[type] || type}">
+                                    ${templates.map((t, i) => {
+                                        const tplCost = t.ingredients.reduce((s, ing) => s + (Number(ing.cost) || 0), 0);
+                                        return `<option value="${type}:${i}">${escHtml(t.name)} · ${t.nutrients.Calories} kcal · ${formatRM(tplCost)}</option>`;
+                                    }).join('')}
+                                </optgroup>
+                            `).join('')}
+                        </select>
                     </div>
-                ` : ''}
 
-                ${whoRef ? `
-                    <p class="text-[9px] text-amber-700 font-mono text-center">
-                        ${isBm
-                            ? `WHO ${whoRef.age} thn · median ${whoRef.median} cm · jalur normal (±2 SD) ${whoRef.low}–${whoRef.high} cm`
-                            : `WHO ${whoRef.age} yrs · median ${whoRef.median} cm · normal band (±2 SD) ${whoRef.low}–${whoRef.high} cm`}
-                    </p>
-                ` : ''}
-
-                <p class="text-[10px] text-slate-500 italic text-center pt-1">
-                    ${state.selectedChild === 'maya'
-                        ? (isBm
-                            ? "Tinggi Maya berbanding umur sebelum ini di bawah skor-Z, tetapi menunjukkan peningkatan pada Julai 2025 dan kini berada pada trajektori yang sihat."
-                            : "Maya's height-for-age was previously below Z-score, but improved in July 2025 and is now on a healthy growth trajectory.")
-                        : (isBm
-                            ? `${child.name} mengekalkan pertumbuhan yang sihat dan kadar BMI yang stabil.`
-                            : `${child.name} maintains a consistent healthy growth and stable BMI rate.`)
-                    }
-                </p>
-            </div>
-            <div class="grid grid-cols-2 gap-2 pt-1">
-                <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tinggi (cm)' : 'Height (cm)'}</label><input type="number" id="input-height" value="${child.height}" oninput="window.recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
-                <div><label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Berat (kg)' : 'Weight (kg)'}</label><input type="number" id="input-weight" value="${child.weight}" oninput="window.recalculateGrowthMetrics()" class="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-lg font-bold"></div>
-            </div>
-
-            <button onclick="window.recordGrowthMeasurement()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold py-2.5 rounded-lg shadow-sm transition flex items-center justify-center space-x-2">
-                <span class="text-sm">📏</span>
-                <span>${isBm ? 'Rekod Berat & Tinggi' : 'Record Weight & Height'}</span>
-            </button>
-
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs">
-                <div class="flex justify-between"><span class="text-slate-500 font-semibold">BMI:</span><span id="res-bmi" class="font-bold text-slate-800">${child.bmi}</span></div>
-                <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Status Bantut:' : 'Stunting Status:'}</span><span id="res-stunting" class="font-bold text-emerald-600">${child.stuntingStatus}</span></div>
-                <div class="flex justify-between"><span class="text-slate-500 font-semibold">${isBm ? 'Pembaziran / Obesiti:' : 'Wasting / Obesity:'}</span><span id="res-wasting" class="font-bold text-emerald-600">${child.wastingStatus}</span></div>
-            </div>
-
-            ${growthRecordsForChild.length > 0 ? `
-                <div class="pt-3 border-t border-slate-100 space-y-2">
-                    <div class="flex justify-between items-center">
-                        <h4 class="text-[10px] font-extrabold text-slate-600 uppercase tracking-wider">📏 ${isBm ? 'Rekod Pertumbuhan' : 'Growth Records'}</h4>
-                        <button onclick="window.resetGrowthData()" class="text-[9px] font-bold text-rose-500 hover:text-rose-600 px-2 py-0.5 rounded border border-rose-200 transition">Reset Chart Data</button>
-                    </div>
-                    <div class="space-y-1.5 max-h-48 overflow-y-auto">
-                        ${growthRecordsForChild.map((r, idx) => `
-                            <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-start gap-2">
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center space-x-1.5 flex-wrap">
-                                        ${idx === 0 ? `<span class="text-[8px] font-extrabold text-white bg-emerald-500 px-1.5 py-0.5 rounded">LATEST</span>` : ''}
-                                        <span class="text-[11px] font-extrabold text-slate-800">${r.height} cm · ${r.weight} kg</span>
-                                        <span class="text-[9px] bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded">BMI ${r.bmi}</span>
-                                    </div>
-                                    <p class="text-[9px] text-slate-500 font-mono mt-0.5">${r.date}</p>
-                                    <div class="flex flex-wrap gap-1 mt-1">
-                                        <span class="text-[8px] bg-white border border-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">Stunting: ${escHtml(r.stuntingStatus)}</span>
-                                        <span class="text-[8px] bg-white border border-slate-200 text-slate-600 px-1 py-0.5 rounded font-mono">Wasting: ${escHtml(r.wastingStatus)}</span>
-                                    </div>
-                                </div>
-                                <button onclick="window.deleteGrowthRecord(${r.id})" title="Delete record" class="text-rose-500 hover:text-rose-600 text-xs font-bold shrink-0">✕</button>
+                    <form onsubmit="window.saveNewMeal(event)" class="space-y-3 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                            <div class="sm:col-span-2">
+                                <label class="block text-[9px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Makanan' : 'Meal Name'}</label>
+                                <input type="text" id="new-meal-name" required placeholder="e.g. Nasi Lemak Ikan Bilis" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500">
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            ` : ''}
-        </div>
-        ` : ''}
-
-        <!-- ===== TAB: HISTORY ===== -->
-        ${activeTab === 'history' ? `
-        <div class="mt-3 bg-white rounded-xl p-4 shadow-sm border border-slate-100 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-2 gap-2 flex-wrap">
-                <div>
-                    <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center space-x-1">
-                        <span>📜</span>
-                        <span>${isBm ? 'Sejarah Makanan 7 Hari' : '7-Day Meal History'}</span>
-                    </h3>
-                    <p class="text-[10px] text-slate-400 font-mono mt-0.5">${sevenDayRangeLabel}</p>
-                </div>
-                <div class="flex items-center space-x-1.5">
-                    <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full">${totalMainMeals7}/${targetMainMeals7} ${isBm ? 'hidangan' : 'meals'}</span>
-                    <button onclick="window.resetSampleMeals()" title="Reset & reload sample demo data (today will remain empty)" class="text-[10px] font-bold text-slate-400 hover:text-rose-500 px-1.5 py-0.5 rounded border border-slate-200 hover:border-rose-300 transition">↻</button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-3 gap-2">
-                <div class="p-2 bg-emerald-50 border border-emerald-200 rounded-lg">
-                    <p class="text-[9px] font-bold text-emerald-600 uppercase">${isBm ? 'Hari Penuh' : 'Full Days'}</p>
-                    <p class="text-lg font-black text-emerald-700">${fullDays7}<span class="text-xs text-emerald-500">/${last7Days.length}</span></p>
-                    <p class="text-[8px] text-emerald-600">3/3 meals</p>
-                </div>
-                <div class="p-2 bg-amber-50 border border-amber-200 rounded-lg">
-                    <p class="text-[9px] font-bold text-amber-600 uppercase">${isBm ? 'Sebahagian' : 'Partial'}</p>
-                    <p class="text-lg font-black text-amber-700">${partialDays7}</p>
-                    <p class="text-[8px] text-amber-600">1–2 meals</p>
-                </div>
-                <div class="p-2 bg-rose-50 border border-rose-200 rounded-lg">
-                    <p class="text-[9px] font-bold text-rose-600 uppercase">${isBm ? 'Tiada' : 'Missed'}</p>
-                    <p class="text-lg font-black text-rose-700">${emptyDays7}</p>
-                    <p class="text-[8px] text-rose-600">0 meals</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                ${ALL_MEAL_TYPES.map(type => {
-                    const count = perTypeCount7[type];
-                    const pct = Math.round((count / last7Days.length) * 100);
-                    const color = pct >= 80 ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
-                        : pct >= 50 ? 'text-amber-700 bg-amber-50 border-amber-200'
-                        : 'text-rose-700 bg-rose-50 border-rose-200';
-                    const barColor = pct >= 80 ? 'bg-emerald-500' : pct >= 50 ? 'bg-amber-500' : 'bg-rose-500';
-                    return `
-                        <div class="p-2 border rounded-lg ${color}">
-                            <div class="flex justify-between items-center">
-                                <p class="text-[10px] font-bold uppercase">${mealTypeIcon[type]} ${mealTypeLabel[type]}</p>
-                                <p class="text-[10px] font-mono font-black">${count}/${last7Days.length}</p>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Jenis' : 'Meal Type'}</label>
+                                <select id="new-meal-type" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500">
+                                    <option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option>
+                                </select>
                             </div>
-                            <div class="w-full bg-white/60 h-1.5 rounded-full overflow-hidden mt-1">
-                                <div class="${barColor} h-full" style="width: ${pct}%"></div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tarikh' : 'Date'}</label>
+                                <input type="date" id="new-meal-date" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500">
                             </div>
                         </div>
-                    `;
-                }).join('')}
-            </div>
 
-            <div class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                ${last7Entries.map(({ day, byType, coverage }, idx) => {
-                    const isToday = idx === 0;
-                    const covBg = coverage === 3 ? 'bg-emerald-500' : coverage === 2 ? 'bg-amber-500' : coverage === 1 ? 'bg-orange-500' : 'bg-rose-500';
-                    const covBorder = coverage === 3 ? 'border-emerald-200' : coverage === 2 ? 'border-amber-200' : coverage === 1 ? 'border-orange-200' : 'border-rose-200';
-                    const todayHighlight = isToday ? 'ring-2 ring-emerald-400/40 shadow-md' : '';
-                    const dayCost = Object.values(byType).reduce((s, m) => s + getMealCost(m), 0);
-                    return `
-                        <div class="border ${covBorder} ${todayHighlight} rounded-lg overflow-hidden bg-white">
-                            <div class="px-2.5 py-1.5 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
-                                <div class="flex items-center space-x-2">
-                                    ${isToday ? `<span class="text-[8px] font-extrabold text-white bg-emerald-500 px-1.5 py-0.5 rounded">TODAY</span>` : ''}
-                                    <span class="text-[11px] font-extrabold text-slate-800">${formatDisplayDate(day, isBm)}</span>
-                                    <span class="text-[8px] font-mono font-bold text-white ${covBg} px-1.5 py-0.5 rounded">${coverage}/3</span>
-                                </div>
-                                <span class="text-[9px] font-mono text-emerald-700 font-bold">${formatRM(dayCost)}</span>
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[9px] font-bold text-slate-500 uppercase">${isBm ? 'Bahan, Ukuran & Kos' : 'Ingredients, Measurement & Cost'}</label>
+                                <button type="button" onclick="window.addMealIngredientRow()" class="text-[9px] font-extrabold text-emerald-600 hover:text-emerald-700 border border-emerald-300 bg-emerald-50 px-2 py-0.5 rounded transition">＋ ${isBm ? 'Tambah Bahan' : 'Add Ingredient'}</button>
                             </div>
-                            <div class="divide-y divide-slate-100">
-                                ${ALL_MEAL_TYPES.map(type => {
-                                    const meal = byType[type];
-                                    if (meal) {
-                                        const kcal = meal.nutrients?.Calories || 0;
-                                        return `
-                                            <div class="px-2.5 py-1.5 flex items-center justify-between hover:bg-emerald-50/40 transition">
-                                                <div class="flex items-center space-x-2 min-w-0 flex-1">
-                                                    <span class="text-sm shrink-0">${mealTypeIcon[type]}</span>
-                                                    <div class="min-w-0">
-                                                        <div class="flex items-center space-x-1.5 flex-wrap">
-                                                            <span class="text-[9px] font-bold text-emerald-600">${mealTypeLabel[type]}</span>
-                                                            <span class="text-[10px] font-bold text-slate-800 truncate">${escHtml(meal.name)}</span>
-                                                            <span class="text-[8px] bg-emerald-100 text-emerald-700 px-1 py-0.5 rounded font-mono font-bold">${formatRM(getMealCost(meal))}</span>
-                                                        </div>
-                                                        <p class="text-[8px] text-slate-400 font-mono">${meal.ingredients.length} ${isBm ? 'bahan' : 'ing.'}${kcal > 0 ? ' · ' + kcal + ' kcal' : ''}</p>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-center space-x-1 shrink-0 ml-2">
-                                                    <button onclick="window.viewLoggedMeal(${meal.id})" title="View details" class="text-blue-500 hover:text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded hover:bg-blue-50 transition">👁</button>
-                                                    <button onclick="window.deleteLoggedMeal(${meal.id})" title="Delete" class="text-rose-500 hover:text-rose-700 text-[10px] font-bold px-1.5 py-0.5 rounded hover:bg-rose-50 transition">✕</button>
-                                                </div>
-                                            </div>
-                                        `;
-                                    }
+                            <div class="overflow-x-auto pb-1">
+                                <div class="min-w-[520px]">
+                                    <div class="grid grid-cols-12 gap-1.5 text-[8px] font-bold uppercase text-slate-400 px-1 mb-1">
+                                        <span class="col-span-4">${isBm ? 'Bahan' : 'Ingredient'}</span>
+                                        <span class="col-span-1">${isBm ? 'Kuantiti' : 'Qty'}</span>
+                                        <span class="col-span-2">${isBm ? 'Unit' : 'Unit'}</span>
+                                        <span class="col-span-2">${isBm ? 'Mikro' : 'Key Micro'}</span>
+                                        <span class="col-span-2 text-emerald-600">${isBm ? 'Kos (RM)' : 'Cost (RM)'}</span>
+                                        <span class="col-span-1"></span>
+                                    </div>
+                                    <div id="meal-ingredient-rows" class="space-y-1.5 max-h-52 overflow-y-auto pr-1"></div>
+                                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 px-1">
+                                        <span class="text-[9px] font-bold text-slate-500 uppercase">${isBm ? 'Jumlah Kos Makanan' : 'Total Meal Cost'}</span>
+                                        <span id="meal-cost-total" class="text-[12px] font-black text-emerald-700 font-mono">RM 0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[9px] font-bold text-slate-500 uppercase">${isBm ? 'Kiraan Mikronutrien' : 'Micronutrient Count'}</label>
+                                <span class="text-[8px] font-mono text-slate-400">${isBm ? '% daripada RNI harian' : '% of daily RNI'}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-1.5">
+                                ${Object.keys(RNI_REFERENCE).map(k => {
+                                    const s = mealSlug(k);
                                     return `
-                                        <div class="px-2.5 py-1.5 flex items-center justify-between text-slate-400">
-                                            <div class="flex items-center space-x-2">
-                                                <span class="text-sm shrink-0 opacity-40">${mealTypeIcon[type]}</span>
-                                                <span class="text-[10px] italic">${mealTypeLabel[type]} — ${isBm ? 'tidak direkod' : 'not logged'}</span>
-                                            </div>
-                                            <button onclick="window.openCreateMealModal('${day}', '${type}')" class="text-[9px] font-bold text-emerald-600 hover:text-emerald-700 px-2 py-0.5 border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 rounded transition">＋ ${isBm ? 'Log' : 'Log'}</button>
-                                        </div>
+                                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
+                                        <label class="block text-[8px] font-bold text-slate-600 truncate">${k} <span class="text-slate-400 font-mono">(${RNI_REFERENCE[k].unit})</span></label>
+                                        <input type="number" min="0" step="0.1" id="meal-mn-${s}" oninput="window.updateMealNutrientBadges()" placeholder="0" class="w-full bg-white border border-slate-200 rounded px-1.5 py-1 text-[10px] font-mono text-slate-800 focus:outline-none focus:border-emerald-500">
+                                        <span id="meal-mnpct-${s}" class="block text-[8px] font-mono text-slate-400">0% RNI</span>
+                                    </div>
                                     `;
                                 }).join('')}
                             </div>
                         </div>
-                    `;
-                }).join('')}
+
+                        <div class="pt-2 flex justify-end space-x-2 border-t border-slate-200">
+                            <button type="button" onclick="window.closeCreateMealModal()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600">${isBm ? 'Batal' : 'Cancel'}</button>
+                            <button type="submit" class="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold shadow-sm">${isBm ? 'Simpan Makanan' : 'Save Meal'}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        ` : ''}
-
-        <!-- ===== CREATE MEAL MODAL (always present) ===== -->
-        <div id="modal-create-meal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
-            <div class="bg-white rounded-2xl max-w-2xl w-full p-5 space-y-4 shadow-2xl relative max-h-[92vh] overflow-y-auto">
-                <button onclick="window.closeCreateMealModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 font-bold p-1">✕</button>
-
-                <div class="flex items-center space-x-3 border-b border-slate-200 pb-3">
-                    <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl font-extrabold">🍽️</div>
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800">${isBm ? 'Rekod Makanan Baru' : 'Log New Meal'}</h3>
-                        <p class="text-[10px] text-slate-500">${isBm ? 'Nama makanan · bahan · ukuran · kiraan mikronutrien · kos' : 'Meal name · ingredients · measurement · micronutrient count · cost'}</p>
-                    </div>
-                </div>
-
-                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-2.5 space-y-1.5">
-                    <div class="flex justify-between items-center gap-2 flex-wrap">
-                        <label class="block text-[9px] font-extrabold text-emerald-700 uppercase tracking-wider">⚡ Quick Load Sample Menu</label>
-                        <span class="text-[8px] font-mono text-emerald-600">Auto-fills name, ingredients, nutrients &amp; costs</span>
-                    </div>
-                    <select id="sample-meal-picker" onchange="window.loadSampleMealTemplate(this.value)" class="w-full bg-white border border-emerald-300 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500 cursor-pointer">
-                        <option value="">— Choose a sample meal to auto-fill —</option>
-                        ${Object.entries(SAMPLE_MEAL_TEMPLATES).map(([type, templates]) => `
-                            <optgroup label="${mealTypeIcon[type] || '🍽️'} ${mealTypeLabel[type] || type}">
-                                ${templates.map((t, i) => {
-                                    const tplCost = t.ingredients.reduce((s, ing) => s + (Number(ing.cost) || 0), 0);
-                                    return `<option value="${type}:${i}">${escHtml(t.name)} · ${t.nutrients.Calories} kcal · ${formatRM(tplCost)}</option>`;
-                                }).join('')}
-                            </optgroup>
-                        `).join('')}
-                    </select>
-                </div>
-
-                <form onsubmit="window.saveNewMeal(event)" class="space-y-3 text-xs">
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                        <div class="sm:col-span-2">
-                            <label class="block text-[9px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Nama Makanan' : 'Meal Name'}</label>
-                            <input type="text" id="new-meal-name" required placeholder="e.g. Nasi Lemak Ikan Bilis" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-[9px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Jenis' : 'Meal Type'}</label>
-                            <select id="new-meal-type" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500">
-                                <option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[9px] font-bold text-slate-500 uppercase mb-1">${isBm ? 'Tarikh' : 'Date'}</label>
-                            <input type="date" id="new-meal-date" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none focus:border-emerald-500">
-                        </div>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <div class="flex justify-between items-center">
-                            <label class="text-[9px] font-bold text-slate-500 uppercase">${isBm ? 'Bahan, Ukuran & Kos' : 'Ingredients, Measurement & Cost'}</label>
-                            <button type="button" onclick="window.addMealIngredientRow()" class="text-[9px] font-extrabold text-emerald-600 hover:text-emerald-700 border border-emerald-300 bg-emerald-50 px-2 py-0.5 rounded transition">＋ ${isBm ? 'Tambah Bahan' : 'Add Ingredient'}</button>
-                        </div>
-                        <div class="overflow-x-auto pb-1">
-                            <div class="min-w-[520px]">
-                                <div class="grid grid-cols-12 gap-1.5 text-[8px] font-bold uppercase text-slate-400 px-1 mb-1">
-                                    <span class="col-span-4">${isBm ? 'Bahan' : 'Ingredient'}</span>
-                                    <span class="col-span-1">${isBm ? 'Kuantiti' : 'Qty'}</span>
-                                    <span class="col-span-2">${isBm ? 'Unit' : 'Unit'}</span>
-                                    <span class="col-span-2">${isBm ? 'Mikro' : 'Key Micro'}</span>
-                                    <span class="col-span-2 text-emerald-600">${isBm ? 'Kos (RM)' : 'Cost (RM)'}</span>
-                                    <span class="col-span-1"></span>
-                                </div>
-                                <div id="meal-ingredient-rows" class="space-y-1.5 max-h-52 overflow-y-auto pr-1"></div>
-                                <div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 px-1">
-                                    <span class="text-[9px] font-bold text-slate-500 uppercase">${isBm ? 'Jumlah Kos Makanan' : 'Total Meal Cost'}</span>
-                                    <span id="meal-cost-total" class="text-[12px] font-black text-emerald-700 font-mono">RM 0.00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <div class="flex justify-between items-center">
-                            <label class="text-[9px] font-bold text-slate-500 uppercase">${isBm ? 'Kiraan Mikronutrien' : 'Micronutrient Count'}</label>
-                            <span class="text-[8px] font-mono text-slate-400">${isBm ? '% daripada RNI harian' : '% of daily RNI'}</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-1.5">
-                            ${Object.keys(RNI_REFERENCE).map(k => {
-                                const s = mealSlug(k);
-                                return `
-                                <div class="bg-slate-50 border border-slate-200 rounded-lg p-1.5">
-                                    <label class="block text-[8px] font-bold text-slate-600 truncate">${k} <span class="text-slate-400 font-mono">(${RNI_REFERENCE[k].unit})</span></label>
-                                    <input type="number" min="0" step="0.1" id="meal-mn-${s}" oninput="window.updateMealNutrientBadges()" placeholder="0" class="w-full bg-white border border-slate-200 rounded px-1.5 py-1 text-[10px] font-mono text-slate-800 focus:outline-none focus:border-emerald-500">
-                                    <span id="meal-mnpct-${s}" class="block text-[8px] font-mono text-slate-400">0% RNI</span>
-                                </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-
-                    <div class="pt-2 flex justify-end space-x-2 border-t border-slate-200">
-                        <button type="button" onclick="window.closeCreateMealModal()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600">${isBm ? 'Batal' : 'Cancel'}</button>
-                        <button type="submit" class="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold shadow-sm">${isBm ? 'Simpan Makanan' : 'Save Meal'}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        </div><!-- /#lapaq-view-root -->
     `;
 }
